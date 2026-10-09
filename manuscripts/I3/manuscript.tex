@@ -1,0 +1,1308 @@
+\documentclass[11pt,a4paper]{amsart}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{orcidlink,enumitem,booktabs,array}
+\usepackage[margin=1in]{geometry}
+\raggedbottom
+\hypersetup{hypertexnames=false}
+\AtBeginDocument{\begingroup\setbox0=\hbox{$\square\mathbb{R}$}\endgroup}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+
+\DeclareMathOperator{\clip}{clip}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\Ebar}{\EE_{\overline P_n}}
+\newcommand{\br}[1]{\langle #1\rangle}
+
+\title[Capital, protection, and information]{Capital, Protection, and Information in Dispersion Underwriting}
+\author[J.~Vidal Llaurad\'o]{J.~Vidal Llaurad\'o\,\orcidlink{0009-0002-1918-5458}}
+\subjclass[2020]{91G20, 91G10, 62C20}
+\keywords{Dispersion underwriting, super-replication, capital constraints, value of information, minimax decisions, portfolio sizing}
+\hypersetup{
+  pdftitle={Capital, Protection, and Information in Dispersion Underwriting},
+  pdfauthor={J. Vidal Llaurad\'o},
+  pdfkeywords={dispersion underwriting, super-replication, capital constraints, value of information, minimax decisions, portfolio sizing}
+}
+\date{}
+\begin{document}
+\begin{abstract}
+How much can dependence information improve the global protection of a fixed basket liability? With matching physical and pricing marginals, every financed additive hedge has the same unit mean. Under stated marginal conditions, minimum reserve fixes that payoff; excess reserve allows risk allocation. Four constituent puts approximate the full-class optimal risk with uniform absolute error $O(\epsilon^{3/2})$ at small excess reserve $\epsilon$, including zero dependence score. In a specified binary model with identical constituent marginals and basket laws, informative paired iid observations strictly improve risk at every positive excess reserve. We determine their exact finite-sample minimax value at a sufficient finite cap and, under a sufficient condition on risk aversion and available capital, solve sizing with both reserve budgets and training randomness.
+\end{abstract}
+\maketitle
+
+\section{The liability decision and minimum reserve}\label{sec:contract}
+
+An underwriter who sells a basket put can protect the liability with payoffs on its constituents. Different allocations of that protection can have different risks, even when each covers the liability in every nonnegative terminal state. Learning more about dependence is useful only to the extent that the available reserve permits a choice among those allocations.
+
+At minimum reserve, the marginal conditions stated below fix the financed unit payoff. With matching physical and pricing marginals, every admissible protection has the same unit mean, so additional reserve is used to reduce risk. Some of that reduction is available without learning anything about dependence. To measure the value of information, we therefore compare a learned allocation with the best uninformed protection under the same reserve constraint.
+
+The general analysis describes this choice near minimum reserve without a joint-density assumption. We then solve a two-sign experiment in which the constituent marginals and the basket law are identical under both signs, yet different constituent protections are preferred. When the signal is nonzero, paired observations distinguish the signs. At sufficient finite reserve, we determine the value of those observations and, under a sufficient condition on risk aversion and available capital, how risk reduction changes the optimal division between underwriting and cash.
+
+\subsection{Relation to earlier work}
+Chen, Deelstra, Dhaene and Vanmaele~\cite{ChenEtAl2008} establish common-quantile constituent strikes and minimum-price super-replication in an option-measure class, including continuum strikes. Su~\cite{Su2005} studies constituent-strike optimization and convex interpolation preserving super-replication. Leung, Lorig and Shirai~\cite{LeungLorigShirai2024} derive coupled additive projection equations for an expectation-price constrained quadratic problem.
+
+Our question concerns the choices available above minimum reserve and the information needed to make them. We extend the signed projection to satisfy the basket floor on every nonnegative state and determine the reserve needed to attain it. Interpolation approximates the optimum of the entire protected additive class uniformly through zero score, while the exact model shows why finite vanilla interpolation cannot attain its optimum. Acciaio, Albrecher and Garc\'ia Flores~\cite{AcciaioAlbrecherGarciaFlores2024} use variational and pointwise-obstacle methods for vector-dependent reinsurance treaties, a different class from coordinate-only protection of this fixed liability. Our thresholding and Gaussian decision arguments use established methods, including the limit-experiment framework of Hirano and Porter~\cite{HiranoPorter2005}. Uniform control of the protected class connects these decision arguments to the capital constraint.
+
+\subsection{Contract and accounting}
+All quantities are discounted. Fix $K>0$, nonnegative terminal coordinates $X,Y$, and a pricing probability law $Q$. There is exactly one fixed short liability
+\begin{equation}\label{eq:basket}
+ B(x,y)=(K-x-y)_+,\qquad b=\EE_Q B.
+\end{equation}
+Let $\calA$ be the entire class of payoffs $A(x,y)=a(x)+d(y)$ whose components are real finite Borel functions, integrable under their corresponding $Q$ marginals, and satisfy
+\begin{equation}\label{eq:globalfloor}
+ A(x,y)\ge B(x,y)\qquad\text{for every }x,y\ge0.
+\end{equation}
+Cash is allowed in either component. The domain in \eqref{eq:globalfloor} is not reduced to the support of $Q$. Initially the physical probability law $P$ has the same corresponding labeled marginals as $Q$; the $X$ and $Y$ marginals need not equal each other. Define
+\begin{equation}\label{eq:accounting}
+ H_A=A-B,\quad C_A=\EE_Q A-b,\quad Z_A=H_A-C_A,
+ \quad q_P(A)=\EE_P Z_A^2.
+\end{equation}
+Infinite second moments have risk $+\infty$. Marginal matching gives $\EE_P A=\EE_Q A$, hence
+\begin{equation}\label{eq:unitmean}
+ \EE_P Z_A=\mu_P:=b-\EE_P B
+ \qquad(A\in\calA).
+\end{equation}
+Consequently $q_P(A)=\Var_P Z_A+\mu_P^2$, so minimizing the second moment and minimizing variance are identical unit-notional decisions. Information can therefore guide risk allocation while leaving the unit underwriting premium unchanged. Sizing will be a separate decision in Section~\ref{sec:pooled}.
+
+Since $H_A\ge0$, $C_A$ is a sufficient terminal loss reserve. More precisely, $s_A=\inf_{x,y\ge0}H_A(x,y)$ is finite and nonnegative. Replacing $A$ by $A-s_A$ changes $C_A$ to $C_A-s_A$ and leaves $Z_A$ unchanged. The new surplus has infimum zero, so its reserve equals $-\inf Z_A$, the exact maximum terminal loss, whether or not the infimum is attained. This normalization never impairs a cap. We use normalized books for economic reserve constraints. Reserve here is terminal loss capital; it is not broker margin, interim liquidity, early-liquidation protection, or protection against default.
+
+Define the globally protected two-put family
+\begin{equation}\label{eq:twoput}
+ G_k(x,y)=(k-x)_++(K-k-y)_+,\quad H_k=G_k-B,
+ \quad C(k)=\EE_QG_k-b,\qquad 0\le k\le K.
+\end{equation}
+Put subadditivity gives $H_k\ge0$, while $H_k\le K$ and $H_k(0,0)=0$. Thus $C(k)$ is its exact reserve.
+
+\begin{lemma}[Containment]\label{lem:containment}
+Every $A\in\calA$ dominates some $G_k$ on the entire nonnegative domain. The residual $R=A-G_k$ is nonnegative and additive, can be expressed as a sum of nonnegative one-coordinate functions, and satisfies
+\begin{equation}\label{eq:residualmean}
+ \EE_P R=\EE_Q R=C_A-C(k)\ge0.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Let $a_0=\inf a$ and $d_0=\inf d$. Fixing a finite value of the other component in $A\ge0$ bounds either component below; its finite value at any coordinate bounds its infimum above. Thus both infima are finite. Separated infima give $M=a_0+d_0\ge0$. Set
+\[
+ c_1=\inf_{x\ge0}(a(x)-a_0+x),\qquad
+ c_2=\inf_{y\ge0}(d(y)-d_0+y).
+\]
+These are finite and nonnegative. Combining $a-a_0\ge0$ with $a-a_0\ge c_1-x$ gives $a-a_0\ge(c_1-x)_+$, and similarly for $d$. Since $A+x+y\ge K$, separated infima also give $M+c_1+c_2\ge K$. Hence
+\[
+ A\ge M+(c_1-x)_++(c_2-y)_+.
+\]
+If $c_1+c_2\ge K$, choose $k\in[0,K]$ with $k\le c_1$ and $K-k\le c_2$. Otherwise let $z=K-c_1-c_2\le M$ and take $k=c_1+z=K-c_2$. The put inequality $(c_1+z-x)_+\le(c_1-x)_++z$ proves containment in the second case as well. No infimum needs to be attained.
+
+Write $R=r_1(x)+r_2(y)\ge0$. Its component infima are finite by the same argument, and their sum is nonnegative. If $r_{10}=\inf r_1$, then $r_1-r_{10}\ge0$ and $r_2+r_{10}\ge0$ split the residual as claimed. Its components remain marginally integrable. Marginal matching now gives \eqref{eq:residualmean}.
+\end{proof}
+
+\begin{assumption}\label{ass:local}
+The continuous convex function $C$ has a unique minimizer $k_0\in(0,K)$. The $Q$ marginal densities are continuous near $k_0$ and $K-k_0$, and
+\[
+ A_0=f_X^Q(k_0)+f_Y^Q(K-k_0)>0.
+\]
+\end{assumption}
+The derivative of a put price is its marginal exercise probability at a continuity point. Therefore
+\begin{equation}\label{eq:localcapital}
+ F_X^Q(k_0)=F_Y^Q(K-k_0),\qquad
+ C(k_0+t)=C_0+\tfrac12 A_0t^2+o(t^2),\quad C_0=C(k_0).
+\end{equation}
+Lemma~\ref{lem:containment} proves that $C_0$ is the minimum reserve over $\calA$. If $C_A=C_0$, containment forces $k=k_0$ and $\EE_QR=\EE_PR=0$. Since $R\ge0$, $R=0$ almost surely under both laws. Thus the financed payoff at minimum reserve is uniquely
+\[
+ Z_0=H_0-C_0,\qquad H_0=H_{k_0},
+\]
+almost surely under $P$ and $Q$. This is not pointwise uniqueness off their supports.
+
+\section{A uniform frontier through zero dependence score}\label{sec:general}
+
+Above minimum reserve, both reallocating the constituent strikes and adding protection can reduce risk. The next result compares a four-put portfolio with the entire additive class, including cases where the leading directional score vanishes.
+
+Under Assumption~\ref{ass:local}, put
+\begin{equation}\label{eq:scores}
+ q_0=\EE_P(H_0-C_0)^2,\quad
+ J=\one_{\{X<k_0\}}-\one_{\{Y<K-k_0\}},\quad
+ h=\EE_PH_0,\quad m=\EE_P(H_0J),\quad j=\EE_PJ^2.
+\end{equation}
+Then $\EE_PJ=0$, $h\ge0$, and $\mu_P=h-C_0$. For sufficiently small $\epsilon>0$, the reserve constraint defines the following interval of two-put strike displacements:
+\begin{equation}\label{eq:actualinterval}
+ I_\epsilon=\{t\in[-k_0,K-k_0]:C(k_0+t)\le C_0+\epsilon\}
+ =[t_-,t_+],\qquad T=\max(-t_-,t_+).
+\end{equation}
+Its endpoints are interior, $t_-<0<t_+$, and both cost $C_0+\epsilon$. Indeed a convex continuous function with a unique interior minimum is strictly decreasing and increasing on its respective sides. Equation~\eqref{eq:localcapital} gives
+\begin{equation}\label{eq:endpointscale}
+ t_\pm=\pm\sqrt{2\epsilon/A_0}(1+o(1)),\qquad T=O(\sqrt\epsilon).
+\end{equation}
+Define the full-class frontier
+\[
+ q_*(\epsilon;P)=\inf\{q_P(A):A\in\calA,\ C_A\le C_0+\epsilon\}.
+\]
+
+\begin{theorem}[Uniform critical frontier]\label{thm:uniform}
+Set
+\[
+ F_\epsilon=\min_{t\in I_\epsilon}(2mt+jt^2),\quad
+ \widehat q=q_0-2h\epsilon+F_\epsilon,\quad
+ E_-=2T\epsilon+\epsilon^2,\quad E_+=6T\epsilon.
+\]
+Then
+\begin{equation}\label{eq:uniformbounds}
+ \widehat q-E_-\le q_*(\epsilon;P)\le\widehat q+E_+.
+\end{equation}
+These bounds are uniform over all physical dependence laws with the specified marginals, including zero or shrinking $m$, without a joint density. The remainder is an absolute $O(\epsilon^{3/2})$.
+
+If $j>0$, let
+\begin{equation}\label{eq:endpointmix}
+ t^*=\clip(-m/j,[t_-,t_+]),\quad
+ p=\frac{t^*-t_-}{t_+-t_-},\qquad
+ A_{\epsilon,t^*}=pG_{k_0+t_+}+(1-p)G_{k_0+t_-}.
+\end{equation}
+This deterministic book has exact reserve $C_0+\epsilon$, uses at most four long constituent put series against the one fixed short basket put, and has risk at most $\widehat q+E_+$. It attains the error guarantee, not necessarily the exact finite-capital optimum. If $j=0$, then $q_*(\epsilon;P)=q_0=\mu_P^2$ exactly, attained without spending excess reserve.
+\end{theorem}
+
+\begin{proof}
+Strike convexity, with the exercise indicators as derivatives at the original strikes, gives
+\begin{equation}\label{eq:strikeremainder}
+ G_{k_0+t}-G_{k_0}=tJ+e_t,\qquad
+ e_t\ge0,\quad\EE_Pe_t=C(k_0+t)-C_0,\quad e_t\le2|t|.
+\end{equation}
+Each one-coordinate remainder vanishes unless that coordinate is within $|t|$ of its old strike, and is bounded by $|t|$. For the covariance estimate, write $a=k_0-x$ and $d=K-k_0-y$. Then
+\[
+ H_0=a_++d_+-(a+d)_+
+\]
+is zero when the signs agree and is $\min(|a|,|d|)$ otherwise. On either strike strip, $H_0\le|t|$. Thus, globally,
+\begin{equation}\label{eq:stripbound}
+ 0\le H_0e_t\le |t|e_t.
+\end{equation}
+
+By containment, every finite-risk competitor has the form $A=G_{k_0+t}+R$, so
+\begin{equation}\label{eq:anyincrement}
+ A-G_{k_0}=tJ+S,\quad S=e_t+R\ge0,\quad
+ \Delta=\EE_PS=C_A-C_0\in[0,\epsilon],\quad t\in I_\epsilon.
+\end{equation}
+Since $Z_0,J$ are bounded, finite risk makes $S$ square-integrable. Expanding $Z_A=Z_0+tJ+S-\Delta$, with $\EE_PJ=0$ and $\EE_PZ_0=h-C_0$, gives
+\begin{align}\label{eq:exactexpansion}
+ q_P(A)-q_0={}&-2h\Delta-\Delta^2+2mt+jt^2\notag\\
+ &+2\EE_P(H_0S)+2t\EE_P(JS)+\EE_PS^2.
+\end{align}
+The first and last of the final three terms are nonnegative. Also $|\EE_P(JS)|\le\Delta$. Since $h\ge0$,
+\[
+ q_P(A)-q_0\ge-2h\epsilon+2mt+jt^2-2T\epsilon-\epsilon^2.
+\]
+Taking the infimum proves the lower bound; competitors with infinite risk satisfy it trivially. The argument uses only the nonnegativity and mean of the unrestricted residual and applies separately to each competitor.
+
+For the book in \eqref{eq:endpointmix}, or for the same construction with any $t\in I_\epsilon$, its increment has
+\[
+ S=pe_{t_+}+(1-p)e_{t_-},\qquad
+ \EE_PS=\epsilon,\quad 0\le S\le2T,\quad H_0S\le TS.
+\]
+The inequalities $H_0S\le TS$, $|J|\le1$, $|t|\le T$, and $S^2\le2TS$ bound each of the final three terms in \eqref{eq:exactexpansion} by $2T\epsilon$. Dropping $-\epsilon^2$ gives
+\[
+ q_P(A_{\epsilon,t})\le q_0-2h\epsilon+2mt+jt^2+6T\epsilon.
+\]
+Clipping minimizes the quadratic when $j>0$. Convex combination preserves the global floor. Linearity of price gives reserve $C_0+\epsilon$, and both endpoint surpluses vanish at $(0,0)$, making this reserve exact.
+
+Finally $H_0>0$ implies $J^2=1$. If $j=0$, then $H_0=0$ almost surely, $h=m=0$ and $q_0=C_0^2=\mu_P^2$. Every competitor has second moment at least its squared mean by \eqref{eq:unitmean}, while $G_{k_0}$ attains that value.
+\end{proof}
+
+\begin{corollary}[Zero, fixed, and critical scores]\label{cor:scores}
+If $m=0$ and $h>0$, then
+\begin{equation}\label{eq:zerofrontier}
+ q_*(\epsilon;P)=q_0-2h\epsilon+O(\epsilon^{3/2}),
+\end{equation}
+whereas the best single two-put book satisfies
+\begin{equation}\label{eq:twoputcomparison}
+ q_0-\inf_{t\in I_\epsilon}q_P(G_{k_0+t})
+ =\max(0,2h-2j/A_0)\epsilon+o(\epsilon).
+\end{equation}
+The four-put leading improvement is strictly larger. For fixed $m\ne0$,
+\begin{equation}\label{eq:fixedscore}
+ q_*(\epsilon;P)=q_0-2|m|\sqrt{2\epsilon/A_0}+o(\sqrt\epsilon).
+\end{equation}
+Along a family $P_\epsilon$ with the same marginals, if $h_\epsilon\to h_*$, $j_\epsilon\to j_*>0$ and $m_\epsilon/\sqrt\epsilon\to\beta$, then
+\begin{equation}\label{eq:criticalscore}
+ q_*(\epsilon;P_\epsilon)=q_0(P_\epsilon)+\epsilon
+ \left[-2h_*+\min_{|z|\le\sqrt{2/A_0}}(2\beta z+j_*z^2)\right]+o(\epsilon).
+\end{equation}
+\end{corollary}
+\begin{proof}
+At zero score the scalar minimum is zero. For an individual strike displacement, put $D_t=C(k_0+t)-C_0$. Equations~\eqref{eq:exactexpansion}--\eqref{eq:stripbound} with $S=e_t$ imply
+\[
+ q_P(G_{k_0+t})-q_0
+ =2mt+jt^2-2hD_t+O(|t|D_t+D_t^2).
+\]
+The local expansion is uniform over the shrinking interval. At $m=0$ the leading coefficient of $t^2$ is $j-hA_0$, while the largest squared displacement is $2\epsilon/A_0+o(\epsilon)$. Minimizing the leading quadratic over the admissible interval gives \eqref{eq:twoputcomparison}, including the zero-coefficient case. Since $h>0$ implies $j>0$, the difference in leading improvements is $\min(2h,2j/A_0)\epsilon+o(\epsilon)>0$.
+
+For fixed nonzero $m$, the unconstrained minimizer $-m/j$ is eventually outside the interval (and $j>0$), so clipping selects the endpoint opposite its sign. Equations~\eqref{eq:endpointscale} and \eqref{eq:uniformbounds} prove \eqref{eq:fixedscore}. The smaller uniform error in Theorem~\ref{thm:uniform} requires the exact endpoints of $I_\epsilon$. For the last claim, the substitution $t=\sqrt\epsilon z$ and division by $\epsilon$ reduce the uniform bounds to scalar quadratics on a common compact interval. Endpoint convergence and uniform convergence of these quadratics give the result.
+\end{proof}
+A posterior-predictive law can supply $m,j$ for this decision once a statistical observation model is specified. Their role in the leading quadratic does not make them exactly sufficient for arbitrary finite-capital unknown dependence.
+
+\section{Population ambiguity and an observation experiment}\label{sec:information}
+
+\subsection{What an unordered population law determines}
+Knowing a population law is not the same as receiving random training data. First suppose the two labeled marginals of $Q$ are the same measure $F$. Let $\nu$ be a fixed law of $(\min(X,Y),\max(X,Y))$, and let $\calP(\nu,F)$ be the entire nonempty class of compatible physical laws with both labeled marginals $F$. Let $\overline P$ be the law obtained by assigning equal probability to each orientation of a pair drawn from $\nu$, with diagonal pairs unchanged. This exchangeable law belongs to the class: the sum of the two unordered marginal measures is $2F$. Equivalently $\overline P=(P+P^{\rm swap})/2$ for any compatible $P$.
+
+\begin{proposition}[Exact population reduction]\label{prop:unordered}
+For every $c\ge C_0$,
+\begin{equation}\label{eq:unordered}
+ \inf_{A\in\calA:C_A\le c}\sup_{P\in\calP(\nu,F)}q_P(A)
+ =\inf_{A\in\calA:A=A^{\rm swap},\ C_A\le c}q_{\overline P}(A)
+ =\inf_{A\in\calA:C_A\le c}q_{\overline P}(A).
+\end{equation}
+Under Assumption~\ref{ass:local}, its small-excess-capital value is
+\[
+ q_{\rm unordered}(\epsilon)=q_0-2h\epsilon+O(\epsilon^{3/2}).
+\]
+\end{proposition}
+\begin{proof}
+The robust infimum is at least the final infimum because $\overline P$ is compatible. For any $A$, the symmetrization $A^s=(A+A^{\rm swap})/2$ is additive, globally protected, and has the same price: equal marginal measures are essential here. Convexity of the square and exchangeability give $q_{\overline P}(A^s)\le q_{\overline P}(A)$. For symmetric $A^s$, its squared financed surplus is a function of the unordered pair, so its risk is identical under every compatible law. Applying this to an approximating sequence for the final infimum proves both reverse inequalities without requiring attainment.
+
+Symmetry of $C$ and uniqueness of its minimizer imply $k_0=K/2$. Under $\overline P$, $H_0$ is symmetric and $J$ antisymmetric, so $m=0$. Theorem~\ref{thm:uniform} gives the expansion. Here $q_0,h,j$ depend only on $\nu$.
+\end{proof}
+Arbitrary pointwise orientation flips can violate labeled marginals. Proposition~\ref{prop:unordered} uses only the compatible exchangeable member and price-preserving book symmetrization; no unequal-marginal version is proved.
+
+\subsection{A dependence model with an unknown orientation signal}
+To isolate information that matters for the allocation of protection, we use dependence laws with the same constituent marginals and the same basket distribution. Their difference lies in the orientation of labeled pairs: exchanging the constituents reverses the signal. The construction below makes this difference observable from paired data and leaves every symmetric statistic unchanged in law.
+
+For all exact results below, $K=2$ and $Q$ is the law of independent uniforms on $[0,2]^2$. Write $U=X-1$, $V=Y-1$. Fix
+\begin{equation}\label{eq:retainedlaw}
+ 0<\delta\le\tfrac1{16},\quad |z|\le\tfrac14,\qquad
+ p_z(u,v)=\frac{dP_z}{dQ}=1-\delta uv+z\psi(u,v),
+ \quad \psi=u(v^2-\tfrac13)-(u^2-\tfrac13)v.
+\end{equation}
+On $[-1,1]^2$, $|\psi|\le4/3$, so $p_z\ge29/48$. Integration in either coordinate annihilates both perturbations, since the uniform centered moments are $\br{u}=0$ and $\br{u^2}=1/3$. Thus $P_z$ is a probability law with both uniform labeled marginals. Swapping $u,v$ preserves $p_0$ and changes the sign of $\psi$; it preserves every symmetric statistic, including $B$. All those statistic laws, and the basket law, are therefore independent of $z$. Simultaneous reflection also reverses $\psi$, while its composition with swap preserves $P_z$.
+
+\begin{lemma}[Model moments]\label{lem:moments}
+In this model,
+\begin{align}\label{eq:modelmoments}
+ b&=\tfrac13, & k_0&=1, & C_0&=\tfrac16,
+ & C(1+t)&=\tfrac16+\tfrac12t^2\quad(|t|\le1),\notag\\
+ h&=\tfrac16+\tfrac\delta{15}, & j&=\tfrac12+\tfrac\delta8,
+ & m&=-\tfrac z{36}, & \mu&=\tfrac\delta{15},\notag\\
+ q_0&=\tfrac{20+7\delta}{360},&&&&
+ \EE_Q\psi^2&=\tfrac8{135}.
+\end{align}
+\end{lemma}
+\begin{proof}
+The uniform put price is $k^2/4$ for $0\le k\le2$, and
+$b=\frac14\int_0^2\int_0^{2-x}(2-x-y)\,dy\,dx=1/3$.
+This gives the capital identities. The surplus $H_0$ is zero outside the mixed quadrants and has the following polynomial pieces:
+\[
+\begin{array}{c|c|c|c}
+ u&v&H_0&J\\ \hline
+ [0,1]&[-1,-u]&u&-1\\
+ {[0,1]}&[-u,0]&-v&-1\\
+ {[-1,0]}&[0,-u]&v&1\\
+ {[-1,0]}&[-u,1]&-u&1
+\end{array}
+\]
+Each integral is weighted by $1/4$. Integrating the indicated monomials over these triangles, and $J^2$ over the mixed rectangles, gives
+\begin{equation}\label{eq:momenttable}
+\begin{array}{c|rrr}
+ T&\EE_QT&\EE_Q(uvT)&\EE_Q(\psi T)\\ \hline
+ B&1/3&1/15&0\\
+ H_0&1/6&-1/15&0\\
+ H_0^2&1/12&-1/24&0\\
+ J^2&1/2&-1/8&0\\
+ H_0J&0&0&-1/36
+\end{array}
+\end{equation}
+For example the first positive-$u$ triangle contributes
+$\frac14\int_0^1\int_{-1}^{-u}u^r\{1,uv,\psi\}\,dv\,du$ to the $H_0^r$ row, and the next contributes the same integral with $(-v)^r$ and limits $[-u,0]$. The two negative-$u$ triangles are integrated in the same way. For the basket row one uses $v\in[-1,-u]$, $u\in[-1,1]$, with payoff $-u-v$. These limits and polynomial integrands evaluate all entries in \eqref{eq:momenttable}. Thus $\EE_{P_z}H_0=h$, $\EE_{P_z}H_0^2=1/12+\delta/24$, and $m=-z/36$. Substituting $C_0=1/6$ gives $q_0$, and $\mu=h-C_0$.
+Finally independence and vanishing odd moments give
+$\EE_Q\psi^2=2(1/3)(1/5-1/9)=8/135$.
+\end{proof}
+
+The nuisance parameter $\delta$ and signal magnitude $\eta\in[0,1/4]$ are known; only $\theta\in\{-1,1\}$ is unknown and $z=\theta\eta$. Conditional on $\theta$, paired training observations $W_1,\ldots,W_n$ are iid $P_{\theta\eta}$. A future pair is independent of training conditional on $\theta$ and has that same law. These independence and same-law assumptions define the observation experiment.
+
+A decision rule has jointly Borel component maps $a(W,x),d(W,y)$, with marginally integrable finite components for each sample, and chooses a member of $\calA$ with $C_A\le c$ for every sample. Independent auxiliary randomization on a standard Borel space is allowed. The minimax risk over all such rules is
+\begin{equation}\label{eq:statisticalrisk}
+ R_n(c;\eta)=\inf_{A(W):C_A\le c}\max_{\theta=\pm1}
+ \EE_{P_{\theta\eta}^{\otimes n}}q_{P_{\theta\eta}}(A(W)).
+\end{equation}
+Here and below expectations incorporate auxiliary randomization if present. The equal sign prior is used only to prove minimax statements. Under it set
+\begin{equation}\label{eq:posterior}
+ \overline P_n=\tfrac12P_\eta^{\otimes n}+\tfrac12P_{-\eta}^{\otimes n},\quad
+ L_n=\sum_{i=1}^n\log\frac{p_\eta(W_i)}{p_{-\eta}(W_i)},\quad
+ \rho_n=\tanh(L_n/2).
+\end{equation}
+Set $\rho_n=0$ if $n=0$ or $\eta=0$. Bayes' formula gives $\rho_n=\EE(\theta\mid W)$ and predictive law $P_{\eta\rho_n}$, since the density is affine in $z$. In general $\overline P_n\ne P_0^{\otimes n}$. If $\sigma W$ denotes the data obtained by swapping every training pair, then $\rho_n(\sigma W)=-\rho_n(W)$. This transformation exchanges the two sample laws. A rule satisfying $A(\sigma W;x,y)=A(W;y,x)$ has equal sign risks, by also swapping the future pair. All rules constructed below have this equivariance. Values outside the training support can be assigned $\rho_n=0$, preserving samplewise feasibility.
+
+\subsection{Finite-information bounds at the critical cap}
+For this subsection the same assertions also hold for $0\le\eta\le\eta_{\max}$ with $\delta+4\eta_{\max}/3<1$; the subsequent exact results assume $\eta\le1/4$.
+
+\begin{theorem}[All-rule critical information value]\label{thm:criticalstat}
+Let $0<\epsilon<1/2$, $s=\sqrt{2\epsilon}$, $a_\eta=\eta/36$, and define
+\[
+ \Phi_\epsilon(w)=
+ \begin{cases}
+ w^2/j,&0\le w\le js,\\
+ 2ws-js^2,&w\ge js.
+ \end{cases}
+\]
+With $R_{n,\epsilon}=R_n(C_0+\epsilon;\eta)$ and
+$E_-=2s\epsilon+\epsilon^2$, $E_+=6s\epsilon$, one has, uniformly in $n$ and the allowed signal magnitudes,
+\begin{equation}\label{eq:criticalstatbounds}
+ -E_-\le R_{n,\epsilon}
+ -\left[q_0-2h\epsilon-\Ebar\Phi_\epsilon(a_\eta|\rho_n|)\right]\le E_+.
+\end{equation}
+A samplewise feasible upper-bound rule is
+\begin{equation}\label{eq:statfourput}
+ t_n=\clip(a_\eta\rho_n/j,[-s,s]),\quad p_n=\tfrac12(1+t_n/s),\quad
+ A_n=p_nG_{1+s}+(1-p_n)G_{1-s}.
+\end{equation}
+Training observations consisting only of symmetric functions of the pairs have exactly the uninformed minimax value for every $n$. At $\eta=0$ the information value is exactly zero at every cap, despite the positive capital value near $C_0$.
+\end{theorem}
+\begin{proof}
+Under the equal sign prior, conditional on data (and independent randomization), the future law is $P_{\eta\rho_n}$. Its $h,j,q_0$ are unchanged, while its score is $m=-a_\eta\rho_n$. The capital interval is $[-s,s]$. The bounds of Theorem~\ref{thm:uniform} apply throughout this interval for $0<\epsilon<1/2$ and give a lower bound on the conditional risk of every chosen additive book. The scalar minimum is
+\[
+ \min_{|t|\le s}(-2a_\eta\rho_nt+jt^2)
+ =-\Phi_\epsilon(a_\eta|\rho_n|).
+\]
+Integrating proves the lower Bayes bound, hence the worst-sign lower bound. The conditional upper construction gives the upper Bayes bound for \eqref{eq:statfourput}. This rule is swap equivariant, so its Bayes and worst-sign risks agree, proving the upper bound.
+
+If retained observations are symmetric functions of the pairs, their laws under the two signs are identical. Conditional on the sign they are independent of the future. Their common law can be generated by the independent randomization already allowed at $n=0$ and fed into the same decision rule. They therefore have exactly the uninformed value. When $\eta=0$ all future and training laws coincide. No randomized choice improves the infimum of the known-law problem; a deterministic approximating sequence gives the reverse bound. The capital improvement follows from $m=0,h>0$ in Corollary~\ref{cor:scores}.
+\end{proof}
+
+\begin{theorem}[Critical information scale]\label{thm:gaussian}
+Fix $\delta$, let $\eta=\kappa\sqrt\epsilon$ with fixed $\kappa\ge0$, and let $n=n_\epsilon$. Define
+\[
+ I_\delta=\EE_Q\frac{\psi^2}{p_0}>0,\quad
+ \Gamma_\epsilon=n\eta^2 I_\delta,\quad \beta=\kappa/36,
+ \qquad
+ G_\beta(r)=
+ \begin{cases}
+ \beta^2r^2/j,&\beta r\le j\sqrt2,\\
+ 2\sqrt2\beta r-2j,&\beta r\ge j\sqrt2.
+ \end{cases}
+\]
+If $\Gamma_\epsilon\to\Gamma<\infty$ and $Z$ is standard normal, then
+\begin{equation}\label{eq:gaussianvalue}
+ R_{n,\epsilon}=q_0-\epsilon\left[
+ 2h+\EE G_\beta\bigl(|\tanh(\Gamma+\sqrt\Gamma Z)|\bigr)\right]+o(\epsilon).
+\end{equation}
+If $\Gamma_\epsilon\to\infty$, replace the expectation by $G_\beta(1)$. At $\kappa=0$ it is zero. For $\kappa>0$ and $0<\Gamma<\infty$ it lies strictly between zero and the oracle gain $G_\beta(1)$. Thus $n\epsilon$ of order one is critical for an order-$\epsilon$ oracle fraction.
+\end{theorem}
+\begin{proof}
+Write $g_0=\psi/p_0$, which is bounded. Swap oddness gives
+\[
+ \EE_0g_0=\EE_0g_0^3=0,\qquad \EE_0g_0^2=I_\delta,
+\]
+where $\EE_0$ denotes $P_0$ expectation. Hence
+\[
+ \EE_{\theta\eta}g_0=\theta\eta I_\delta,\qquad
+ \Var_{\theta\eta}g_0=I_\delta-\eta^2I_\delta^2.
+\]
+Uniformly as $\eta\to0$,
+\begin{equation}\label{eq:logexpansion}
+ \log\frac{1+\eta g_0}{1-\eta g_0}=2\eta g_0+O(\eta^3).
+\end{equation}
+For finite positive $\Gamma$, $n\eta^2$ is bounded and $n\eta^3\to0$. The centered triangular array $\eta(g_0-\EE_{\theta\eta}g_0)$ has terms uniformly $O(\eta)\to0$, so it satisfies Lindeberg, with total variance tending to $\Gamma$. The central limit theorem yields
+\[
+ L_n\ \Longrightarrow\ N(2\theta\Gamma,4\Gamma).
+\]
+For $\Gamma=0$, both mean and variance of $L_n$ tend to zero. For infinite $\Gamma_\epsilon$, the odd moments under $P_0$ show that a single log increment has mean $2\theta\eta^2I_\delta+O(\eta^4)$ and variance $O(\eta^2)$. Independence and Chebyshev's inequality imply
+$L_n/(2n\eta^2I_\delta)\to\theta$ in probability; hence $\rho_n\to\theta$.
+
+The identity $\Phi_\epsilon(a_\eta r)/\epsilon=G_\beta(r)$ follows from the definitions. The function $G_\beta$ is bounded and continuous on $[0,1]$, and $|\rho_n|$ has the same law under both signs. Passing to bounded-continuous expectations gives \eqref{eq:gaussianvalue} and its limiting regimes, since the errors in \eqref{eq:criticalstatbounds} divided by $\epsilon$ vanish. If $\kappa=0$, $\eta=0$ and the gain is identically zero. For finite positive $\Gamma$, the limiting absolute hyperbolic tangent is strictly between zero and one almost surely, and $G_\beta$ is strictly increasing there if $\beta>0$.
+\end{proof}
+The uniform bounds on the protected class allow the classical limit-experiment argument to determine the asymptotic decision value. The error is absolute; it does not estimate the relative size of gains arbitrarily smaller than $\epsilon^{3/2}$.
+
+\section{The exact uninformed frontier at every cap}\label{sec:obstacle}
+
+Extra capital can improve protection even when the dependence sign is unknown. The optimal uninformed frontier measures that benefit and supplies the benchmark against which learning will be valued.
+
+We now impose the parameter bounds in \eqref{eq:retainedlaw}. Write $q_z(A)=\EE_{P_z}Z_A^2$ and
+\[
+ Q_z(c)=\inf_{A\in\calA:C_A\le c}q_z(A),\qquad c\ge C_0.
+\]
+Here $Q_z(c)$ denotes the optimal risk at cap $c$, while $Q$ continues to denote the pricing law. The experiment's uninformed value is $R_0(c;\eta)$, with independent randomization allowed.
+
+\begin{lemma}[Global symmetric reduction]\label{lem:obstacle}
+At every $c\ge C_0$,
+\begin{equation}\label{eq:obstaclereduction}
+ Q_0(c)=\inf_{r\ge0,\ 2\int_0^1r\le c-C_0}
+ q_{P_0}\bigl(G_1+r(|X-1|)+r(|Y-1|)\bigr),
+\end{equation}
+where $r$ is finite Borel and zero outside $[0,1]$; infinite-risk choices may be discarded. For such a book, with $e_r=\int_0^1r$, define
+\begin{equation}\label{eq:gprofile}
+ g(s)=\tfrac s2+\tfrac{\delta-1}{4}s^2-\tfrac\delta{12}s^4,
+ \qquad 0\le s\le1.
+\end{equation}
+Then
+\begin{equation}\label{eq:obstaclefunctional}
+ q_{P_0}(A)-q_0
+ =4\int_0^1gr-4he_r+2\int_0^1r^2-2e_r^2.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Global containment gives $A=G_k+r_1(X)+r_2(Y)$ with $r_i\ge0$. Swapping coordinates is globally feasible and price preserving. Reflection on $[0,2]^2$ is implemented by
+\[
+ A^R(x,y)=A(2-x,2-y)+2-x-y.
+\]
+Its surplus equals $H_A(2-x,2-y)$, and its price is unchanged, since $\EE_Q(2-X-Y)=0$. The reflected payoff extends to the entire nonnegative domain as
+\[
+ G_{2-k}(x,y)+r_1^R(x)+r_2^R(y),\qquad
+ r_i^R(x)=
+ \begin{cases}r_i(2-x),&0\le x\le2,\\0,&x>2.
+ \end{cases}
+\]
+The identity between this and $A^R$ on the square follows from put--call parity for each coordinate. Outside the square, the nonnegative residuals and contained $G_{2-k}$ preserve the global floor.
+
+Averaging the four transforms generated by swap and reflection lowers financed risk, by convexity and invariance of $P_0$. On the square the average is $G_1$ plus the same even nonnegative residual in each coordinate. In particular, the average of the two contained put allocations contributes $(|k-1|-|u|)_+/2$ to each coordinate; the remaining averaged residuals are also nonnegative and even. Zero-extending this new residual beyond $|u|=1$ leaves price and risk unchanged and retains $G_1$ as a global lower bound. Its price increment is $2\int_0^1r$, which proves one inequality in \eqref{eq:obstaclereduction}; inclusion gives the other.
+
+For $u\ge0$, the substitution $w=-V\ge0$ in the mixed quadrant gives
+\[
+ \EE_{P_0}[H_0\mid U=u]
+ =\tfrac12\int_0^1\min(u,w)(1+\delta uw)\,dw=g(u).
+\]
+Reflection gives $g(|u|)$ for negative $u$. Also $\int_0^1g=h$. Evenness of $r$ makes the $uv$ term vanish in its conditional expectation, so $\EE_{P_0}[r(|V|)\mid U]=e_r$. Thus the two residual copies have zero covariance. Their covariance with $H_0$ is $2(\int gr-he_r)$, and their combined variance is $2(\int r^2-e_r^2)$. The unit mean is fixed, giving \eqref{eq:obstaclefunctional}.
+\end{proof}
+
+\begin{theorem}[All-capital uninformed solution]\label{thm:allcapital}
+Define
+\begin{equation}\label{eq:aparam}
+ \epsilon(a)=\tfrac12a^2+\tfrac{\delta-1}{3}a^3-\tfrac{2\delta}{15}a^5,
+ \quad \epsilon_* =\tfrac16+\tfrac\delta5,
+ \quad C_* =\tfrac13+\tfrac\delta5.
+\end{equation}
+For $c\ge C_0$, choose the unique $a\in[0,1]$ satisfying
+$\epsilon(a)=\min(c-C_0,\epsilon_*)$. Set
+\begin{equation}\label{eq:obstaclebook}
+ r_a(s)=(g(a)-g(s))_+\quad(0\le s\le1),\qquad
+ A_a=G_1+r_a(|X-1|)+r_a(|Y-1|),
+\end{equation}
+with $r_a=0$ outside $[0,1]$. Then $A_a$ has exact reserve $C_0+\epsilon(a)$ and
+\begin{equation}\label{eq:exactuninformed}
+ Q_0(c)=R_0(c;\eta)=q_0-2h\epsilon(a)
+ +2\int_0^a\{g(a)^2-g(s)^2\}\,ds-\tfrac12\epsilon(a)^2.
+\end{equation}
+This is also the robust value over the entire compatible unordered-pair class with uniform labeled marginals and unordered law of $P_0$. The value strictly decreases before $C_*$ and is constant thereafter. Its saturated variance is
+\begin{equation}\label{eq:vstar}
+ v_* =Q_0(C_*)-\mu^2
+ =\frac{1260+135\delta-289\delta^2}{28350}.
+\end{equation}
+Capital above $C_*$ may be left unused.
+\end{theorem}
+\begin{proof}
+At fixed $e_r\ge0$, the problem is to minimize $\int(r^2+2gr)$ over $r\ge0$ with integral $e_r$. The unique threshold $\tau\ge0$ satisfying $\int(\tau-g)_+=e_r$ gives $r_\tau=(\tau-g)_+$. For any competitor with that integral,
+\begin{align*}
+ \int(r^2+2gr)-\int(r_\tau^2+2gr_\tau)
+ &=\int(r-r_\tau)^2
+ +2\int(g+r_\tau-\tau)(r-r_\tau)\ge0.
+\end{align*}
+The coefficient in the last integral vanishes on $\{r_\tau>0\}$ and is nonnegative on its complement, where $r\ge0$. This proves uniqueness at fixed integral without assuming any differentiability of the competitor.
+
+Here $g''(s)=(\delta-1)/2-\delta s^2<0$ and $g'(1)=\delta/6>0$, so $g$ is strictly increasing and concave. Before full support, $\tau=g(a)$ and
+\[
+ e_r=a g(a)-\int_0^a g=\epsilon(a)/2,\qquad
+ \epsilon'(a)=2a g'(a)>0\quad(a>0).
+\]
+Differentiating the explicit minimized functional in \eqref{eq:obstaclefunctional} with respect to $e_r$ gives $4(\tau-h-e_r)$. Since
+$\tau-e_r=\int_0^1\min(g,\tau)$, this is strictly negative while $\tau<g(1)$. Once the whole interval is active, $r=e_r+h-g$; further changes only add cash to the payoff, leaving the financed payoff unchanged. This proves the cap choice in \eqref{eq:aparam}, strict decrease and saturation. Substitution of $e_r=\epsilon(a)/2$ into \eqref{eq:obstaclefunctional} gives \eqref{eq:exactuninformed}. At $(0,0)$, $r_a(1)=0$ and $H_0=0$, so its reserve is exact.
+
+For completeness the polynomial integrals at saturation are
+\[
+ \int_0^1g=h,\qquad
+ \int_0^1g^2=\frac1{30}+\frac{149\delta}{5040}
+                   +\frac{83\delta^2}{11340}.
+\]
+The saturated centered surplus is $H_0-g(|U|)-g(|V|)+h$. Its variance is
+$\EE_{P_0}H_0^2+h^2-2\int g^2$. Using Lemma~\ref{lem:moments} yields \eqref{eq:vstar}.
+
+For an arbitrary uninformed book, the sign-average risk is its $P_0$ risk, since the density is affine in $z$. Thus its worst-sign risk is at least $Q_0(c)$, also after randomization. The symmetric $A_a$ has the same risk under both signs and attains this lower bound. For the unordered class, its equal-orientation member is precisely $P_0$: symmetrizing $p_z$ removes $z\psi$. Proposition~\ref{prop:unordered} proves the asserted full-class robust equality.
+\end{proof}
+
+\begin{proposition}[Continuum synthesis and finite-vanilla nonattainment]\label{prop:nonattainment}
+For every $c>C_0$, no finite piecewise-affine vanilla portfolio attains \eqref{eq:exactuninformed}. The optimal single-name component
+$a_a(x)=(1-x)_++r_a(|x-1|)$ is synthesized by a continuum of long puts: its strike measure has density
+\[
+ \frac{1-\delta}{2}+\delta(k-1)^2\quad\text{on }(1-a,1+a)
+\]
+and atoms $g'(a)$ at both endpoints; the strike-zero atom when $a=1$ is immaterial.
+\end{proposition}
+\begin{proof}
+For $a>0$, outside the middle interval the component has slopes $-1$ and $0$. Inside it the second derivative is
+$-g''(|x-1|)=(1-\delta)/2+\delta(x-1)^2>0$.
+At $1\pm a$ the derivative jumps upwards by $g'(a)$. At $1$ the jump of the original strike-one put cancels the jump from $-g(|x-1|)$. Integrating this nonnegative second-derivative measure, with zero value and slope beyond the right endpoint, gives the stated long-put representation on the entire nonnegative domain.
+
+Financed payoffs form a convex set, and the squared $L^2(P_0)$ norm is strictly convex in those payoffs. Two optimizers therefore agree $P_0$-almost surely. The strictly positive density on the square implies agreement under product $Q$. Fubini then makes their single-coordinate components equal up to constants almost everywhere. A finite vanilla component is affine on each interval between its finitely many strikes. It cannot agree almost everywhere with a continuous strictly curved component on a nonempty open subinterval of $(1-a,1+a)$. This also rules out finite books attaining the uninformed two-sign optimum, since their $P_0$ risk would have to attain the same lower bound.
+\end{proof}
+The four-put approximation of Theorem~\ref{thm:uniform} is consistent with this exact nonattainment. Expanding the exact formula at small excess reserve gives
+\begin{equation}\label{eq:localrefinement}
+ Q_0(C_0+\epsilon)=q_0-2h\epsilon
+ +\frac{2\sqrt2}{3}\epsilon^{3/2}+O(\epsilon^2).
+\end{equation}
+Indeed $a=\sqrt{2\epsilon}+O(\epsilon)$ and
+$2\int_0^a(g(a)^2-g(s)^2)\,ds=a^3/3+O(a^4)$, while the final square in \eqref{eq:exactuninformed} is $O(\epsilon^2)$.
+
+\section{A signed projection with its necessary global reserve}\label{sec:projection}
+
+\subsection{The additive quadratic lower bound}
+For a known dependence law, the unconstrained additive projection gives a lower bound on risk. Attaining that bound requires a payoff satisfying the basket floor on every nonnegative state. The reserve needed for this extension determines when the projection becomes an admissible underwriting decision. For $|z|\le1/4$ define
+\begin{align}\label{eq:projectioncoeff}
+ D_z&=135+45\delta-4z^2,\qquad
+ \beta_z=\frac{z^2(19-5\delta)}{7D_z},\notag\\
+ \gamma_z&=\frac{7965\delta+11655-548z^2}{840D_z},\notag\\
+ f_0(u)&=\tfrac14+\tfrac\delta6-\tfrac u2
+          +\tfrac{1-\delta}{4}u^2+\tfrac\delta{12}u^4,\notag\\
+ f_z(u)&=f_0(u)+\beta_z(u^2-1)
+ +z\left\{\frac{u^5-1}{8}-\frac{13(u^3-1)}{36}+\gamma_z(u-1)\right\},
+ \quad -1\le u\le1.
+\end{align}
+Here $\beta_z$ is a coefficient of the projected component; the unsubscripted $\beta$ in Theorem~\ref{thm:gaussian} denotes the critical-limit score. Write $\br{f}=\frac12\int_{-1}^1f(u)\,du$, and $F_z=f_z-\br{f_z}$. Put
+\begin{equation}\label{eq:projectiongain}
+ \Lambda_\delta(z)=z^2\left\{\frac{838}{363825}
+ +\frac{2(19-5\delta)^2}{2205D_z}\right\},\qquad
+ v(z)=v_*-\Lambda_\delta(z).
+\end{equation}
+
+\begin{lemma}[Polynomial projection]\label{lem:projection}
+For every square-integrable additive payoff $A$, even without a protection constraint,
+\begin{equation}\label{eq:pythagorean}
+ q_z(A)=\mu^2+v(z)+\EE_{P_z}\left[
+ (A-\EE_QA)-\{F_z(U)+F_{-z}(V)\}\right]^2.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Conditional basket integration yields
+\begin{align}\label{eq:conditionalbasket}
+ b_z(u)&=\tfrac12\int_{-1}^{-u}(-u-v)p_z(u,v)\,dv\notag\\
+ &=\frac{(u-1)^2}{72}\{6\delta u^2+12\delta u
+                  +9zu^3+18zu^2+zu-4z+18\}\notag\\
+ &=\tfrac14+(\tfrac\delta6-\tfrac12)u
+   +\tfrac{1-\delta}{4}u^2+\tfrac\delta{12}u^4
+   +z\left(\tfrac18u^5-\tfrac{13}{36}u^3+\tfrac16u^2+\tfrac18u-\tfrac1{18}\right).
+\end{align}
+Thus $\br{b_z}=\EE_{P_z}B=1/3-\delta/15$. The centered moments satisfy
+$\br{u^r}=0$ for odd $r$ and $1/(r+1)$ for even $r$. With
+\[
+ c_1=-\tfrac12+z\gamma_z,\quad c_2=\tfrac{1-\delta}{4}+\beta_z,
+ \quad c_3=-13z/36,\quad c_4=\delta/12,\quad c_5=z/8,
+\]
+we have $F_z=\sum_{i=1}^5c_i(u^i-\br{u^i})$. In particular, writing
+$A_1=\br{uF_z}$, $A_2=\br{(u^2-1/3)F_z}$ and $D_1,D_2$ for the corresponding moments of $F_{-z}$,
+\begin{align}\label{eq:projectionmoments}
+ A_1&=c_1/3+c_3/5+c_5/7
+ =-\tfrac16+z(\gamma_z/3-137/2520)\notag\\
+ &=\frac{30\delta z-315\delta+28z^2-114z-945}{42D_z},\notag\\
+ D_1&=-\tfrac16-z(\gamma_z/3-137/2520)
+ =-\frac{30\delta z+315\delta-28z^2-114z+945}{42D_z},\notag\\
+ A_2=D_2&=\tfrac4{45}c_2+\tfrac8{105}c_4
+ =\frac{7-5\delta}{315}+\frac{4\beta_z}{45}\notag\\
+ &=-\frac{75\delta^2+120\delta-16z^2-315}{105D_z}.
+\end{align}
+The conditional operator is finite rank:
+\[
+ \EE_{P_z}[F_{-z}(V)\mid U=u]
+ =-\delta uD_1+z\{uD_2-(u^2-1/3)D_1\}.
+\]
+Let $L_z=\gamma_z/3-137/2520=-(19-5\delta)/(7D_z)$. Then
+$A_1=-1/6+zL_z$, $D_1=-1/6-zL_z$, and the explicit coefficients give
+\[
+ \beta_z=-z^2L_z,\qquad
+ \gamma_z+\delta L_z+A_2=1/8.
+\]
+Consequently $\beta_z-zD_1=z/6$ and
+$z\gamma_z-\delta D_1+zD_2=\delta/6+z/8$. These are exactly the quadratic and linear coefficient equations. The cubic, quartic and quintic coefficients match directly in \eqref{eq:conditionalbasket}, and constants match by centering. Therefore
+\begin{equation}\label{eq:normalequation}
+ F_z(u)-\delta uD_1+z\{uD_2-(u^2-1/3)D_1\}
+ =b_z(u)-\EE_{P_z}B.
+\end{equation}
+The other coupled normal equation follows by replacing $z$ by $-z$ and interchanging the coordinates.
+
+Equations~\eqref{eq:normalequation} make the centered residual
+$F_z(U)+F_{-z}(V)-(B-\EE_{P_z}B)$ orthogonal to every centered additive payoff in $L^2(P_z)$. This covers the whole class: if an additive sum has finite risk, boundedness of $B$ makes it $L^2(P_z)$, and $p_z\ge29/48$ makes it $L^2(Q)$. Conditional expectations under product $Q$ then show that each component is $L^2$ up to a constant. Marginal matching identifies $\EE_{P_z}A$ with $\EE_QA$.
+
+Orthogonality determines the remaining variance constant:
+\begin{equation}\label{eq:varianceprojection}
+ v(z)=\Var_{P_z}B-\br{F_zb_z}-\br{F_{-z}b_{-z}}.
+\end{equation}
+The basket simplex integral
+\[
+ \frac14\int_0^2\int_0^{2-x}x^p y^q(2-x-y)^r\,dy\,dx
+ =\frac{2^{p+q+r}p!q!r!}{(p+q+r+2)!}
+\]
+for nonnegative integers $p,q,r$ gives $\EE_{P_z}B^2=1/3-\delta/9$ and hence
+$\Var_{P_z}B=2/9-\delta/15-\delta^2/225$; the $\psi$ term vanishes by swap symmetry. All single-variable products in \eqref{eq:varianceprojection} are also explicit. In fact the centered monomial integration matrix, in degrees $1,\ldots,5$, is
+\[
+ M=\begin{pmatrix}
+ 1/3&0&1/5&0&1/7\\
+ 0&4/45&0&8/105&0\\
+ 1/5&0&1/7&0&1/9\\
+ 0&8/105&0&16/225&0\\
+ 1/7&0&1/9&0&1/11
+ \end{pmatrix}.
+\]
+Let
+\[
+ b=( -1/2+\delta/6+z/8,\ (1-\delta)/4+z/6,
+          -13z/36,\ \delta/12,\ z/8)^{\mathsf T}
+\]
+be the nonconstant coefficient vector of $b_z$. Then $\br{F_zb_z}=c^{\mathsf T}Mb$. Substitution for the two signs and collection of coefficients gives
+\begin{align*}
+ c_z^{\mathsf T}Mb_z+c_{-z}^{\mathsf T}Mb_{-z}
+ ={}&\frac{5040-2025\delta+163\delta^2}{28350}\\
+ &+\frac{2z^2(4125\delta^2-12495\delta+116130-1676z^2)}{363825D_z}.
+\end{align*}
+The vector subscripts indicate evaluation of the coefficients at $z$ or $-z$. The numerator identity
+\[
+ 4125\delta^2-12495\delta+116130-1676z^2
+ =419D_z+165(19-5\delta)^2
+\]
+turns the second term into $\Lambda_\delta(z)$. The first term is $\Var_{P_z}B-v_*$. Together these identities prove \eqref{eq:projectiongain}. Finally orthogonality and the fixed mean $\mu$ give \eqref{eq:pythagorean} by Pythagoras.
+\end{proof}
+
+\subsection{From projection to a globally protected payoff}
+Let $m_z=\min_{[-1,1]}f_z$ denote the component minimum; the unsubscripted score remains $m=-z/36$. Define
+\begin{equation}\label{eq:globalell}
+ \ell_z(x)=
+ \begin{cases}
+ f_z(x-1)-m_z,&0\le x\le2,\\
+ (x-2)\max(f'_z(1),0)-m_z,&x>2,
+ \end{cases}
+ \qquad A_z^*(x,y)=\ell_z(x)+\ell_{-z}(y).
+\end{equation}
+
+\begin{theorem}[Necessary and sufficient projection reserve]\label{thm:reserve}
+The family \eqref{eq:globalell} is jointly Borel in parameter and state, globally protected, and normalized. Its exact reserve is
+\begin{equation}\label{eq:saturationreserve}
+ C_{\rm sat}(z)=C_*-\tfrac43\beta_z-m_z-m_{-z}
+ \le\frac{23126149}{63000000}<\overline c:=\tfrac38.
+\end{equation}
+This reserve is necessary to attain the unrestricted additive lower bound. Thus
+\begin{equation}\label{eq:signedvalue}
+ Q_z(c)=\mu^2+v(z)\qquad(c\ge C_{\rm sat}(z)).
+\end{equation}
+Generally the book is a continuum of long puts and long calls. If $|z|\le\delta/4$, both minima are zero, only long puts are needed, and $C_{\rm sat}(z)=C_*-(4/3)\beta_z$.
+\end{theorem}
+\begin{proof}
+First the denominators and coefficients obey
+\begin{equation}\label{eq:coeffbounds}
+ D_z\ge539/4,\qquad 0\le\beta_z<1/750,\qquad
+ 1/12\le\gamma_z\le1/8.
+\end{equation}
+The bound for $\beta_z$ follows from $z^2\le1/16$, $19-5\delta\le19$, and $D_z\ge539/4$. Clearing the positive denominator in the lower and upper bounds for $\gamma_z$ reduces them respectively to
+$4815\delta+2205-268z^2\ge0$ and
+$3240\delta-2520-128z^2\le0$, both true on the rectangle.
+Moreover
+\begin{equation}\label{eq:strongconvex}
+ f_z''(u)=\tfrac{1-\delta}{2}+\delta u^2+2\beta_z
+ +z\{\tfrac52u^3-\tfrac{13}{6}u\}\ge7/32.
+\end{equation}
+The cubic in braces has endpoint magnitude $1/3$, and its interior extrema occur at $\pm\sqrt{13/45}$, with magnitude $(13/9)\sqrt{13/45}<1$. Thus \eqref{eq:strongconvex} follows from $(1-\delta)/2\ge15/32$ and $|z|\le1/4$.
+
+Also $f_z(1)=0$ and
+\[
+ f'_z(-1)=-1+\delta/6-2\beta_z+z(\gamma_z-11/24)
+ \le-1+1/96+3/32=-43/48<0.
+\]
+Strict convexity makes the minimum unique: it is at $1$ if $f'_z(1)\le0$, otherwise at the unique derivative root in $(-1,1)$. Continuous dependence of a strictly convex function on its coefficients on the compact interval makes its minimizer and minimum continuous in $z$ (and $\delta$). In particular \eqref{eq:globalell} is jointly Borel. Its extension is convex because the right slope is $\max(f'_z(1),0)$, no smaller than the left slope. The global minimum remains $m_z$, so $\ell_z\ge0$.
+
+The polynomial identity essential for the floor is
+\begin{equation}\label{eq:reflectionidentity}
+ f_z(u)-f_{-z}(-u)+u=k_z,
+ \qquad k_z=2z(17/72-\gamma_z)=-k_{-z}.
+\end{equation}
+The extensions plus $x$ increase beyond $2$, so their infima occur on $[0,2]$. On this interval \eqref{eq:reflectionidentity} gives
+\[
+ \inf_{x\ge0}(\ell_z(x)+x)=1+k_z+m_{-z}-m_z.
+\]
+Adding the two signs proves the exact separated-infimum identity
+\begin{equation}\label{eq:separatedfloor}
+ \inf(\ell_z+x)+\inf(\ell_{-z}+y)=2.
+\end{equation}
+Consequently $A_z^*\ge0$ and $A_z^*+x+y\ge2$ on all nonnegative states. These two inequalities are equivalent to $A_z^*\ge(2-x-y)_+$. At the two component minimizers $A_z^*=0$, and \eqref{eq:separatedfloor} forces $x+y\ge2$, so $B=0$ as well. The surplus infimum is zero.
+
+Uniform integration of \eqref{eq:projectioncoeff} gives
+\[
+ \br{f_z}=\tfrac13+\tfrac\delta{10}-\tfrac23\beta_z
+               +z(17/72-\gamma_z),
+\]
+so the raw sum has debit $C_*-(4/3)\beta_z$. Subtracting the component minima proves its exact reserve formula. To bound the reserve uniformly, suppose first that $z>0$. Then
+\[
+ f'_z(1)=-\delta/6+2\beta_z+z(\gamma_z-11/24)<0,
+\]
+because $2\beta_z<z/3$ and $\gamma_z-11/24\le-1/3$. At $z=0$ the derivative is also negative. Thus $m_z=0$ for $z\ge0$, and at most one of the two minima is negative. A positive endpoint derivative is at most
+$\alpha=3/32+1/375$ by \eqref{eq:coeffbounds}. The strong-convexity tangent bound at $1$ gives
+$m_z\ge-16\alpha^2/7$. Since $C_*\le83/240$ and $\beta_z\ge0$,
+\[
+ C_{\rm sat}(z)\le83/240+16\alpha^2/7
+ =23126149/63000000<3/8.
+\]
+
+To prove necessity, suppose a globally protected $A$ attains the lower bound in Lemma~\ref{lem:projection}. The Pythagorean equality forces $A=f_z(U)+f_{-z}(V)+\kappa$ almost everywhere on the square, for a constant $\kappa$. The raw continuous surplus $f_z(U)+f_{-z}(V)-B$ has minimum $m_z+m_{-z}$ there: the normalized book just proved has minimum zero at its component minimizers, which lie on the square. Because the square has positive density, its essential infimum equals its ordinary minimum. Global protection therefore requires $\kappa\ge-m_z-m_{-z}$; almost-everywhere modifications cannot remove this cash requirement. Its $Q$ price consequently gives $C_A\ge C_{\rm sat}(z)$. Sufficiency follows from the globally feasible book and \eqref{eq:pythagorean}.
+
+Finally a nonnegative convex component with minimum zero is represented by integrating its nonnegative second-derivative measure outward from a zero subgradient: long puts below the minimizer and long calls above it, including endpoint derivative atoms. For $|z|\le\delta/4$, $D_z\ge135$, and
+\[
+ 2\beta_z\le\frac{38z^2}{7\cdot135},\qquad
+ 2\beta_z+3|z|/8<\delta/6.
+\]
+Hence both $f'_z(1)$ and $f'_{-z}(1)$ are nonpositive. Both minima equal $f_{\pm z}(1)=0$, their extensions vanish beyond $2$, and the representation uses only long puts.
+\end{proof}
+The reserve correction outside the small-signal subregion need not fall with information. The signed frontier below $C_{\rm sat}(z)$ has not been solved by this theorem, and the continuum representation is not finite-vanilla attainment.
+
+\section{Strict learning and exact finite-information value}\label{sec:learning}
+
+The uninformed optimum leaves room for a sign-dependent change in protection at every positive excess reserve. Paired observations guide that change while its reserve and global floor are preserved for every sample. At a common sufficient finite cap, the projection from the preceding section gives the exact optimal learned book.
+
+\subsection{A useful direction at every positive excess reserve}
+Fix $c>C_0$ and take $a\in(0,1]$ from Theorem~\ref{thm:allcapital}. Set $q_c=Q_0(c)$ and define, with arguments in centered state units,
+\begin{align}\label{eq:deformationcoeff}
+ f_a(u)&=\clip(u/(2a),[-1/2,1/2]),\qquad T_a=2a g'(a)>0,\notag\\
+ d_a&=\tfrac12-\tfrac a3+2\delta(\tfrac14-\tfrac{a^2}{12})^2>0,\notag\\
+ \ell_a&=\frac{10\delta a^9-65\delta a^7+21a^7-15a^6
+ +140\delta a^5-98a^5+63a^4-105\delta a^3
+ +105a^3-105a^2+105}{3780}.
+\end{align}
+Here $\ell_a$ denotes a cross coefficient; the global payoff component in \eqref{eq:globalell} retains the notation $\ell_z$. Define the clipped gain
+\begin{equation}\label{eq:psigain}
+ \Psi_a(z)=\max_{|t|\le T_a}(-2z\ell_a t-d_a t^2)
+ =\begin{cases}
+ \ell_a^2z^2/d_a,&|z|\ell_a\le d_aT_a,\\
+ 2|z|\ell_aT_a-d_aT_a^2,&|z|\ell_a\ge d_aT_a.
+ \end{cases}
+\end{equation}
+
+\begin{theorem}[Strict learning at every excess cap]\label{thm:strictlearning}
+One has $\ell_a>0$, and for every $n\ge1$, $\eta>0$ in the exact rectangle,
+\begin{equation}\label{eq:strictgain}
+ R_0(c;\eta)-R_n(c;\eta)\ge\Ebar\Psi_a(\eta\rho_n)>0.
+\end{equation}
+A deformation of the uninformed optimal book preserves its reserve and global protection and achieves the risk reduction on the right-hand side. Thus the formula gives a lower bound on the value of information; the exact informed value at intermediate caps remains undetermined. At $c=C_0$ the learning value is exactly zero.
+\end{theorem}
+\begin{proof}
+Let $a_a(x)$ be the single-name component of $A_a$. For $|t|\le T_a$, define on $[0,2]$
+\begin{equation}\label{eq:signeddeformation}
+ a_{a,t}(x)=a_a(x)+t\{f_a(x-1)-1/2\},\qquad
+ d_{a,t}(x)=a_a(x)-t\{f_a(x-1)-1/2\},
+\end{equation}
+and extend both by zero beyond $2$. On $|x-1|<a$ the old slopes lie in $[-1+g'(a),-g'(a)]$; the new slopes change by $\pm t/(2a)$. Outside this interval they are unchanged. Therefore both components are decreasing with slopes in $[-1,0]$, and are nonnegative because they vanish at $2$. Their derivative jumps at $1\pm a$ are $g'(a)\pm t/(2a)$, hence nonnegative; both components are convex long-put payoffs. Their endpoint values at $0$ are $1-t$ and $1+t$, summing to $2$. Since their sums with $x$ are increasing,
+\[
+ \inf(a_{a,t}+x)+\inf(d_{a,t}+y)=2.
+\]
+Together with component nonnegativity this proves the floor on every nonnegative state. Their surplus vanishes at $(0,0)$. The component price perturbations cancel under matching uniform marginals, so every deformation has unchanged exact reserve $C_0+\epsilon(a)\le c$.
+
+On the square write $D_a=f_a(U)-f_a(V)$; then $A_{a,t}=A_a+tD_a$ and $\EE_{P_z}D_a=0$. Swap symmetry gives $\EE_{P_0}[Z_{A_a}D_a]=0$ and $\EE_Q[\psi D_a^2]=0$. Consequently
+\begin{equation}\label{eq:deformationrisk}
+ q_z(A_{a,t})=q_c+2z\ell_a t+d_a t^2.
+\end{equation}
+To verify the coefficients, direct one-coordinate integration gives
+\[
+ \br{f_a^2}=1/4-a/6,\qquad
+ \br{u f_a(u)}=1/4-a^2/12.
+\]
+The $P_0$ cross moment is $-\delta\br{uf_a}^2$, which yields $d_a$ and shows $d_a\ge1/6>0$.
+For the linear term put
+\[
+ R_2=\int_0^a(s^2-1/3)(g(a)-g(s))\,ds.
+\]
+For $u\ge0$, polynomial integration on the two negative-$v$ triangles gives
+\begin{align*}
+ \EE_Q[\psi Z_{A_a}\mid U=u]
+ &=\tfrac12\left[\int_{-1}^{-u}\psi(u,v)u\,dv
+                  +\int_{-u}^{0}\psi(u,v)(-v)\,dv\right]+uR_2\\
+ &=-u(9u^4-26u^2+6)/72+uR_2.
+\end{align*}
+Cash and the $U$-residual have zero conditional $\psi$ integral; evenness of the $V$-residual gives $uR_2$. The expression is odd for negative $u$. Hence
+\begin{equation}\label{eq:ellintegral}
+ \ell_a=2\int_0^1 f_a(u)
+       \{-u(9u^4-26u^2+6)/72+uR_2\}\,du.
+\end{equation}
+Splitting the integral at $a$, with $f_a(u)=u/(2a)$ below $a$ and $1/2$ above it, gives the coefficient in \eqref{eq:deformationcoeff}.
+
+In the degree-nine Bernstein basis $\binom9i a^i(1-a)^{9-i}$, the ten coefficients of $\ell_a$ are
+\begin{equation}\label{eq:bernstein}
+ \left(
+ \frac1{36},\frac1{36},\frac{35}{1296},
+ \frac{78-\delta}{3024},\frac{93-5\delta}{3780},
+ \frac{1621-205\delta}{68040},\frac{1867-385\delta}{79380},
+ \frac{2(99-25\delta)}{8505},\frac{2(19-5\delta)}{1701},
+ \frac{19-5\delta}{945}\right).
+\end{equation}
+Expanding the basis yields the numerator in \eqref{eq:deformationcoeff}. Every coefficient is strictly positive for $0<\delta\le1/16$, while the basis is nonnegative and sums to one. Thus $\ell_a>0$ on $[0,1]$.
+
+The data-dependent choice is
+\[
+ t_n=-\clip(\eta\rho_n\ell_a/d_a,[-T_a,T_a]).
+\]
+Under the predictive law, \eqref{eq:deformationrisk} gives exact risk $q_c-\Psi_a(\eta\rho_n)$. The rule is swap equivariant, so this integrated predictive risk is its worst-sign risk. Theorem~\ref{thm:allcapital} gives $R_0(c;\eta)=q_c$, proving the first inequality. If $\rho_n$ vanished almost surely, the two product training laws would be equal. Their one-pair marginals are distinct when $\eta>0$, because $\psi$ is not zero almost everywhere; thus $\rho_n\ne0$ with positive probability. The gain is strictly positive off zero, proving strictness. At $C_0$, minimum-reserve rigidity applies samplewise, and leaves the same financed payoff for every rule.
+\end{proof}
+The risk improvement holds in expectation under either sign, while protection holds for every training sample. In the unclipped range $\eta\ell_a\le d_aT_a$, the attained gain is exactly $(\ell_a^2/d_a)\eta^2\Ebar\rho_n^2$. As $c\downarrow C_0$, $a\sim\sqrt{2(c-C_0)}$, $\ell_a\to1/36$, $d_a\to1/2+\delta/8$, and $T_a\sim a$; this recovers the local decision geometry without an additive capital remainder.
+
+\subsection{The exact minimax value at a common reserve cap}
+
+\begin{theorem}[Exact finite-information value]\label{thm:exactstat}
+For $\overline c=3/8$ and every larger per-unit cap,
+\begin{equation}\label{eq:exactstatvalue}
+ R_n(\overline c;\eta)=\mu^2+v_*-\Ebar\Lambda_\delta(\eta\rho_n).
+\end{equation}
+The posterior book $A_{\eta\rho_n}^*$ attains the minimax value with global reserve below $\overline c$ for every sample. There is no capital-expansion remainder.
+
+For $n\ge1$ set $J_n=R_0(\overline c;\eta)-R_n(\overline c;\eta)$ and
+\begin{align}\label{eq:rateconstants}
+ k_\delta&=\frac{838}{363825}
+ +\frac{2(19-5\delta)^2}{2205(135+45\delta)},\notag\\
+ K_{\delta,\eta}&=\frac{838}{363825}
+ +\frac{2(19-5\delta)^2}{2205(135+45\delta-4\eta^2)}.
+\end{align}
+Then
+\begin{equation}\label{eq:allnrates}
+ k_\delta\eta^2\frac{n\eta^2 I_\delta}{1+(n-1)\eta^2 I_\delta}
+ \le J_n\le K_{\delta,\eta}\eta^2\min(1,2n\eta^2 I_\delta),
+\end{equation}
+where
+\begin{equation}\label{eq:informationbounds}
+ \frac8{135(1+\delta)}\le I_\delta\le\frac8{135(1-\delta)}.
+\end{equation}
+Thus $J_n$ has uniform order $\eta^2\min(n\eta^2,1)$ on the rectangle. For fixed $\delta$, as $\eta\to0$,
+\begin{equation}\label{eq:exactsiglimits}
+ J_n\sim k_\delta I_\delta n\eta^4\quad(n\eta^2\to0),\qquad
+ J_n\sim k_\delta\eta^2\quad(n\eta^2\to\infty).
+\end{equation}
+At an arbitrary $c>C_0$ the deformation also gives
+\begin{equation}\label{eq:arbitrarycaprate}
+ R_0(c;\eta)-R_n(c;\eta)\ge
+ \Psi_a(\eta)\frac{n\eta^2 I_\delta}{1+(n-1)\eta^2 I_\delta}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Conditional on observations, Lemma~\ref{lem:projection} lower-bounds the risk of every selected additive book by $\mu^2+v(\eta\rho_n)$, even before imposing protection. Integrating over the equal sign prior gives an all-rule minimax lower bound. Theorem~\ref{thm:reserve} makes its conditional minimizer globally feasible at every posterior value within the common cap. Its swap equivariance equalizes the sign risks, so the bound is attained. This proves \eqref{eq:exactstatvalue}, including $n=0$ and $\eta=0$, and also proves it for larger caps.
+
+For the posterior moments, all expectations are under the joint equal-prior experiment. Let $S=\sum_i g_0(W_i)$ with $g_0=\psi/p_0$. The moments used in Theorem~\ref{thm:gaussian} and conditional independence give
+\[
+ \EE(\theta S)=n\eta I_\delta,\qquad
+ \EE S^2=n I_\delta+n(n-1)\eta^2I_\delta^2.
+\]
+Since $\EE(\theta\mid W)=\rho_n$, $\EE(\rho_nS)=\EE(\theta S)$. Cauchy--Schwarz yields
+\begin{equation}\label{eq:posteriorlower}
+ \Ebar\rho_n^2\ge\frac{n\eta^2I_\delta}{1+(n-1)\eta^2 I_\delta}.
+\end{equation}
+For the upper bound, the one-pair affinity is
+\[
+ \alpha=\EE_Q\sqrt{p_\eta p_{-\eta}}
+        =\EE_0\sqrt{1-\eta^2g_0^2}.
+\]
+If $f_+,f_-$ denote the two product data densities, then
+$\rho_n=(f_+-f_-)/(f_++f_-)$, and integrating
+$\sqrt{1-\rho_n^2}$ under their mixture gives exactly $\alpha^n$.
+The scalar inequality $r^2\le2(1-\sqrt{1-r^2})$ therefore implies
+\[
+ \Ebar\rho_n^2\le2(1-\alpha^n)\le2n(1-\alpha)
+ \le2n\eta^2 I_\delta,
+\]
+as well as the trivial upper bound $1$. Since
+$k_\delta z^2\le\Lambda_\delta(z)\le K_{\delta,\eta}z^2$ for $|z|\le\eta$, these bounds prove \eqref{eq:allnrates}. Bounds \eqref{eq:informationbounds} follow from $1-\delta\le p_0\le1+\delta$ and $\EE_Q\psi^2=8/135$; all constants stay bounded away from zero and infinity on the rectangle, giving the stated uniform order.
+
+Boundedness of $g_0$ gives $1-\alpha=\eta^2I_\delta/2+O(\eta^4)$. If $n\eta^2\to0$, the sharper affinity upper bound and \eqref{eq:posteriorlower} squeeze $\Ebar\rho_n^2\sim n\eta^2 I_\delta$. If $n\eta^2\to\infty$, the lower bound tends to one. Uniformly on $|z|\le\eta$, $\Lambda_\delta(z)/z^2\to k_\delta$, proving both equivalents in \eqref{eq:exactsiglimits}.
+
+Finally $\Psi_a(z)/z^2$ is nonincreasing for $z>0$: it is constant on the quadratic branch, and on the clipped branch its derivative is
+$2T_a(d_aT_a-\ell_a z)/z^3\le0$.
+Thus $\Psi_a(\eta r)\ge r^2\Psi_a(\eta)$ for $0\le r\le1$. Combining Theorem~\ref{thm:strictlearning} with \eqref{eq:posteriorlower} proves \eqref{eq:arbitrarycaprate}.
+\end{proof}
+In this binary experiment, the optimal book at the common finite cap depends on the data through $\rho_n$. Symmetric functions of the observed pairs have identical laws under both signs and zero learning value; paired observations strictly lower the minimax risk for $n\ge1$ and $\eta>0$.
+
+\section{Pooled value with cash and data-dependent sizing}\label{sec:pooled}
+
+Learning lowers unit risk while leaving the unit mean unchanged in this experiment. Allowing the underwriter to adjust notional turns that reduction into a capital-allocation decision. A sizing rule must account for variation across training samples as well as uncertainty in the future payoff.
+
+We now allow the notional $u(W)\ge0$ of a normalized unit book to depend on the data, with unused discounted cash, a per-unit cap $c$, and a total reserve $L>0$. The uppercase variables $U,V$ continue to denote the centered terminal coordinates. The samplewise constraints and pooled profit are
+\begin{equation}\label{eq:twobudgets}
+ C_A\le c,\qquad u\ge0,\qquad uC_A\le L,\qquad Y=u(W)Z_{A(W)}.
+\end{equation}
+Cash left unused has zero net profit. For finite second moments under both signs and $\lambda>0$, define
+\begin{equation}\label{eq:pooledutility}
+ F_\theta(Y)=\EE_\theta Y-\tfrac\lambda2\Var_\theta(Y),\qquad
+ U_n(c,L,\lambda)=\sup_{A,u}\min_{\theta=\pm1}F_\theta(Y).
+\end{equation}
+Here both training and future randomness under a fixed true sign enter the moments. In particular
+\[
+ \Var_\theta(Y)=\EE_\theta[u^2\Var_\theta(Z_A\mid W)]
+                         +\mu^2\Var_\theta u.
+\]
+The second term accounts for variation in position size across training samples and enters the pooled objective \eqref{eq:pooledutility}.
+
+\begin{theorem}[Exact pooled optimum]\label{thm:pooled}
+At $c=\overline c=3/8$, put
+\[
+ q(r)=\mu^2+v_*-\Lambda_\delta(\eta r),\qquad
+ h_n=\Ebar[1/q(\rho_n)].
+\]
+Under the sufficient condition $\lambda\ge24\mu\overline c/L$,
+\begin{equation}\label{eq:pooledvalue}
+ U_n(\overline c,L,\lambda)
+ =\frac{\mu^2h_n}{2\lambda(1-\mu^2h_n)}.
+\end{equation}
+It is attained by $A_{\eta\rho_n}^*$ and
+\begin{equation}\label{eq:inversesize}
+ u_n(W)=\frac{\mu}{\lambda(1-\mu^2h_n)q(\rho_n(W))}.
+\end{equation}
+The comparison includes all eligible books, including cheaper-reserve ones. Moreover
+\begin{equation}\label{eq:pooledgain}
+ U_0=\frac{\mu^2}{2\lambda v_*},\qquad
+ U_n-U_0\ge\frac{\mu^2\Ebar\Lambda_\delta(\eta\rho_n)}{2\lambda v_*^2}>0
+ \quad(n\ge1,\eta>0).
+\end{equation}
+\end{theorem}
+\begin{proof}
+We first symmetrize the total payoff rule. Reflection here means swapping every training pair and the future coordinates; it exchanges the two sign objectives. If an original rule and its reflected rule have sizes $u_1,u_2$ and books $A_1,A_2$, their total-payoff average is represented by
+\[
+ u=(u_1+u_2)/2,\qquad
+ A=\frac{u_1A_1+u_2A_2}{u_1+u_2}\quad(u_1+u_2>0),
+\]
+and any admissible book when the size is zero. The component maps remain jointly Borel. The floor is convex under these weights, as is the per-unit cap; furthermore
+$uC_A=(u_1C_{A_1}+u_2C_{A_2})/2\le L$.
+Its financed total payoff is exactly $(Y_1+Y_2)/2$. A possible positive surplus floor only makes its sufficient debit reserve conservative. For the upper bound we may retain such nonnormalized books in the larger convex feasible class; no measurable normalization of the average is needed, while our attaining book is normalized.
+
+Mean--variance utility is concave in the full random payoff, so the symmetrized rule's worst-sign utility is no smaller than the original's. This argument also conditions and averages independent auxiliary randomization. Hence an upper bound may be proved for swap-equivariant total rules. Their sizes are swap invariant and their two sign means and second moments coincide; they equal the pooled moments under the equal sign mixture.
+
+Conditionally on data the unit mean is always $\mu$, and Lemma~\ref{lem:projection} gives a unit second moment at least $q(\rho_n)$. Thus, with mixture expectations and $M=\EE u$,
+\begin{equation}\label{eq:pooledupper}
+ F(Y)\le\mu M-\tfrac\lambda2
+      \{\EE[q(\rho_n)u^2]-\mu^2M^2\}.
+\end{equation}
+Cauchy--Schwarz gives $\EE[qu^2]\ge M^2/h_n$, with equality precisely for size proportional to $1/q$ when $M>0$. Relaxing the budget constraints gives the scalar maximization problem
+$\mu M-\lambda(1/h_n-\mu^2)M^2/2$ over $M\ge0$. Its maximum and equality size are \eqref{eq:pooledvalue} and \eqref{eq:inversesize}. The bound applies to every feasible book and size, including books that use less than the per-unit cap.
+
+We next prove feasibility. Directly from \eqref{eq:projectiongain} and \eqref{eq:vstar},
+\begin{equation}\label{eq:variancefloor}
+ K_{\delta,\eta}<1/200,\qquad
+ v(z)\ge2/45-1/3200>1/24.
+\end{equation}
+Indeed
+$838/363825+2\cdot19^2/[2205(539/4)]<1/200$, $z^2\le1/16$, and $v_*\ge2/45$. Consequently
+$h_n\le1/(\mu^2+1/24)$ and
+\[
+ (1-\mu^2h_n)q(\rho_n)\ge1/24,\qquad
+ u_n\le24\mu/\lambda\le L/\overline c.
+\]
+The globally normalized posterior book has $C_{\rm sat}<\overline c$, so both budgets hold for each sample. These bounds also ensure the required finite moments; for competing finite-moment rules the same positive conditional risk lower bound ensures $\EE u^2<\infty$. All equalities in the upper-bound steps are attained, proving the theorem's value.
+
+At $n=0$, $h_0=1/q(0)$ gives $U_0$. For $n\ge1$, $\eta>0$, $q(\rho_n)<q(0)$ with positive probability, hence $h_n>h_0$ and the value strictly increases. For the quantitative bound,
+\[
+ h_n-h_0=\Ebar\frac{\Lambda_\delta(\eta\rho_n)}{q(0)q(\rho_n)}
+ \ge\frac{\Ebar\Lambda_\delta(\eta\rho_n)}{q(0)^2}.
+\]
+The exact difference of $h/(1-\mu^2h)$ at $h_n$ and $h_0$ has denominator
+$(1-\mu^2h_n)(1-\mu^2h_0)\le v_*^2/q(0)^2$.
+This proves \eqref{eq:pooledgain}.
+\end{proof}
+
+\begin{corollary}[Pooled improvement at every excess cap]\label{cor:intermediatepooled}
+For $C_0<c\le3/8$ write $v_c=Q_0(c)-\mu^2$ and
+\[
+ q_f(r)=\mu^2+v_c-\Psi_a(\eta r),\qquad h_f=\Ebar[1/q_f(\rho_n)].
+\]
+If $\lambda\ge24\mu c/L$, the full uninformed cash-and-sizing optimum is $\mu^2/(2\lambda v_c)$. The deformation in Theorem~\ref{thm:strictlearning}, with inverse-$q_f$ size as in \eqref{eq:inversesize}, has pooled utility
+\begin{equation}\label{eq:intermediatepooled}
+ \frac{\mu^2h_f}{2\lambda(1-\mu^2h_f)}
+ >\frac{\mu^2}{2\lambda v_c}\qquad(n\ge1,\eta>0).
+\end{equation}
+\end{corollary}
+\begin{proof}
+For uninformed rules, sign symmetrization and Theorem~\ref{thm:allcapital} give a sign-average unit risk of at least $\mu^2+v_c$, conditional on auxiliary randomization. The preceding Cauchy--Schwarz optimization therefore gives the stated upper bound, attained by constant size $\mu/(\lambda v_c)$ of $A_a$; its size is at most $24\mu/\lambda\le L/c$ since $v_c>1/24$.
+The learned deformation is globally protected and has predictive risk $q_f$, so Lemma~\ref{lem:projection} and \eqref{eq:variancefloor} imply $q_f-\mu^2>1/24$. The same inverse-risk sizing is consequently feasible, since its unit reserve is at most $c$. Its sign moments agree by equivariance. The exact computation gives the left side of \eqref{eq:intermediatepooled}; strict improvement follows from positive $\Psi_a(\eta\rho_n)$ with positive probability.
+\end{proof}
+The preference thresholds are sufficient, not necessary. They do not characterize binding-total-budget regimes. Corollary~\ref{cor:intermediatepooled} beats the full uninformed class but does not identify the optimal informed intermediate-capital book.
+
+\section{Index benchmarks and a finite option portfolio}\label{sec:comparison}
+
+The value of learning is separate from the value of access to constituent protection. The index comparison below measures the latter: even an uninformed constituent book can improve on the stated index class. A fixed four-put portfolio then provides a finite-contract comparison with its own cost allowance.
+
+\subsection{An index bound with the same training data}
+Let $I=X+Y$. The benchmark consists of all square-integrable static terminal-index profit rules $Y(W,I)$ using the same paired training data, including cash, and satisfying, for every sample,
+\[
+ \EE_{Q_I}Y(W,I)\le0,\qquad Y(W,i)\ge-L\quad(i\ge0).
+\]
+The pricing condition requires each profit rule to have nonpositive expectation under $Q_I$, allowing for charges. Write $V_{I,n}(L,\lambda)$ for their supremum of worst-sign pooled utility.
+
+\begin{lemma}[Index pricing-kernel envelope]\label{lem:index}
+Under $Q$, $t=I-2$ has density $(2-|t|)/4$ on $[-2,2]$, and
+\begin{equation}\label{eq:indexmoments}
+ M_I(t)=\EE_Q[UV\mid t]=\frac{t^2+2|t|-2}{6},\qquad
+ \EE_Q M_I=0,\quad \EE_QM_I^2=\frac{11}{135},\quad -1/3\le M_I\le1.
+\end{equation}
+The physical index law is sign independent, with density $1-\delta M_I$ relative to $Q_I$. For every eligible sample-dependent index rule,
+\begin{equation}\label{eq:indexenvelope}
+ F_\theta(Y)\le\frac{\Var_P\zeta_I}{2\lambda}
+ \le\frac{\delta^2}{2\lambda}\frac{176}{2025},\qquad
+ \zeta_I=\frac1{1-\delta M_I}.
+\end{equation}
+The bound holds even if the loss cap is relaxed.
+\end{lemma}
+\begin{proof}
+For $t\ge0$, the conditional index slice is uniform on $u\in[t-1,1]$, $v=t-u$. Its length is $2-t$, yielding the triangular density; the conditional integral of $u(t-u)$ gives $(t^2+2t-2)/6$. Reflection gives the negative-$t$ formula. Its range is immediate, and integration gives
+\[
+ \EE_QM_I^2=\frac12\int_0^2(2-t)
+             \left(\frac{t^2+2t-2}{6}\right)^2dt=11/135.
+\]
+The mean is $\EE_QUV=0$. The $\psi$ integral on each slice is zero by coordinate swap, which preserves the slice and reverses $\psi$. Thus the index density is $1-\delta M_I$ for every sign.
+
+Under either fixed sign the future index is independent of training and has this same law. Conditional pricing therefore gives $\EE_\theta[\zeta_IY]\le0$. Since $\EE_P\zeta_I=1$, Cauchy--Schwarz gives
+$\EE_\theta Y\le-\Cov_\theta(\zeta_I,Y)
+\le\sqrt{\Var_P\zeta_I}\sqrt{\Var_\theta Y}$.
+Maximizing this scalar upper bound minus $\lambda\Var_\theta Y/2$ proves the first inequality. Also
+\[
+ \Var_P\zeta_I
+ =\delta^2\EE_Q\frac{M_I^2}{1-\delta M_I}
+ \le\frac{\delta^2}{1-\delta}\frac{11}{135}
+ \le\delta^2\frac{176}{2025}.
+\]
+All pricing-kernel moments exist since the kernel is bounded. No loss restriction was used.
+\end{proof}
+
+\begin{corollary}[Index comparison]\label{cor:indexgap}
+At $c=L=3/8$ and $7\delta/4\le\lambda\le2\delta$,
+\begin{equation}\label{eq:indexgap}
+ U_n(3/8,3/8,\lambda)-V_{I,n}(3/8,\lambda)>\delta/400.
+\end{equation}
+The uninformed optimum already exceeds this complete-index benchmark; the strictly positive learning increment $U_n-U_0$ is a separate effect.
+\end{corollary}
+\begin{proof}
+Here $24\mu=8\delta/5<7\delta/4$, so Theorem~\ref{thm:pooled} applies. It yields $U_n\ge U_0=\delta^2/(450\lambda v_*)$. Combining with Lemma~\ref{lem:index}, the difference is at least
+\[
+ \frac{\delta^2}{2\lambda}\left(\frac1{225v_*}-\frac{176}{2025}\right).
+\]
+Formula~\eqref{eq:vstar} is increasing in $\delta\in[0,1/16]$, so $v_*\le324431/7257600$. Using $\lambda\le2\delta$, the last display is at least
+$\delta\,2054636/656972775>\delta/400$.
+\end{proof}
+
+\subsection{A fixed four-put book with a cost allowance}
+At reserve $5/12$, the following fixed four-put book has an explicit cost allowance over a stated preference interval. Its strikes and coefficients define a separate construction from both the learned continuum policy and the critical-capital approximation. For this theorem the density region may be enlarged to $0<\delta\le1/16$, $\delta+4|z|/3<1$.
+
+\begin{theorem}[Fixed finite book with a positive cost allowance]\label{thm:finitewitness}
+Take
+\begin{equation}\label{eq:fixedbook}
+ a(x)=\tfrac12(1-x)_++\tfrac14(2-x)_+,\quad
+ H=a(X)+a(Y)-B,\quad C=5/12.
+\end{equation}
+Globally $0\le H\le1$, with both endpoints attained. Each component costs $3/8$. With deterministic total charges $e\ge0$, $Z_e=H-C-e$ has mean $\delta/15-e$ and exact reserve $C+e$. Against the complete static index class with $\EE_QZ\le0$ and the same loss budget, including cash,
+\[
+ F_\lambda(Z_e)>\sup_{Z\text{ in that index class}}F_\lambda(Z)
+\]
+whenever $5/4\le\lambda/\delta\le7/4$ and $0\le e\le\delta/500$. At $\lambda=3\delta/2$, the larger allowance $0\le e\le\delta/300$ is sufficient. The strict advantage is measured by the mean--variance objective.
+\end{theorem}
+\begin{proof}
+The function $a$ is the linear interpolation of $(2-x)_+^2/4$ at $0,1,2$, and lies above this convex quadratic on each interval; it is zero beyond $2$. If $s=x+y\le2$, the quadratic hedge minus $B$ is $(x^2+y^2)/4\ge0$. If $s\ge2$, the basket put is zero. This proves the global floor. At fixed $s$, convexity gives
+$a(x)+a(y)\le a(0)+a(s)=1+a(s)$; as $a(s)\le(2-s)_+$, subtracting $B$ gives $H\le1$. Also $H(0,0)=0$ and $H(0,2)=1$. Put prices give $\EE_Q a=\frac12(1/4)+\frac14(1)=3/8$, hence $C=3/4-1/3=5/12$ and the stated exact reserve after charges.
+
+On $[0,2]^2$, the surplus is piecewise linear:
+\[
+\begin{array}{c|c|c}
+ x&y&H\\ \hline
+ [0,1]&[0,1]&(x+y)/4\\
+ {[1,2]}&[1,2]&(4-x-y)/4\\
+ {[0,1]}&[1,2-x]&(x+3y-2)/4\\
+ {[0,1]}&[2-x,2]&(6-3x-y)/4
+\end{array}
+\]
+with the last two also swapped. For $w=1$ or $(x-1)(y-1)$ and $r=1,2$, integration of $wH^r/4$ over the first two squares and twice over the last two triangles gives
+\begin{equation}\label{eq:fixedmoments}
+ \EE_QH=5/12,\quad \EE_QH^2=7/32,\quad
+ \EE_Q(UVH)=-1/15,\quad \EE_Q(UVH^2)=-43/720.
+\end{equation}
+Swap symmetry annihilates the $z\psi$ term. Consequently
+\[
+ \EE_{P_z}Z_0=\delta/15,\qquad
+ \Var_{P_z}H=13/288+\delta/240-\delta^2/225
+ \le\overline v:=523/11520.
+\]
+The variance bound follows by dropping the negative square and using $\delta\le1/16$.
+
+Lemma~\ref{lem:index} bounds every static index profit, even without a loss restriction, by $\delta^2\overline r/(2\lambda)$, where $\overline r=176/2025$. Put $k=\lambda/\delta$. The uncharged objective gap is therefore at least
+\[
+ \delta\left[1/15-k\overline v/2-\overline r/(2k)\right].
+\]
+The bracket is concave on $k>0$. Its endpoint values at $5/4$ and $7/4$ are respectively
+$73129/20736000$ and $61249/29030400$, both strictly greater than $1/500$. Thus the whole interval has a strict gap exceeding $\delta/500$. At $k=3/2$ the bracket is $22681/6220800>1/300$. A deterministic charge subtracts exactly $e$ from the mean--variance objective and leaves variance unchanged. It enlarges the common permitted reserve to $C+e$, but the unrestricted index bound still applies. This proves both inclusive cost ceilings with strict advantage.
+\end{proof}
+The cost allowance applies to this fixed four-put book; extending it to the learned continuum policy requires a separate analysis.
+
+\section{First-order extensions and remaining questions}\label{sec:extensions}
+
+We next derive first-order results for physical marginal mismatch and for a fixed finite number of names.
+
+\subsection{Physical marginal mismatch under global domination}
+
+\begin{proposition}\label{prop:mismatch}
+Suppose the pricing law satisfies Assumption~\ref{ass:local} and the physical marginals obey the global bounds
+\begin{equation}\label{eq:globaldomination}
+ \frac{dP_X}{dQ_X}\le M,\qquad\frac{dP_Y}{dQ_Y}\le M,
+ \qquad 1\le M<\infty.
+\end{equation}
+For any protected competitor with $C_A\le C_0+\epsilon$, its contained $G_k$ and $r=\EE_Q(A-G_k)\in[0,\epsilon]$ satisfy, with $\mu_A=\EE_PZ_A$, $v_A=\Var_PZ_A$ and analogous notation for $G_k$,
+\begin{align}\label{eq:mismatchresidual}
+ -r&\le\mu_A-\mu(k)\le(M-1)r,\notag\\
+ v_A&\ge v(k)-2KM r,\qquad q_P(A)\ge q_P(G_k)-2K(M+1)r.
+\end{align}
+Put
+\[
+ a_P=\EE_PJ,\qquad\beta_P=\Cov_P(H_0,J),\qquad
+ g_P=\EE_P(Z_0J)=\beta_P+\mu_0a_P.
+\]
+Then the local derivatives of mean, variance and second moment are respectively $a_P$, $2\beta_P$ and $2g_P$. For every fixed $\tau\ge0$,
+\begin{equation}\label{eq:mismatchobjective}
+ \sup_{A\in\calA:C_A\le C_0+\epsilon}(\mu_A-\tau v_A)
+ =\mu_0-\tau v_0+|a_P-2\tau\beta_P|\sqrt{2\epsilon/A_0}
+ +o(\sqrt\epsilon).
+\end{equation}
+If $a_P-2\tau\beta_P=0$, the improvement is $O(\epsilon)$. At $\tau=0$ the objective is just the mean; for positive $\tau$, infinite-variance competitors have value $-\infty$. This convention corresponds to $\tau=\lambda/2$ in the pooled objective.
+\end{proposition}
+\begin{proof}
+Containment holds independently of marginal matching. By Lemma~\ref{lem:containment}, its residual $R$ is a sum of nonnegative one-coordinate components. The global density-ratio bounds give
+$0\le\EE_PR\le M\EE_QR=Mr$.
+Since $Z_A=Z_k+R-r$, this immediately proves the mean inequalities. For finite risk,
+\[
+ v_A=v(k)+2\Cov_P(H_k,R)+\Var_PR
+ \ge v(k)-2K\EE_PR.
+\]
+Also $|Z_k|\le K$: both $H_k$ and its pricing expectation $C(k)$ lie in $[0,K]$. Expanding the second moment and discarding the nonnegative square of $R-r$ yields
+\[
+ q_P(A)\ge q_P(G_k)-2K(\EE_PR+r),
+\]
+proving \eqref{eq:mismatchresidual}. The inequalities also hold for infinite-risk books, since only a lower bound on residual variance is used.
+
+The strike remainder $e_t$ is nonnegative and additive, with $\EE_Qe_t=C(k_0+t)-C_0=O(t^2)$; thus $\EE_Pe_t\le M\EE_Qe_t=O(t^2)$. Moreover $|H_{k_0+t}-H_0|\le|t|$, since one put increases and the other decreases by amounts bounded by $|t|$. Consequently
+\begin{align*}
+ \mu(k_0+t)&=\mu_0+a_Pt+O(t^2),\\
+ v(k_0+t)&=v_0+2\beta_Pt+O(t^2),\\
+ q_P(G_{k_0+t})&=q_0+2g_Pt+O(t^2).
+\end{align*}
+For example $|\Cov(H_0,e_t)|\le K\EE_Pe_t$, and the squared payoff increment is $O(t^2)$; the pricing increment is also $O(t^2)$. These observations justify all three expansions without physical joint-density regularity.
+
+From \eqref{eq:mismatchresidual},
+\[
+ \mu_A-\tau v_A\le\mu(k)-\tau v(k)
+ +(M-1+2\tau KM)\epsilon.
+\]
+Capital feasibility localizes $|k-k_0|\le\sqrt{2\epsilon/A_0}(1+o(1))$. The local expansion gives the upper bound in \eqref{eq:mismatchobjective}; the actual boundary strike with the sign of $a_P-2\tau\beta_P$ attains its leading term. If the coefficient vanishes, both the local error and the residual allowance are $O(\epsilon)$, while $G_{k_0}$ remains feasible. Global domination controls the physical expectation of residuals throughout the nonnegative domain.
+\end{proof}
+
+\subsection{A fixed finite number of names}
+
+\begin{proposition}\label{prop:manynames}
+Fix $d\ge2$ nonnegative names $X_1,\ldots,X_d$ with corresponding matching $P,Q$ marginals, and protect
+$B=(K-\sum_iX_i)_+$ globally by $A=\sum_i a_i(X_i)$, with finite Borel marginally integrable components. Set
+\[
+ \Delta_K=\{k_i\ge0:\sum_i k_i=K\},\quad
+ G_k=\sum_i(k_i-X_i)_+,\quad C(k)=\EE_QG_k-b.
+\]
+Every protected $A$ dominates a $G_k$ with $k\in\Delta_K$. Suppose its capital minimizer $k_0$ is interior and each marginal density is continuous and positive at $k_{0i}$. Write $C_0=C(k_0)$, $H_0=G_{k_0}-B$, $q_0=\EE_P(H_0-C_0)^2$ and
+\begin{align}\label{eq:manymatrix}
+ D&=\operatorname{diag}(f_i^Q(k_{0i})),\qquad
+ \Pi=D^{-1}-D^{-1}\one(\one^{\mathsf T}D^{-1}\one)^{-1}\one^{\mathsf T}D^{-1},\notag\\
+ \beta_i&=\Cov_P(H_0,\one_{\{X_i<k_{0i}\}}),\qquad
+ \rho^2=\beta^{\mathsf T}\Pi\beta.
+\end{align}
+Here $\one$ in matrix expressions denotes the column of $d$ ones. The full-class frontier is
+\begin{equation}\label{eq:manyfrontier}
+ \inf_{A:C_A\le C_0+\epsilon}q_P(A)
+ =q_0-2\sqrt{2\epsilon}\,\rho+o(\sqrt\epsilon).
+\end{equation}
+For $\rho>0$, $d$ puts attain the leading coefficient by exact-boundary rescaling of the direction $-\Pi\beta$. If $\rho=0$, the improvement is nonnegative and at most $O(\epsilon)$. The bounds are for fixed dimension $d$.
+\end{proposition}
+\begin{proof}
+Let $\alpha_i=\inf a_i$, $M_0=\sum_i\alpha_i\ge0$ and
+$c_i=\inf_{x\ge0}(a_i(x)-\alpha_i+x)\ge0$. Fixing all other coordinates shows each infimum is finite. As before,
+\[
+ A\ge M_0+\sum_i(c_i-x_i)_+,\qquad M_0+\sum_i c_i\ge K.
+\]
+If $\sum_i c_i\ge K$, reduce the strikes to nonnegative numbers summing to $K$. Otherwise distribute increments totaling $K-\sum_i c_i\le M_0$. Put Lipschitzness in strike proves containment. Its nonnegative additive residual has matching physical and pricing expectation $r$, after shifting component constants if desired. Thus $C_A=C(k)+r$.
+
+For simplex strikes,
+\[
+ H_k=\min\left(\sum_i(k_i-X_i)_+,\sum_i(X_i-k_i)_+\right),
+ \qquad 0\le H_k\le K.
+\]
+The interior first-order condition makes all $F_i^Q(k_{0i})$ equal to the same $p$. Local positive densities give strict quadratic convexity on the tangent space
+$\mathcal T=\{w:\one^{\mathsf T}w=0\}$, and hence global uniqueness: any distinct convex minimizer would create a flat segment entering this neighborhood. For tangent $w\to0$,
+\begin{equation}\label{eq:manylocal}
+ C(k_0+w)=C_0+\tfrac12w^{\mathsf T}Dw+o(\|w\|^2),\qquad
+ q_P(G_{k_0+w})=q_0+2\beta^{\mathsf T}w+O(\|w\|^2).
+\end{equation}
+Indeed strike convexity gives the payoff increment
+$\sum_iw_i\one_{\{X_i<k_{0i}\}}+e_w$, with $e_w\ge0$ and matching expectation $C(k_0+w)-C_0=O(\|w\|^2)$. Since positive and negative tangent displacements sum to equal magnitudes, the absolute payoff increment is at most $\|w\|_1/2$. Covariance with the bounded $H_0$ and the squared increment therefore have the claimed error. The linear mean vanishes because the exercise probabilities all equal $p$ and $\sum_iw_i=0$.
+
+For every finite-risk competitor,
+\[
+ q_P(A)=q_P(G_k)+2\Cov_P(H_k,R)+\Var_PR
+ \ge q_P(G_k)-2Kr.
+\]
+Feasibility and uniqueness localize $k-k_0$ to
+$w^{\mathsf T}Dw\le2\epsilon(1+o(1))$, with $r\le\epsilon$.
+On $\mathcal T$, $\Pi\beta$ is the vector representing the functional $w\mapsto\beta^{\mathsf T}w$ in the $D$ inner product: $D\Pi\beta$ differs from $\beta$ by a multiple of $\one$. Also $\Pi D\Pi=\Pi$. Cauchy--Schwarz thus gives
+\[
+ \min_{w\in\mathcal T:\ w^{\mathsf T}Dw\le2\epsilon}
+ \beta^{\mathsf T}w=-\sqrt{2\epsilon}\sqrt{\beta^{\mathsf T}\Pi\beta}.
+\]
+Combining with \eqref{eq:manylocal} and the residual inequality proves the frontier lower bound. For $\rho>0$, the ray $w=-s\Pi\beta/\rho$ gives an attaining direction. This tangent vector has $D$-norm $s$, and the ray's actual capital boundary is reached at $s=\sqrt{2\epsilon}(1+o(1))$, by continuity and strict local convexity. The resulting $d$-put book attains the leading term. If $\rho=0$, the linear functional vanishes on the tangent; the quadratic local and residual errors bound improvement by $O(\epsilon)$, and the original book gives the other inequality.
+\end{proof}
+
+\subsection{Mathematical and implementation boundaries}
+For any normalized book with mean $\mu_A$, reserve $C_A$ and second moment $q_A$, deterministic total charges $e\ge0$ replace profit by $Z_A-e$. Exactly,
+\[
+ \mu_A^{\rm net}=\mu_A-e,\qquad C_A^{\rm net}=C_A+e,\qquad
+ q_A^{\rm net}=q_A-2e\mu_A+e^2.
+\]
+A discrete strike catalog requires its actual finite payoff and debit differences, not derivatives of ideal prices. The critical approximation assumes fractional mathematical holdings and its actual endpoint strikes; it establishes neither listed-strike availability nor lot compatibility. The exact learned policy generally uses continuum strikes, so finite-strike approximation with lots and costs needs a separate execution theorem. The fixed book of Theorem~\ref{thm:finitewitness} supplies its own cost allowance only.
+
+The exact experiment assumes known $\delta$ and $\eta$ and paired iid training. Conditional on the sign, the future pair is independent of training and has the same law. Unknown nuisance parameters and dependent or nonstationary training remain separate inference problems. Other remaining mathematical questions are the signed frontier below $C_{\rm sat}(z)$, pooled regimes where the total budget binds outside our sufficient preference threshold, and compatible orientation optimization with unequal labeled marginals. None is settled by the first-order extensions.
+
+A market application requires contracts that satisfy the stated basket payoff relation, compatible quantities, common settlement and maturity, and actual prices and charges. Reserve covers the maximum terminal loss defined at the start. The comparisons concern model mean--variance values; market returns remain untested.
+
+The economic role of information depends on the choices that capital makes available. Under the marginal conditions of this paper, minimum reserve fixes the financed unit payoff. In the two-sign experiment, every positive excess reserve admits a risk reduction from informative paired observations beyond the best uninformed choice. Sufficient finite reserve permits an exact solution, including data-dependent sizing under the stated preference condition. The value comes from choosing and sizing protection more accurately while preserving its global floor.
+
+\section*{Acknowledgements}
+
+The author used ChatGPT (OpenAI, GPT-6 Astra) to assist in drafting and
+polishing the exposition from the author's notes and proof sketches, as well
+as in checking for possible gaps and inconsistencies. The author is
+responsible for the final statements and proofs.
+
+\begin{thebibliography}{99}
+
+\bibitem{ChenEtAl2008}
+X.~Chen, G.~Deelstra, J.~Dhaene, and M.~Vanmaele,
+\emph{Static Super-Replicating Strategies for a Class of Exotic Options},
+author manuscript, 25 March 2008.
+
+\bibitem{LeungLorigShirai2024}
+Tim Leung, Matthew Lorig, and Yoshihiro Shirai,
+\emph{Optimal positioning in derivative securities in incomplete markets},
+arXiv:2403.00139v1, 2024.
+
+\bibitem{AcciaioAlbrecherGarciaFlores2024}
+Beatrice Acciaio, Hansj\"org Albrecher, and Brandon Garc\'ia Flores,
+\emph{Optimal reinsurance from an optimal transport perspective},
+arXiv:2312.06811v2, 1 November 2024.
+
+\bibitem{HiranoPorter2005}
+Keisuke Hirano and Jack R.~Porter,
+\emph{Asymptotics for Statistical Treatment Rules},
+author working paper, 10 May 2005.
+
+\bibitem{Su2005}
+Xia Su,
+\emph{Hedging Basket Options by Using a Subset of Underlying Assets},
+author paper, 6 December 2005.
+
+\end{thebibliography}
+\end{document}

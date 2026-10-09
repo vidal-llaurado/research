@@ -1,0 +1,3 @@
+# Preserve source bytes across platforms.
+* -text
+LICENSE whitespace=-blank-at-eof

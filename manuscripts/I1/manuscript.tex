@@ -1,0 +1,2007 @@
+\documentclass[11pt,a4paper]{amsart}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{orcidlink,enumitem,booktabs,array}
+\usepackage[margin=1in]{geometry}
+\raggedbottom
+\hypersetup{hypertexnames=false}
+\AtBeginDocument{\begingroup\setbox0=\hbox{$\square\mathbb{R}$}\endgroup}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\chol}{chol}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\TV}{TV}
+\newcommand{\Hell}{\mathsf H}
+\title[Leverage and structural information]{Leverage and Structural Information in Noisy Stochastic-Volatility Prices}
+\author[J.~Vidal Llaurad\'o]{J.~Vidal Llaurad\'o\,\orcidlink{0009-0002-1918-5458}}
+\subjclass[2020]{62M05, 62F12, 62F25, 62P05}
+\keywords{Stochastic volatility, leverage, weak identification, noisy price observations, minimax estimation, honest confidence sets}
+\hypersetup{
+  pdftitle={Leverage and Structural Information in Noisy Stochastic-Volatility Prices},
+  pdfauthor={J. Vidal Llaurad\'o},
+  pdfkeywords={stochastic volatility, leverage, weak identification, noisy price observations, minimax estimation, honest confidence sets}
+}
+\date{}
+
+\begin{document}
+\begin{abstract}
+Leverage can preserve information about a hidden volatility drift as
+covariance shrinks, provided its response propagates through the latent
+dynamics. For a bivariate Ornstein--Uhlenbeck model observed through noisy
+log-price levels on a fixed grid, we prove exact identification at positive
+covariance and adaptive squared drift risk of order
+$\min\{1,[n(s^2+se^2)]^{-1}\}$, where $n$ counts observation blocks,
+$s$ is the covariance scale and $e$ the leverage amplitude. Matching
+lower bounds on specified drift neighborhoods use the full price law.
+Dynamically exciting leverage thus permits learning where zero leverage
+prevents uniform consistency. Nuisance parameters are unknown; confidence
+coverage includes zero covariance and absent excitation. Precision requires
+fixed excitation and residual covariance margins, fixed positive level
+noise, a nonaliased drift branch and a sufficiently small, unevaluated
+covariance ceiling.
+\end{abstract}
+\maketitle
+
+\section{When leverage changes learnability}\label{sec:intro}
+
+When volatility fluctuations are small, noisy prices may contain little
+evidence about the dynamics generating them. The persistence and interaction
+of hidden volatility factors can then be difficult to estimate, even in a
+long sample. We use noisy
+price levels, with hidden volatility, and ask when return--volatility
+dependence makes those dynamics learnable. The answer depends on how the
+signed leverage response propagates through the latent system.
+
+The sample grows through $n$ observation blocks on a fixed grid. In the
+bivariate Ornstein--Uhlenbeck model studied here, the state covariance is
+$\Sigma=sV$, with $\tr V=2$; hence $s=\tr\Sigma/2$, while the state
+diffusion amplitude is proportional to $\sqrt{s}$. Covariance responses
+have size $s$, whereas signed leverage responses have size $\sqrt{s}\,e$,
+where $e$ is the Frobenius leverage amplitude. If the dynamics propagate
+that response across both state coordinates, leverage supplies information
+about every entry of the drift matrix.
+
+At positive covariance and with a fixed excitation margin at the truth,
+an exact nonlinear moment inverse identifies the whole drift against
+alternatives throughout the admitted parameter class, with all nuisance
+parameters unknown. A single observable estimator adapts to the covariance
+and leverage amplitudes. Its squared drift risk is bounded by a constant
+times
+\[
+ \min\{1,[n(s^2+se^2)]^{-1}\}.
+\]
+Lower bounds for the full observed-price law match this rate on specified
+drift neighborhoods. No estimator based on those prices improves its
+worst-case order. For
+$s_n=n^{-a}$, $1/2<a<1$, covariance-only information $ns_n^2$ tends to
+zero, while $n(s_n^2+s_ne^2)$ diverges for fixed nonzero dynamically
+exciting leverage. Under the neighborhood hypothesis of
+Theorem~\ref{thm:main}, this separates worst-case failure of uniform drift
+consistency from consistent estimation on the same noisy grid.
+
+Confidence sets translate this information boundary into uncertainty about
+a fitted drift. Our sets have honest coverage over the full admitted class,
+including zero covariance and absent excitation. Their expected squared
+contrast diameter has the same upper order at excited positive-scale
+truths, with matching worst-case lower bounds on the specified
+neighborhoods. These precision guarantees require fixed excitation and
+residual covariance margins and a sufficiently small, unevaluated
+covariance ceiling.
+
+Signed leverage moments have long been used to study latent volatility.
+The correlated exponential-OU response and its diffusion-amplitude order
+occur in Masoliver and Perell\'o \cite{MasoliverPerello2005}.
+Ahsan, Dufour and Rodriguez-Rondon \cite{ADR2025journal} study signed
+moments and recovery of unknown leverage and latent dynamics in a discrete
+scalar higher-order model with specified lag support and regular
+fixed-parameter theory. Here an exact integrated-price calculation allows
+unknown carry, covariance, loading and level noise; propagation determines
+which matrix drift directions benefit from the response.
+
+Inference under weak identification is also established. Cheng, Renault
+and Sangrey \cite{ChengRenaultSangrey2024} study volatility risk prices
+through leverage under reduced-form regularity assumptions supporting
+uniform inference. Ahsan and Dufour \cite{AhsanDufour2024} develop
+identification-robust stochastic-volatility tests using high-frequency
+instruments and nuisance projection. Our confidence construction follows
+these principles, with diameter governed by the information about the
+hidden drift as covariance shrinks.
+
+A moment inverse alone leaves open whether other features of the prices
+could give a better rate. Abraham, Naulet and Gassiat
+\cite{AbrahamNauletGassiat2022} connect weak moment geometry with
+full-sequence information for finite-state hidden models. Gloter
+\cite{Gloter2007} studies price-based drift inference, including noisy
+prices on a shrinking grid over a growing horizon. Chong, Hoffmann, Liu,
+Rosenbaum and Szymanski \cite{ChongEtAl2024} prove actual-price minimax
+results for rough volatility in fixed-horizon infill with independent
+drivers and without microstructure noise. Our lower bounds concern the
+full noisy-price law on a fixed grid as covariance shrinks.
+Structural-shock identification with measurement error provides broader
+context in Gregoir and Meddahi \cite{GregoirMeddahi2025}.
+
+\section{The noisy-price experiment}\label{sec:model}
+
+Fix $N\ge20$, $\Delta>h>0$, $\delta=h/N$ and $r=\delta$. For $n\ge2$ the
+observation times are all distinct elements of
+\begin{equation}\label{eq:grid}
+ \mathcal T_n=\{k\Delta+j\delta:0\le k\le n+1,\ 0\le j\le N\}.
+\end{equation}
+Both asset coordinates are observed:
+\begin{equation}\label{eq:prices}
+ P_i(t)=X_i(t)+\varepsilon_i(t),\qquad
+ dX_i(t)=b_i\,dt+e^{Y_i(t)}dU_i(t),\quad i=1,2.
+\end{equation}
+The clean initial log prices are fixed known constants. There is exactly
+one error per coordinate and physical time,
+\[
+ \varepsilon_i(t)\sim N(0,\nu_i),
+\]
+independent across coordinates and distinct times and independent of all
+drivers. Reusing a time reuses its error. Here $\nu_i$ is a
+variance. Known bounds are
+\begin{equation}\label{eq:nuisance-bounds}
+ |b_i|\le B_c,\qquad \mu_-\le\mu_i\le\mu_+,\qquad
+ 0<\nu_-\le\nu_i\le\nu_+<\infty.
+\end{equation}
+The carry $b$ is an unknown constant log carry; there is no
+compensation term in \eqref{eq:prices}. The experiment is the sigma-field
+of every noisy level in \eqref{eq:grid}, including the initial noisy level
+and the observations adjoining the gaps. Grid spacings and noise bounds
+remain fixed as $n$ grows and covariance shrinks.
+
+The state is a two-sided stationary Gaussian OU process:
+\begin{equation}\label{eq:state}
+ dY=M(Y-\mu)dt+A\,dB,\qquad
+ \Sigma=sV,\qquad A=\sqrt{s}A_0,\qquad
+ A_0=\chol[-(MV+VM^\top)].
+\end{equation}
+Cholesky is lower triangular with positive diagonal. Its convention fixes
+the loading coordinates. The stationary prehistory has the model-implied
+law and is unobserved. At $s=0$ set $A=0$ and $Y=\mu$.
+The state coordinates are fixed by the outputs $e^{Y_i}$; there is no
+unknown output mixing.
+
+The state driver $B$ is standard two-dimensional Brownian motion, and
+\begin{equation}\label{eq:brownian}
+ d\langle U\rangle=Q\,dt,\quad
+ Q=\begin{pmatrix}1&q\\q&1\end{pmatrix},\qquad
+ d\langle B,U\rangle=L\,dt.
+\end{equation}
+Thus the row of $L$ records a state-driver coordinate and the column a
+return-driver coordinate. Fix $0<\kappa<1$, $q_{\max}<1$, and require
+\begin{equation}\label{eq:residual}
+ |q|\le q_{\max},\qquad Q-L^\top L\succeq\kappa I.
+\end{equation}
+The full $L$, including support, rank, orientation and amplitude, is
+unknown. Taking traces gives $\|L\|_F^2\le2(1-\kappa)$. At $Q=I$,
+$\|L\|_{\mathrm{op}}^2\le1-\kappa$, so rank-one amplitudes can reach
+$\sqrt{1-\kappa}$, while full-rank Frobenius amplitudes can reach
+$\sqrt{2(1-\kappa)}$.
+
+Fix a compact class $\mathcal K$ of $(M,V)$ with
+\begin{equation}\label{eq:class}
+ V=V^\top,\quad \tr V=2,\quad v_-I\preceq V\preceq v_+I,
+ \qquad -(MV+VM^\top)\succeq\omega_- I,
+\end{equation}
+where $v_-,\omega_->0$, on the prescribed branch
+\begin{equation}\label{eq:strip}
+ |\operatorname{Im}\lambda(M)|<\pi/\Delta.
+\end{equation}
+Indeed $D=V^{-1/2}MV^{1/2}$ satisfies
+$D+D^\top\preceq-(\omega_-/v_+)I$. This proves strict stability and
+uniform exponential decay. Compactness gives a strict nonaliasing margin.
+Defective matrices are allowed. The Lyapunov equation in
+\eqref{eq:state} gives stationary covariance $sV$ and confirms the
+normalization $s=\tr\Sigma/2$.
+
+The class $\Theta(s_0)$ consists of all parameters
+$\theta=(M,V,s,L,q,\mu,b,\nu)$ satisfying these conditions and
+$0\le s\le s_0$. Every listed parameter is unknown. Define the physical
+state--return loading, transition and leverage amplitude by
+\begin{equation}\label{eq:HZ}
+ H=AL,\qquad Z=e^{M\Delta},\qquad e=\|L\|_F.
+\end{equation}
+For a fixed $\eta>0$, the performance subset $\Theta_\eta(s_0)$ is defined
+by
+\begin{equation}\label{eq:excitation}
+ \sigma_{\min}([H,ZH])\ge\eta\|H\|_F.
+\end{equation}
+Here $\sigma_{\min}$ is the smaller row singular value, including zero.
+At $H=0$ both sides vanish: zero leverage and the zero-scale boundary are
+included. At $H\ne0$, the instantaneous and propagated response together
+span both state coordinates. The condition depends on $H$, so an orthogonal
+driver refactorization
+$A\mapsto AO$, $L\mapsto O^\top L$ leaves it unchanged.
+
+The estimator's candidates range over the full class $\Theta(s_0)$,
+as does confidence coverage. The number $\eta$ indexes precision guarantees
+only. Constants and the sufficiently small fixed covariance ceiling $s_0$
+may depend on it, the grid and compact envelopes; no uniformity as $\eta$
+or $\kappa$ tends to zero is asserted.
+
+We use Frobenius norms for matrices and Euclidean norms for vectors. The
+structural loss and a fixed nonzero contrast are
+\begin{equation}\label{eq:loss}
+ \|\Delta(\widehat M-M)\|_F^2,\qquad
+ \psi_C(M)=\tr(C^\top\Delta M).
+\end{equation}
+For two parameter values put
+$s_* =\max(s,s')$ and
+$h_* =\max(\|\sqrt\Delta H\|_F,\|\sqrt\Delta H'\|_F)$, and define
+\begin{align}\label{eq:comparison}
+ d_\eta(\theta,\theta')={}&\|\Sigma-\Sigma'\|_F
+ +\|\sqrt\Delta(H-H')\|_F
+ +(s_*+h_*)\|\Delta(M-M')\|_F\notag\\
+ &+\|\Delta(b-b')\|+\|\mu-\mu'\|+\|\nu-\nu'\|+|q-q'|.
+\end{align}
+No triangle property of this weighted comparison is needed. Rescaling time
+to $\Delta=1$ replaces $(M,H,b)$ by
+$(\Delta M,\sqrt\Delta H,\Delta b)$ and adds the known shift
+$(\log\Delta)/2$ to each state mean. We restore these units in conclusions.
+
+\section{Dynamic excitation and the information boundary}\label{sec:theorem}
+
+Set $\rho_n(s,e)=\min\{1,[n(s^2+se^2)]^{-1}\}$ for $s>0$, and set
+$\rho_n(0,e)=1$.
+
+\begin{theorem}\label{thm:main}
+For fixed $\mathcal K$, grid, nuisance bounds, residual margin and
+excitation margin, there is a sufficiently small fixed $s_0>0$ with the
+following properties.
+\begin{enumerate}[label=\textup{(\Alph*)},leftmargin=*]
+\item\label{part:id} If $\theta\in\Theta_\eta(s_0)$ and
+$\theta'\in\Theta(s_0)$ have the same joint law of observed prices for
+$n\ge2$, then at $s>0$ their $(M,\Sigma,L,q,\mu,b,\nu)$ agree, and hence
+also $s,V$. At $s=0$ only $(\mu,b,q,\nu)$ remain in the law. No zero-scale
+law equals a positive-scale law anywhere in $\Theta(s_0)$.
+\item\label{part:upper} One measurable exact-moment estimator over the
+full $\Theta(s_0)$, not supplied $s,L,\eta$ or any nuisance value,
+satisfies
+\begin{equation}\label{eq:joint-risk}
+ \sup_{\theta\in\Theta_\eta(s_0)}
+ \EE_\theta d_\eta(\widehat\theta_n,\theta)^2\le C/n.
+\end{equation}
+At each such truth of positive scale,
+\begin{equation}\label{eq:drift-upper}
+ \EE_\theta\|\Delta(\widehat M_n-M)\|_F^2
+ \le C\min\{1,[n(s^2+se^2)]^{-1}\}.
+\end{equation}
+\item\label{part:lower} Suppose $\mathcal K$ contains $V=I$ and a full
+four-dimensional drift neighborhood of
+\begin{equation}\label{eq:coupled}
+ M_0=\begin{pmatrix}-a_1&g\\g&-a_2\end{pmatrix},\qquad
+ a_i>0,\quad0<g<\sqrt{a_1a_2}.
+\end{equation}
+The ball and $\eta$ are as in Proposition~\ref{prop:rank-one} below.
+For its fixed-$(s,e)$ excited slices $\Theta_{\eta;s,e}$, for
+$0<s\le s_0$ and $0\le e\le\sqrt{2(1-\kappa)}$,
+\begin{equation}\label{eq:minimax}
+ \inf_{\widetilde M}\sup_{\theta\in\Theta_{\eta;s,e}}
+ \EE_\theta\|\Delta(\widetilde M-M)\|_F^2\asymp\rho_n(s,e).
+\end{equation}
+For every fixed nonzero $C$, scalar contrast risk has order
+$\|C\|_F^2\rho_n(s,e)$. The infima range over all measurable estimators
+using every noisy level. For $0\le e\le\sqrt{1-\kappa}$ the lower orders already hold
+on the rank-one subfamily $L=eE_{12}$. Full-rank
+$L=(e/\sqrt2)I$ supplies the entire feasible Frobenius range. These
+subfamilies are not restrictions supplied to the estimator.
+\item\label{part:confidence} For every fixed $\alpha\in(0,1)$ there are
+observable confidence sets, with all nuisance parameters projected, whose coverage
+is at least $1-\alpha$ uniformly over full $\Theta(s_0)$, including
+nonexciting truths and $s=0$. At $\theta\in\Theta_\eta(s_0)$ their projected
+contrast diameter satisfies
+\begin{equation}\label{eq:diam-upper}
+ \EE_\theta\diam(\mathcal I_{n,C})^2
+ \le C_\alpha\|C\|_F^2\rho_n(s,e).
+\end{equation}
+Under the neighborhood assumption in \textup{(C)}, for fixed
+$\alpha<1/4$ this is also the worst-case lower order for every honest
+confidence set based on all prices.
+\end{enumerate}
+\end{theorem}
+
+The theorem is an order comparison for squared loss, not an efficient
+information or LAN assertion. The physical $H$ is in
+\eqref{eq:joint-risk}; no uniform unweighted root-$n$ rate for $L$ is
+asserted. The proofs of identification and upper inference are in
+Sections~\ref{sec:moments}--\ref{sec:estimation}, and the all-price lower
+proof is in Section~\ref{sec:information}.
+
+Two examples clarify why propagation enters the rate. In the coupled
+model below, rank-one leverage reaches both state coordinates and permits
+recovery of all four drift entries. In the separate diagonal model of
+Section~\ref{sec:contrasts}, with known loading support, rank-one leverage
+accelerates inference on only one persistence parameter; the other retains
+its covariance-only rate. The same instantaneous rank can therefore have
+different consequences for structural learning.
+
+\begin{proposition}\label{prop:rank-one}
+The coupled example \eqref{eq:coupled}, with $V=I$ and $L=eE_{12}$,
+satisfies \eqref{eq:excitation} on a full four-dimensional drift ball with
+one positive normalized margin, uniformly for
+$0<e\le\sqrt{1-\kappa}$. The same ball admits a positive uniform margin
+for $L=(e/\sqrt2)I$, $0<e\le\sqrt{2(1-\kappa)}$, at $Q=I$.
+\end{proposition}
+\begin{proof}
+By the two-dimensional Cayley--Hamilton calculus,
+$e^{M\Delta}=uI+vM$. For distinct eigenvalues,
+\[
+ v=\frac{e^{\lambda_1\Delta}-e^{\lambda_2\Delta}}
+          {\lambda_1-\lambda_2}.
+\]
+A vanishing numerator would require their difference to be a nonzero
+$2\pi i/\Delta$ multiple, impossible on the strict strip
+\eqref{eq:strip}. For a repeated eigenvalue and a nontrivial Jordan block,
+the quotient limit is $v=\Delta e^{\lambda\Delta}\ne0$. A repeated,
+diagonalizable two-dimensional matrix is scalar, in which case propagation
+cannot improve loading rank. Thus for nonscalar $M$,
+$[H,ZH]$ and $[H,MH]$ have the same row rank.
+
+At \eqref{eq:coupled} the first column of $\chol(-2M_0)$ is
+\[
+ h_0=\begin{pmatrix}\sqrt{2a_1}\\-2g/\sqrt{2a_1}\end{pmatrix},
+ \qquad
+ \det[h_0,M_0h_0]=\frac{2g(a_1a_2-g^2)}{a_1}>0.
+\]
+Indeed $M_0h_0$ has entries
+$-a_1\sqrt{2a_1}-2g^2/\sqrt{2a_1}$ and
+$g\sqrt{2a_1}+2a_2g/\sqrt{2a_1}$.
+Only the second column of $A_0L$ is nonzero, but it and its propagation
+span the two rows. Continuity gives a closed drift ball, full in all four
+entries, with negative definite symmetric part, a strict strip margin and
+a positive normalized singular value. The factor $\sqrt{s}e$ cancels
+from the normalized condition. For $L=(e/\sqrt2)I$, $A_0$ is uniformly
+invertible on that ball, giving another positive normalized margin.
+We choose $\eta$ below both margins and shrink the ball if necessary. The stated
+amplitude ranges satisfy \eqref{eq:residual} with $Q=I$.
+\end{proof}
+
+This propagation algebra is classical reachability and shifted-response
+realization; Oymak and Ozay \cite{OymakOzay2019} give an LTI identification
+and conditioning antecedent with observed Gaussian inputs. Here the inputs
+and the loading are not observed. At leading order $D_k=Z^{k-1}W$,
+$W=F_1(M)H$. If $W$ has rank one, choose
+a nonzero row $w^\top$ with $w^\top W=0$. The perturbation
+$Z'=Z+uw^\top$ leaves $D_1,D_2$ unchanged when $W$ is fixed. If
+$[W,ZW]$ has row rank two, $w^\top ZW\ne0$, and
+$Z'^2W=Z^2W+uw^\top ZW$ changes the third response. A small admissible
+perturbation can keep $W$ fixed by setting
+$M'=\Delta^{-1}\Log Z'$ and $H'=F_1(M')^{-1}W$.
+This is an ambiguity of the leading two-lag response, not an exact
+observed-law equivalence. Section~\ref{sec:inverse} proves that the
+three-lag mechanism survives the nonlinear moments.
+
+\begin{corollary}\label{cor:separation}
+Under the lower-neighborhood hypothesis of Theorem~\ref{thm:main}, along
+$s_n=n^{-a}$ with $1/2<a<1$, zero leverage prevents uniform drift
+consistency. The single estimator is consistent at truths with any fixed
+nonzero leverage satisfying a fixed excitation margin on the same grid.
+For $a=3/4$, its excited squared risk order is $n^{-1/4}$, with matching
+worst-case lower order on the excited slices.
+\end{corollary}
+\begin{proof}
+Here $ns_n^2=n^{1-2a}\to0$, so \eqref{eq:minimax} at $e=0$ stays bounded
+below. For fixed $e>0$,
+$n(s_n^2+s_ne^2)=n^{1-2a}+e^2n^{1-a}\to\infty$, and
+\eqref{eq:drift-upper} tends to zero. At $a=3/4$ the dominating term is
+$e^2n^{1/4}$. The sequences eventually lie below the fixed $s_0$.
+The first statement is minimax worst-case impossibility; it is not a
+pointwise lower claim at every zero-leverage drift.
+\end{proof}
+
+\begin{remark}\label{rem:finite-noise}
+For fixed $n$, the joint law of all distinct noisy levels is the convolution
+of the corresponding clean-price law with a Gaussian having strictly
+positive diagonal covariance. The convolution density is everywhere
+positive, since the Gaussian kernel is positive at every point. Thus any
+two model laws are mutually absolutely continuous. If one estimator
+recovered two different structural values almost surely under their
+respective laws, the event of recovery of the first would have probability
+one under both laws, contradicting recovery of the second. This argument
+also applies to singular Brownian covariance, but is not a rate assertion
+at perfect leverage. The nondegenerate asymptotic theorem above uses fixed
+$\eta,\kappa$ and an unevaluated small covariance ceiling. Its observable
+estimators and sets are existence constructions, not calibrated practical
+confidence widths.
+\end{remark}
+
+\section{Exact moments of observed prices}\label{sec:moments}
+
+The observable moments must distinguish the drift while allowing carry,
+covariance, loading and level noise to vary. We derive their exact forms
+before comparing their sensitivity to those parameters.
+
+For $t\in\{r,h\}$ put
+$R_i^t(k)=P_i(k\Delta+t)-P_i(k\Delta)$ and define
+\[
+ m_i=\EE R_i^h=b_ih,\qquad q_i^t=\EE(R_i^t)^2,\qquad
+ w_i^t=q_i^t-(t/h)^2m_i^2,\qquad
+ \lambda_i=e^{2\mu_i+2\Sigma_{ii}}.
+\]
+The raw second moment $q_i^t$ is distinct from the return correlation $q$.
+It\^o isometry and independent endpoint errors give
+\begin{equation}\label{eq:two-lengths}
+ w_i^t=t\lambda_i+2\nu_i,\qquad
+ \lambda_i=\frac{w_i^h-w_i^r}{h-r},\qquad
+ \nu_i=\frac{h w_i^r-r w_i^h}{2(h-r)}.
+\end{equation}
+These identities do not require the return driver to be independent of
+the state. For $k=1,2,3$ define
+\begin{equation}\label{eq:cubic-def}
+ T_{kij}=\EE[R_i^h(k)^2R_j^h(0)]-q_i^h m_j,\qquad
+ D_{kij}=\frac{T_{kij}}{2h^2\lambda_i\sqrt{\lambda_j}}.
+\end{equation}
+For $k=1,2$ define
+\begin{equation}\label{eq:fourth-def}
+ G_{kij}=\frac{\EE[R_i^h(k)^2R_j^h(0)^2]-q_i^h q_j^h
+                      -2m_jT_{kij}}{h^2\lambda_i\lambda_j}.
+\end{equation}
+An earlier linear martingale return can correlate with a later square,
+requiring the unknown-carry correction $2m_jT_{kij}$. A later linear return
+has zero mean against earlier variables.
+
+The exact raw feature vector $F(\theta)\in\R^{27}$ consists of
+\begin{equation}\label{eq:raw-features}
+ \left(m_i,q_i^r,q_i^h; \EE[R_1^h(0)R_2^h(0)]; \EE[R_i^h(k)^2R_j^h(0)]_{k=1,2,3}; \EE[R_i^h(k)^2R_j^h(0)^2]_{k=1,2}\right),
+\end{equation}
+with $i,j=1,2$ in the mixed arrays. The counts are $6+1+12+8=27$.
+Estimation and inference use this exact feature map.
+The transformations \eqref{eq:two-lengths}--\eqref{eq:fourth-def} are
+Lipschitz on its compact image: $\lambda_i$ is uniformly bounded above
+and away from zero. Shared endpoint errors between $R_i^r$ and $R_i^h$
+are retained in empirical dependence; no independence between those
+returns is assumed.
+
+Write, for $t\ge0$,
+\begin{equation}\label{eq:cov-loading}
+ C(t)=e^{Mt}\Sigma,\qquad K(t)=e^{Mt}H.
+\end{equation}
+In particular $K_{ij}(t-u)du=\Cov(Y_i(t),dU_j(u))$ for $t>u$.
+The symbol $C(t)$ here is a covariance kernel, not the fixed contrast
+matrix of \eqref{eq:loss}.
+
+\begin{lemma}\label{lem:exact-moments}
+For $z=k\Delta+t$, $\tau=z-u$,
+\begin{equation}\label{eq:exact-cubic}
+ D_{kij}=\frac1{h^2}\int_0^h\!\int_0^h
+ K_{ij}(\tau)e^{2C_{ij}(\tau)-\Sigma_{jj}/2}\,du\,dt.
+\end{equation}
+Moreover $G_k=G_k^0+J_k$, where
+\begin{equation}\label{eq:cov-moments}
+ G_{kij}^0=\frac1{h^2}\int_0^h\!\int_0^h
+                [e^{4C_{ij}(z-u)}-1]\,du\,dt
+\end{equation}
+and
+\begin{align}\label{eq:J}
+ J_{kij}=\frac4{h^2}\int_0^h\!\int_0^h\!\int_0^u
+ &K_{ij}(z-u)[K_{jj}(u-v)+2K_{ij}(z-v)]\notag\\[-2pt]
+ &\quad\cdot e^{-\Sigma_{jj}+C_{jj}(u-v)
+                    +2C_{ij}(z-u)+2C_{ij}(z-v)}\,dv\,du\,dt.
+\end{align}
+The same-block cross moment satisfies
+\begin{equation}\label{eq:cross-second}
+ \EE[R_1^h(0)R_2^h(0)]-m_1m_2
+ =h q\sqrt{\lambda_1\lambda_2}
+       e^{\Sigma_{12}-(\Sigma_{11}+\Sigma_{22})/2}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+We first establish the Gaussian exponential-tilting identity needed here.
+Let $Z_0$ be a Gaussian linear functional of the two-sided drivers. For an
+adapted integrand $f$ on a bounded interval, whenever the expressions are
+integrable,
+\begin{equation}\label{eq:tilt}
+ \EE\left[e^{Z_0}\int f(u)dU_j(u)\right]
+ =\int\frac{\Cov(dU_j(u),Z_0)}{du}\,
+                  \EE[e^{Z_0}f(u)]\,du.
+\end{equation}
+After division by $\EE e^{Z_0}$, the left-hand side is an expectation under
+the Gaussian tilt $\exp(Z_0-\EE Z_0-\Var(Z_0)/2)$. The driver
+covariances are unchanged, and their means shift by their covariance
+with $Z_0$. Centered increments remain independent of the preceding
+sigma-field. For an adapted step process, the centered stochastic sum
+therefore has zero expectation, leaving exactly the deterministic drift
+shift in \eqref{eq:tilt}. Localization, H\"older and It\^o convergence
+extend it to the integrands used below. The Gaussian state has uniformly
+bounded fixed exponential moments, and the Burkholder--Davis--Gundy
+(BDG) inequality supplies fixed return moments, so both sides converge
+in the required $L^1$ spaces.
+
+Let $N_j(u)=\int_0^u e^{Y_j(v)}dU_j(v)$ be the clean centered earlier
+return. A squared later martingale increment, when multiplied by an
+earlier measurable variable, can be replaced in expectation by its
+quadratic-variation integral. This follows from It\^o's formula for its
+square, since the remaining later stochastic integral has zero expectation.
+For $z\ge\Delta>h$, \eqref{eq:tilt} with $Z_0=2Y_i(z)$ gives
+\[
+ \EE[e^{2Y_i(z)}N_j(h)]
+ =2\int_0^h K_{ij}(z-u)\,
+                   \EE[e^{Y_j(u)+2Y_i(z)}]\,du.
+\]
+The Gaussian expectation is
+\[
+ \EE[e^{Y_j(u)+2Y_i(z)}]
+ =\lambda_i\sqrt{\lambda_j}
+                    e^{2C_{ij}(z-u)-\Sigma_{jj}/2}.
+\]
+Integrating in $z=k\Delta+t$ proves \eqref{eq:exact-cubic} for the clean
+centered returns.
+
+For the fourth moment, It\^o's formula gives
+\[
+ N_j(h)^2=\int_0^h e^{2Y_j(u)}du
+             +2\int_0^h N_j(u)e^{Y_j(u)}dU_j(u).
+\]
+Against $e^{2Y_i(z)}$ the first term has expectation
+$\lambda_i\lambda_j e^{4C_{ij}(z-u)}$, producing
+\eqref{eq:cov-moments} after subtracting the product of second moments.
+Applying \eqref{eq:tilt} to the second term gives
+\[
+ 4\int_0^h K_{ij}(z-u)
+                 \EE[N_j(u)e^{Y_j(u)+2Y_i(z)}]du.
+\]
+A second application, now with $Z_0=Y_j(u)+2Y_i(z)$, gives
+\[
+ \EE[N_j(u)e^{Y_j(u)+2Y_i(z)}]
+ =\int_0^u [K_{jj}(u-v)+2K_{ij}(z-v)]
+            \EE[e^{Y_j(v)+Y_j(u)+2Y_i(z)}]dv.
+\]
+Dividing the last Gaussian exponential expectation by
+$\lambda_i\lambda_j$ yields exactly
+\[
+ e^{-\Sigma_{jj}+C_{jj}(u-v)+2C_{ij}(z-u)+2C_{ij}(z-v)}.
+\]
+This proves the full triple integral \eqref{eq:J}.
+
+The later and earlier observed block returns are, respectively,
+$m_i+N_i+\xi_i$ and $m_j+N_j+\xi_j$.
+The disjoint block errors $\xi_i,\xi_j$ are independent centered Gaussians
+and independent of the clean paths. The later centered return has zero
+mean against any earlier variable, and disjoint clean martingale returns
+have zero cross second moment. Expanding the cubic thus leaves
+$\EE[N_i^2N_j]$ after subtracting $q_i^hm_j$.
+Expanding the raw fourth moment leaves
+$\EE[N_i^2N_j^2]-\EE N_i^2\EE N_j^2$ and
+$2m_j\EE[N_i^2N_j]$ after subtracting $q_i^h q_j^h$.
+The latter is precisely the carry correction in \eqref{eq:fourth-def}.
+Error variances in the two disjoint blocks cancel in these corrected
+moments. This argument does not cancel shared errors within a block.
+
+Finally the cross quadratic variation is
+$q\int_0^h e^{Y_1(t)+Y_2(t)}dt$. Independent errors across the two
+coordinates add no cross covariance. The Gaussian expectation
+$e^{\mu_1+\mu_2+(\Sigma_{11}+\Sigma_{22})/2+\Sigma_{12}}$
+proves \eqref{eq:cross-second}. Every integration is over a bounded
+interval; H\"older, Gaussian exponential moments and BDG justify Fubini
+and the localization limits above. In particular, we have not assumed a
+fixed-mean conditional-normal return likelihood under leverage.
+\end{proof}
+
+These formulas exhibit $D_k=O(\sqrt{s}e)$, $G_k^0=O(s)$ and
+$J_k=O(se^2)$. The leverage response order is classical
+\cite{MasoliverPerello2005,ADR2025journal}; neither it nor a moment rank
+calculation proves the all-price information order.
+
+\section{A one-endpoint inverse}\label{sec:inverse}
+
+We work in $\Delta=1$ units in this section. Write
+$\delta_M=\|M-M'\|_F$, $\delta_\Sigma=\|\Sigma-\Sigma'\|_F$,
+$\delta_H=\|H-H'\|_F$, and $\epsilon=\|F(\theta)-F(\theta')\|$.
+Until excitation is explicitly invoked, both points can be anywhere in
+the admitted compact class. By admissibility and bounded $A_0$,
+\begin{equation}\label{eq:H-small}
+ h_*^2\le C s_*,\qquad
+ h_*=\max(\|H\|_F,\|H'\|_F),\quad s_*=\max(s,s').
+\end{equation}
+All constants below are independent of the true $s,e,n$.
+
+\subsection{The covariance-pair inverse}
+
+Define the matrix averaging kernels
+\begin{equation}\label{eq:averaging}
+ F_k(M)=\frac1{h^2}\int_0^h\!\int_0^h
+                  e^{M(k\Delta+t-u)}du\,dt,
+ \quad A_h(M)=\frac1h\int_0^h e^{Mt}dt.
+\end{equation}
+They obey $F_k=Z^{k-1}F_1$ and
+$F_1=A_h(M)ZA_h(-M)$. Each factor is invertible on the drift class. The
+scalar entire function $(e^{hz}-1)/(hz)$ has value one at zero and only
+nonzero purely imaginary zeros; no Hurwitz eigenvalue, nor its negative,
+can be such a zero. Functional calculus proves invertibility even at a
+Jordan block, and compactness bounds $F_1,F_1^{-1}$ uniformly.
+
+On the compact nonaliasing image,
+\begin{equation}\label{eq:log-inverse}
+ M=\Delta^{-1}\Log Z,\qquad \|M-M'\|_F\le C\|Z-Z'\|_F.
+\end{equation}
+Here $Z$ has spectrum off the nonpositive real axis by
+\eqref{eq:strip}, and the principal logarithm of $e^{M\Delta}$ equals
+$M\Delta$, also for defective $M$. The logarithm is analytic in a
+neighborhood of each image point. A finite covering bounds its local
+Fr\'echet derivatives and gives the Lipschitz inequality for close pairs.
+For pairs outside those neighborhoods, continuity, injectivity and compact
+separation give a positive minimum image distance, while the drift
+diameter is bounded. This proves the global inequality; no spectral
+diagonalization assumption is used.
+
+\begin{lemma}\label{lem:cov-inverse}
+For a sufficiently small fixed covariance ceiling,
+\begin{equation}\label{eq:cov-inverse}
+ \delta_\Sigma+s_*\delta_M
+ \le C\|(G_1^0,G_2^0)-(G_1^{0\prime},G_2^{0\prime})\|.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The linear terms in \eqref{eq:cov-moments} are
+$B_1=4F_1\Sigma$ and $B_2=ZB_1$. We may label the endpoints so that
+$s'=s_*>0$. Then $\sigma_{\min}(B_1')\ge c s_*$, and
+\[
+ (Z-Z')B_1'=(B_2-B_2')-Z(B_1-B_1')
+\]
+controls $s_*\|Z-Z'\|_F$, hence $s_*\delta_M$ by
+\eqref{eq:log-inverse}, by the linear-pair difference. Also
+\[
+ B_1-B_1'=4F_1(\Sigma-\Sigma')+4(F_1-F_1')\Sigma'
+\]
+and bounded $F_1^{-1}$ control $\delta_\Sigma$ by that difference and
+$s_*\delta_M$. If $s_*=0$ both terms to be bounded vanish.
+
+For the exponential remainder $e^{4C}-1-4C$, finite-time differentiation
+has covariance derivative $O(s_*)$ and drift derivative $O(s_*^2)$.
+Thus its integrated pair difference is at most
+$Cs_*[\delta_\Sigma+s_*\delta_M]$. These estimates can be checked along
+bounded matrix interpolations: finite-time exponentials have bounded
+Fr\'echet derivatives regardless of stability of the interpolation, and
+$\|\Sigma\|\le Cs_*$ throughout. This does not require convexity of
+$\mathcal K$. Applying the linear inverse to the nonlinear pair gives a
+remainder that can be absorbed when $s_0$ satisfies $Cs_0\le1/2$.
+\end{proof}
+
+\subsection{Profiling the unknown physical loading}
+
+\begin{lemma}\label{lem:profile}
+Write $D_k=F_kH+E_k$, $k=1,2,3$. Uniformly,
+\begin{align}\label{eq:E-bounds}
+ \|E_k\|_F&\le Cs\|H\|_F,\notag\\
+ \|E_k-E_k'\|_F&\le C[s_*\delta_H+h_*\delta_\Sigma
+                                      +s_*h_*\delta_M].
+\end{align}
+For a sufficiently small fixed $s_0$, profiling $H$ through $D_1$ gives
+\begin{align}\label{eq:H-profile}
+ \delta_H&\le C[\epsilon+h_*\delta_M+h_*\delta_\Sigma],\notag\\
+ \|J_k-J_k'\|_F&\le C[h_*\epsilon+h_*^2(\delta_M+\delta_\Sigma)].
+\end{align}
+In addition, with $a=\|H\|_F$ at the unprimed endpoint,
+\begin{equation}\label{eq:amplitude}
+ h_*\le C(a+\epsilon).
+\end{equation}
+No excitation of the primed endpoint is needed.
+\end{lemma}
+\begin{proof}
+Subtracting one from the exponential in \eqref{eq:exact-cubic} leaves a
+remainder of order $O(s)$. Its covariance derivative is bounded, and its
+drift derivative is $O(s)$, on all the finite integration times involved.
+The expression is linear in $H$, while the derivative of $e^{Mt}$ is
+bounded at finite times. Taking differences gives \eqref{eq:E-bounds}.
+Bounded interpolations as above justify these pairwise bounds on a
+possibly nonconvex compact parameter class.
+
+For each return column $j$ the exact first cubic is
+$D_{1,:j}=\mathcal B_j(M,\Sigma)H_{:j}$, where
+\begin{equation}\label{eq:profile-matrix}
+ (\mathcal B_j)_{ip}=\frac1{h^2}\int_0^h\!\int_0^h
+ [e^{M(\Delta+t-u)}]_{ip}
+ e^{2C_{ij}(\Delta+t-u)-\Sigma_{jj}/2}\,du\,dt.
+\end{equation}
+It is $F_1+O(s)$. The preceding uniform inverse bound and a Neumann
+argument give uniformly bounded inverses for small $s_0$. Their coefficient
+functions are Lipschitz: locally this follows by differentiation of an
+inverse, and globally by compact separation for distant pairs. Therefore
+subtracting $H_{:j}=\mathcal B_j^{-1}D_{1,:j}$ gives the first bound in
+\eqref{eq:H-profile}. Here differences of $D_1$ are bounded by $C\epsilon$
+through the raw normalization, and $\|D_1\|_F\le C\|H\|_F$.
+
+Substitution of the column profiles into \eqref{eq:J} gives
+$\overline J_k(M,\Sigma,D_1)$ as a quadratic polynomial in the observable
+$D_1$, with bounded Lipschitz coefficient functions. Its difference is
+bounded by a linear term $Ch_*\epsilon$ and a coefficient difference
+$Ch_*^2(\delta_M+\delta_\Sigma)$, proving the second bound.
+Finally
+\[
+ \|H'\|_F\le C\|D_1'\|_F
+ \le C(\|D_1\|_F+\epsilon)\le C(a+\epsilon),
+\]
+which proves \eqref{eq:amplitude}. In particular, an arbitrary alternative
+loading is controlled by the observed first cubic, not assumed known or
+excited.
+\end{proof}
+
+\begin{lemma}\label{lem:pre-cov}
+For arbitrary admitted endpoints,
+\begin{equation}\label{eq:pre-cov}
+ \delta_\Sigma\le C[\epsilon+s_*\delta_M].
+\end{equation}
+\end{lemma}
+\begin{proof}
+From \eqref{eq:cov-moments},
+$G_1^0=4F_1\Sigma+R_1^0$, with
+\begin{equation}\label{eq:cov-remainder}
+ \|R_1^0-R_1^{0\prime}\|_F
+ \le C[s_*\delta_\Sigma+s_*^2\delta_M].
+\end{equation}
+We take the difference of $G_1=G_1^0+J_1$ between the endpoints and apply
+the inverse of $F_1$.
+The difference of $F_1$ contributes at most $Cs_*\delta_M$.
+By \eqref{eq:H-profile}, \eqref{eq:H-small} and bounded $h_*$, the
+correction contributes at most
+$C\epsilon+Cs_*\delta_M+Cs_*\delta_\Sigma$.
+Together with \eqref{eq:cov-remainder} this yields
+$\delta_\Sigma\le C[\epsilon+s_*\delta_M]+Cs_0\delta_\Sigma$.
+For fixed $Cs_0\le1/2$, the last term can be absorbed. The covariance
+derivative of the profiled correction is small in $s$, so this step
+requires no smallness assumption on $L$.
+\end{proof}
+
+\subsection{Lag three and excitation at only one endpoint}
+
+\begin{lemma}\label{lem:dynamic-inverse}
+For every $\theta\in\Theta_\eta(s_0)$ and every
+$\theta'\in\Theta(s_0)$, after another fixed smallness choice for $s_0$,
+\begin{equation}\label{eq:dynamic-inverse}
+ h_*\delta_M\le C_\eta\epsilon.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The dynamic lag residuals
+$\mathcal R_k=E_{k+1}-ZE_k$, $k=1,2$, satisfy the exact identities
+\begin{equation}\label{eq:lag-identities}
+ D_2=ZD_1+\mathcal R_1,\qquad D_3=ZD_2+\mathcal R_2.
+\end{equation}
+By \eqref{eq:E-bounds},
+\[
+ \|\mathcal R_k-\mathcal R_k'\|_F
+ \le C[s_*\delta_H+h_*\delta_\Sigma+s_*h_*\delta_M].
+\]
+The additional term $(Z-Z')E_k'$ has precisely the last order here.
+The first bound of \eqref{eq:H-profile}, together with bounded $s_*$, gives
+\begin{equation}\label{eq:lag-remainder}
+ \|\mathcal R_k-\mathcal R_k'\|_F
+ \le C[s_*\epsilon+h_*\delta_\Sigma+s_*h_*\delta_M].
+\end{equation}
+
+If $\epsilon\ge a=\|H\|_F$, then \eqref{eq:amplitude} gives
+$h_*\le C\epsilon$. The compact drift diameter proves
+\eqref{eq:dynamic-inverse} immediately. This case includes $a=0$,
+so it includes zero leverage and zero scale without any assumption on the
+alternative.
+
+Suppose instead $\epsilon<a$. Then $a>0$ and $h_*\le Ca$.
+At the unprimed endpoint only, excitation gives
+\begin{align}\label{eq:observed-excitation}
+ \sigma_{\min}([D_1,D_2])
+ &\ge\sigma_{\min}(F_1[H,ZH])-Csa\notag\\
+ &\ge c\eta a-Csa\ge c_\eta a,
+\end{align}
+after choosing $s_0\le c\eta/(2C)$.
+We used that $F_1$ commutes with $Z$, hence
+$[F_1H,F_2H]=F_1[H,ZH]$. The difference of \eqref{eq:lag-identities}
+takes the form
+\[
+ (Z-Z')D_1=(D_2-D_2')-Z'(D_1-D_1')
+                         -(\mathcal R_1-\mathcal R_1'),
+\]
+and similarly with $D_2,D_3$. Equations \eqref{eq:lag-remainder} and
+$h_*\le Ca$ give
+\begin{equation}\label{eq:transition-action}
+ \|(Z-Z')[D_1,D_2]\|_F
+ \le C[\epsilon+a\delta_\Sigma+s_*a\delta_M].
+\end{equation}
+For any matrix $T$, \eqref{eq:observed-excitation} implies
+$c_\eta a\|T\|_F\le\|T[D_1,D_2]\|_F$. Together with
+\eqref{eq:log-inverse}, \eqref{eq:transition-action} and
+\eqref{eq:pre-cov} and bounded $a$, this gives
+\[
+ a\delta_M\le C_\eta\epsilon+C_\eta s_*a\delta_M.
+\]
+Choosing $C_\eta s_0\le1/2$ allows the last term to be absorbed. Since
+$h_*\le Ca$ in this case, \eqref{eq:dynamic-inverse} follows. The argument
+places no lower bound on the singular values of $[H',Z'H']$.
+\end{proof}
+
+\begin{proposition}\label{prop:full-inverse}
+For every excited truth and every admitted alternative,
+\begin{equation}\label{eq:full-inverse}
+ d_\eta(\theta,\theta')\le C_\eta\|F(\theta)-F(\theta')\|.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Lemma~\ref{lem:cov-inverse}, applied to $G^0=G-J$, together with the
+profiled correction and Lemma~\ref{lem:dynamic-inverse}, gives
+\[
+ \delta_\Sigma+s_*\delta_M
+ \le C_\eta\epsilon+C h_*^2\delta_\Sigma.
+\]
+Indeed the term $h_*^2\delta_M$ is bounded by $C h_*\epsilon$, and $h_*$
+is uniformly bounded. By \eqref{eq:H-small}, a further fixed smallness
+choice allows $Ch_*^2\delta_\Sigma$ to be absorbed. Then
+\eqref{eq:H-profile} and \eqref{eq:dynamic-inverse} yield
+\begin{equation}\label{eq:structural-inverse}
+ \delta_\Sigma+\delta_H+(s_*+h_*)\delta_M\le C_\eta\epsilon.
+\end{equation}
+The regular nuisance parameters follow explicitly: $b_i=m_i/h$,
+$\nu_i,\lambda_i$ come from \eqref{eq:two-lengths}, and
+$\mu_i=(\log\lambda_i)/2-\Sigma_{ii}$. Finally, by
+\eqref{eq:cross-second},
+\[
+ q=\frac{\EE[R_1^hR_2^h]-m_1m_2}{h\sqrt{\lambda_1\lambda_2}}
+       e^{-\Sigma_{12}+(\Sigma_{11}+\Sigma_{22})/2}.
+\]
+These maps are uniformly Lipschitz on the compact moment image.
+Restoring the $\Delta$ units specified after \eqref{eq:comparison} gives
+\eqref{eq:full-inverse}.
+
+If $s>0$, equality of features gives $M,\Sigma,H$ and all regular
+nuisance parameters. Then $s=\tr\Sigma/2$, $V=\Sigma/s$, $A$ is determined by
+\eqref{eq:state}, and $L=A^{-1}H$. At zero scale the price law is that of
+a constant-carry Brownian log price with covariance
+$\diag(e^\mu)Q\diag(e^\mu)$ and the given level noise, independent of
+$M,V,L$. The regular moments identify its retained parameters.
+A zero-scale endpoint is always in $\Theta_\eta(s_0)$. Taking it as the
+unprimed endpoint in \eqref{eq:full-inverse} rules out equality with
+any positive-scale law. Equality of the joint laws of observed prices implies
+equality of the available features for $n\ge2$. Conversely equal retained
+parameters construct equal laws. This proves Theorem~\ref{thm:main}(A).
+It does not classify pairs of large nonexciting positive-scale models.
+\end{proof}
+
+\section{Adaptive estimation and honest sets}\label{sec:estimation}
+
+The inverse bound converts moment error into drift error according to the
+signal strength at the truth. Estimation over the full parameter class
+then allows that strength to be unknown, while confidence coverage remains
+valid even where the drift cannot be precisely estimated.
+
+\begin{lemma}\label{lem:moment-variance}
+The average of the 27 raw features over origins $k=0,\ldots,n-2$, with all
+block indices in \eqref{eq:raw-features} shifted accordingly, is denoted by
+$\widehat F_n$. A deterministic compact-class envelope $C_F$ satisfies
+\begin{equation}\label{eq:moment-variance}
+ \sup_{\theta\in\Theta(s_0)}
+ \EE_\theta\|\widehat F_n-F(\theta)\|^2\le C_F/n.
+\end{equation}
+This includes nonexciting leverage and zero scale.
+\end{lemma}
+\begin{proof}
+An origin uses at most four neighboring blocks through lag three, all
+already in $\mathcal T_n$. There are $n-1\ge n/2$ origins. Every feature
+is a polynomial of degree at most four in returns. For every fixed $p$,
+BDG bounds a clean return by the $p/2$ moment of
+$\int e^{2Y_i(t)}dt$ on a bounded interval. H\"older and Gaussian
+exponential moments bound this uniformly; the bounded carry and Gaussian
+errors preserve the bound. Thus all raw features have uniformly bounded
+fixed $L^p$ norms.
+
+For $s>0$, the normalized state
+$s^{-1/2}V^{-1/2}(Y-\mu)$ has transition correlation matrix
+$R_t=V^{-1/2}e^{Mt}V^{1/2}$, with
+$\|R_t\|_{\mathrm{op}}\le Ce^{-ct}$ independent of $s$. For sufficiently
+large $t$, its pair of standardized states has joint covariance
+$\left(\begin{smallmatrix}I&R_t^\top\\R_t&I\end{smallmatrix}\right)$.
+Against the product Gaussian law the trace term in the Gaussian KL formula
+vanishes and the determinant term gives
+\[
+ \mathrm{KL}=-\tfrac12\log\det(I-R_tR_t^\top)\le Ce^{-2ct}.
+\]
+Pinsker therefore bounds the corresponding total variation by $Ce^{-ct}$.
+For a stationary Markov state, conditioning past and future on their
+boundary states and then applying data processing passes this bound to
+absolute regularity of separated state segments. It also passes to
+emission blocks: after the boundary, joint Brownian innovations are
+independent of the past, even though state and return innovations within
+the future are correlated by $L$. Separated observation-error sets are
+independent. Hence the feature blocks have an exponential absolute-
+regularity bound once their spans $3\Delta+h$ are separated.
+
+One separated block can be coupled to an independent copy with
+mismatch probability at most its absolute-regularity coefficient $\beta$.
+For $p>2$, H\"older on the mismatch event gives
+\[
+ |\Cov(f,g)|\le C\beta^{1-2/p}\|f\|_p\|g\|_p.
+\]
+Indeed independence makes the covariance with the copy zero, and the
+difference $g-g^*$ is supported on the mismatch event; the three
+H\"older exponents are $p,p,(1-2/p)^{-1}$.
+Summing the exponential covariance tail and controlling the finitely
+many overlapping offsets by Cauchy--Schwarz yields a uniform absolute
+covariance sum. At $s=0$ separated features depend on independent return
+innovations and errors and have finite-range dependence. For an average
+of $n-1$ origins, the double covariance sum is at most $C(n-1)$, proving
+\eqref{eq:moment-variance} after summing over the 27 coordinates.
+The fixed moment envelopes, overlap count and geometric tail give a
+known deterministic upper envelope $C_F$; no long-run variance estimate
+or volatility proxy is required.
+\end{proof}
+
+Let $(\theta_j)_{j\ge1}$ be a fixed enumeration of a countable
+dense subset of full $\Theta(s_0)$. We define $\widehat\theta_n$ as the
+first enumerated point satisfying
+\begin{equation}\label{eq:MD}
+ \|F(\theta_j)-\widehat F_n\|
+ \le \inf_{l\ge1}\|F(\theta_l)-\widehat F_n\|+1/n.
+\end{equation}
+Continuity of the exact moment map makes the countable infimum equal to
+the compact infimum. The first-index selection is measurable, since all
+its inequalities involve measurable real functions and a countable
+infimum. It exists by the definition of the infimum, and
+\begin{equation}\label{eq:MD-error}
+ \|F(\widehat\theta_n)-F(\theta)\|
+ \le2\|\widehat F_n-F(\theta)\|+1/n.
+\end{equation}
+At an excited truth, Proposition~\ref{prop:full-inverse} applies to the selected
+candidate regardless of its excitation. Lemma~\ref{lem:moment-variance} then proves
+\eqref{eq:joint-risk}. Uniform bounds for $A_0,A_0^{-1}$ give
+\begin{equation}\label{eq:H-scale}
+ c\sqrt{s}e\le\|\sqrt\Delta H\|_F\le C\sqrt{s}e.
+\end{equation}
+The drift weight in \eqref{eq:comparison} is at least
+$s+\|\sqrt\Delta H\|_F$. Its square is comparable, within fixed constants,
+to $s^2+se^2$. Dividing the joint bound by the squared truth weight and
+using the compact drift diameter gives \eqref{eq:drift-upper}. This proves
+Theorem~\ref{thm:main}(B). The construction gives an observable, measurable
+estimator based on the exact moment map over the full parameter class.
+Its computational efficiency is not established.
+
+For fixed $\alpha\in(0,1)$ define the full-class moment confidence set
+\begin{equation}\label{eq:confidence-ball}
+ \mathcal C_{n,\alpha}=\left\{\vartheta\in\Theta(s_0):
+       \|\widehat F_n-F(\vartheta)\|
+                        \le\sqrt{C_F/(\alpha n)}\right\}.
+\end{equation}
+Projection gives a drift set or the contrast set
+$\mathcal I_{n,C}=\{\psi_C(M_\vartheta):\vartheta\in\mathcal C_{n,\alpha}\}$,
+with zero diameter for an empty set. The continuous compact construction
+makes these observable sets and their diameters measurable. Markov's
+inequality applied to \eqref{eq:moment-variance} gives
+\begin{equation}\label{eq:honesty}
+ \inf_{\theta\in\Theta(s_0)}
+ \PP_\theta\{\theta\in\mathcal C_{n,\alpha}\}\ge1-\alpha.
+\end{equation}
+This coverage includes every nonexciting truth and $s=0$. Projection
+removes nuisance coordinates rather than treating them as known, as in
+identification-robust inference \cite{AhsanDufour2024,ChengRenaultSangrey2024}.
+
+At an excited truth, every candidate in \eqref{eq:confidence-ball} obeys,
+even off the coverage event,
+\[
+ \|F(\vartheta)-F(\theta)\|
+ \le Z_n:=\sqrt{C_F/(\alpha n)}+\|\widehat F_n-F(\theta)\|.
+\]
+The one-endpoint inverse bounds its dimensionless drift distance from the
+truth by $C_\eta Z_n/(s+\|\sqrt\Delta H\|_F)$ at positive scale.
+Two candidates thus have contrast distance at most twice this bound times
+$\|C\|_F$. Since $\EE Z_n^2\le C_\alpha/n$, and the projection also has
+the fixed compact diameter, \eqref{eq:diam-upper} follows. At zero scale
+the bounded diameter still gives the stated bound; structural uncertainty
+generally cannot shrink there. This proves the upper part of Theorem~\ref{thm:main}(D)
+without a leverage or rank pretest.
+
+\section{The information in all observed prices}\label{sec:information}
+
+The moment estimator attains the proposed rate. To show that using other
+features of the prices cannot improve its worst-case order, we bound the
+separation between nearby drift models in the full observed-price law.
+For dominated laws we use
+$\Hell^2(P,P')=\int(\sqrt p-\sqrt{p'})^2$, with
+$\TV(P,P')=\frac12\int|p-p'|\le\Hell(P,P')$.
+The path parameter in this section is $\xi$, distinct from confidence
+error probability $\alpha$.
+
+\begin{lemma}\label{lem:all-price}
+Fix $Q=I$, $b,\mu,\nu,s,e$ and $\overline L$ with
+$\|\overline L\|_F=1$, and let $L=e\overline L$ satisfy
+$e^2\|\overline L\|_{\mathrm{op}}^2\le1-\kappa$. Suppose
+$(M_\xi,V_\xi)$ is a $C^2$ path on a compact interval, with bounded
+first and second derivatives and uniform class and stability bounds on
+a neighborhood. The complete noisy-level laws satisfy
+\begin{equation}\label{eq:price-Hellinger}
+ \Hell^2(P_\xi^{(n)},P_{\xi'}^{(n)})
+ \le Cn(s^2+se^2)|\xi-\xi'|^2.
+\end{equation}
+The constant is uniform in $n,s,e$ under the fixed envelopes. No
+excitation is needed. This is a structural-submodel bound, not a
+full-nuisance equivalence of experiments.
+\end{lemma}
+
+The proof is given in the next four subsections. At $s=0$ the laws on this
+submodel do not depend on $\xi$. We therefore carry out the differentiation
+for $s>0$.
+
+\subsection{A parameter-free common driver and hidden states}
+
+Let $\tau^2=1-\kappa/2$ and $r_0=\kappa/2$. Independent standard
+two-dimensional two-sided Brownian motions $W^0,B^0,W^1$ give the representation
+\begin{equation}\label{eq:common-factor}
+ U=\tau W^0+\sqrt{r_0}W^1,\qquad
+ B=\tau^{-1}LW^0+\Gamma_e^{1/2}B^0,\qquad
+ \Gamma_e=I-LL^\top/\tau^2.
+\end{equation}
+Since $\|L\|_{\mathrm{op}}^2\le1-\kappa$,
+$\Gamma_e\succeq\kappa/(2-\kappa)I$.
+Direct multiplication gives
+$\Cov(dU)=I\,dt$, $\Cov(dB)=I\,dt$ and
+$\Cov(dB,dU)=L\,dt$. The factorization preserves the law and the
+physical Cholesky convention, with positive independent conditional
+components for both state and returns.
+
+Let $I_\ell$ denote the intervals between successive distinct grid times.
+These include every gap. Their lengths lie in
+\begin{equation}\label{eq:interval-bounds}
+ d_-:=\min(\delta,\Delta-h)>0,\qquad
+ d_+:=\max(\delta,\Delta-h)<\infty,
+\end{equation}
+and their number is $(n+2)N+n+1\le Cn$. We consider an enlarged experiment
+in which $W^0$ is observed on the full stationary prehistory up to the final
+observation time, together with every clean asset-by-interval increment.
+Both state coordinates remain hidden. The law of this additional driver
+is independent of $\xi$.
+Starting from the fixed clean initial levels, cumulative summation of
+these increments reconstructs every clean level. Adding one original
+independent Gaussian error for each coordinate and distinct time
+reconstructs all observations, including the initial noisy level and gap
+observations. This parameter-independent kernel reproduces shared
+endpoint-error dependence in any subsequently formed returns.
+
+Given $W^0$, the conditional state mean is
+\begin{equation}\label{eq:conditional-mean}
+ m_\xi(t)=\mu+\frac{\sqrt{s}e}{\tau}
+ \int_{-\infty}^t e^{M_\xi(t-u)}A_{0,\xi}\overline L\,dW^0(u),
+\end{equation}
+and its covariance is $sR_\xi$, where, for $t\ge u$,
+\begin{align}\label{eq:conditional-cov}
+ R_\xi(t,u)&=e^{M_\xi(t-u)}S_\xi,\notag\\
+ S_\xi&=\int_0^\infty e^{M_\xi v}A_{0,\xi}\Gamma_e A_{0,\xi}^\top
+                                      e^{M_\xi^\top v}dv.
+\end{align}
+For $t<u$, the kernel is obtained by transposition. Smoothness of Cholesky
+on the uniformly positive diffusion cone and Duhamel's formula give
+\begin{equation}\label{eq:R-derivative}
+ \|\dot R_\xi(t,u)\|_F\le C(1+|t-u|)e^{-c|t-u|}.
+\end{equation}
+Indeed
+$\partial_\xi e^{M_\xi v}
+ =\int_0^v e^{M_\xi(v-w)}\dot M_\xi e^{M_\xi w}dw$
+is bounded by $Cv e^{-cv}$ after reducing $c$ if necessary; differentiating
+the integral for $S_\xi$ is justified by this integrable bound.
+In general $\dot R_\xi(t,t)\ne0$, even when the unconditional covariance
+is fixed: conditioning on the common driver changes the covariance.
+
+Differentiating the adapted convolution \eqref{eq:conditional-mean}
+gives, for every fixed $p$,
+\begin{equation}\label{eq:m-derivative}
+ \sup_t\|\dot m_\xi(t)\|_{L^p}\le C_p\sqrt{s}e.
+\end{equation}
+For example, with $x=m_\xi-\mu$,
+\[
+ dx=M_\xi x\,dt+\frac{\sqrt{s}e}{\tau}A_{0,\xi}\overline L\,dW^0,
+ \quad
+ d\dot m_\xi=(M_\xi\dot m_\xi+\dot M_\xi x)dt
+       +\frac{\sqrt{s}e}{\tau}\dot A_{0,\xi}\overline L\,dW^0.
+\]
+This stable triangular linear system has stationary second moments of
+order $se^2$, by the exponential convolution bounds. Gaussian moments
+give all fixed $p$. The second parameter derivative is likewise bounded
+in $L^2$, using the $C^2$ coefficients and differentiated kernels.
+For each finite collection of time nodes, Fubini bounds the $H^2$ norm
+in $\xi$ almost surely; the one-dimensional embedding $H^2\subset C^1$
+gives a continuously differentiable version at these nodes.
+
+Let $j$ now index an asset $i(j)$ and a complete-grid interval $I_j$;
+there are $m\le Cn$ such emissions. Conditional on $Y,W^0$ they are
+independent normals with
+\begin{equation}\label{eq:conditional-emission}
+ a_j=b_{i(j)}|I_j|+\tau\int_{I_j}e^{Y_{i(j)}(t)}dW^0_{i(j)}(t),
+ \qquad d_j=r_0\int_{I_j}e^{2Y_{i(j)}(t)}dt.
+\end{equation}
+This follows from independence of $W^1$ from $(Y,W^0)$ and independent
+$W^1$ coordinates on disjoint intervals. The random mean is a measurable
+It\^o functional of the state and the additional observed driver, defined
+by its left sums.
+
+\subsection{Finite Gaussian differentiation and the full score}
+
+For both assets, we use a common deterministic refinement of the full grid
+and left sums with positive cell lengths. At a node $u$, let $w_u$ be its
+cell length, $z_u$ the
+appropriate $W^0$ increment, and $y_u$ the corresponding left state value.
+Both coordinates at the union of physical nodes form one Gaussian vector.
+Distinct asset coordinates at one time are distinct Gaussian nodes.
+For emission $j$ the finite quadrature is
+\begin{equation}\label{eq:quadrature}
+ a_j=b_i|I_j|+\tau\sum_{u\in j}e^{y_u}z_u,
+ \qquad d_j=r_0D_j,\qquad D_j=\sum_{u\in j}w_u e^{2y_u}.
+\end{equation}
+Its node derivatives are
+\[
+ \mathfrak m_u=\partial_{y_u}a_j=\tau e^{y_u}z_u,\qquad
+ \mathfrak d_u=\partial_{y_u}d_j=2r_0w_u e^{2y_u}.
+\]
+Their own second derivatives are $\mathfrak m_u$ and $2\mathfrak d_u$.
+The state-mean derivative $\dot m_u$ is different from $\mathfrak m_u$.
+
+For the one-dimensional normal density $k_j(x;a_j,d_j)$, set
+$Z_j=(x-a_j)/\sqrt{d_j}$, $M_j=k_{j,a}/k_j$ and $S_j=k_{j,d}/k_j$.
+Direct differentiation of its exponential gives
+\begin{equation}\label{eq:Hermite-identities}
+ \begin{gathered}
+ M_j=\frac{H_1(Z_j)}{\sqrt{d_j}},\quad
+ S_j=\frac{H_2(Z_j)}{2d_j},\quad
+ \frac{k_{j,aa}}{k_j}=\frac{H_2(Z_j)}{d_j},\quad
+ \frac{k_{j,ad}}{k_j}=\frac{H_3(Z_j)}{2d_j^{3/2}},\quad
+ \frac{k_{j,dd}}{k_j}=\frac{H_4(Z_j)}{4d_j^2}.
+ \end{gathered}
+\end{equation}
+Here $H_1(z)=z$, $H_2(z)=z^2-1$, $H_3(z)=z^3-3z$ and
+$H_4(z)=z^4-6z^2+3$ are probabilists' Hermite polynomials.
+For a finite Gaussian vector of mean $m_\xi$ and covariance $sR_\xi$,
+\begin{equation}\label{eq:Gaussian-diff}
+ \partial_\xi\EE f(Y)
+ =\sum_u\dot m_u\EE f_u(Y)
+       +\frac{s}{2}\sum_{u,v}\dot R_{uv}\EE f_{uv}(Y).
+\end{equation}
+The identity follows by differentiating the Gaussian characteristic
+function. In the density, the mean derivative corresponds to
+$-\sum_u\dot m_u\partial_u\phi$, and the covariance derivative to
+$(s/2)\sum_{u,v}\dot R_{uv}\partial_{uv}\phi$.
+Integrating against a compactly supported smooth $f$ and integrating by
+parts once or twice gives \eqref{eq:Gaussian-diff}. Equivalently these
+identities follow directly by differentiating the finite Gaussian density.
+The conditional covariance at the distinct nodes is positive definite:
+$\Gamma_e$ and the state diffusion are positive, as are nonzero-time OU
+innovation covariances. For our positive emission functions, we first
+localize in the Gaussian nodes. The uniform moment and inverse-moment
+bounds proved below justify removal of that localization. Thus the identity
+applies to the finite Gaussian vector at each quadrature.
+
+Let $k=\prod_j k_j$. The score coefficients are
+\begin{equation}\label{eq:score-singletons}
+ \begin{aligned}
+ \mathsf A_j&=\sum_{u\in j}\dot m_u\mathfrak m_u,&
+ \mathsf B_j&=\sum_{u\in j}\dot m_u\mathfrak d_u,\\
+ \mathsf C_j&=\sum_{u\in j}\dot R_{uu}\mathfrak m_u,&
+ \mathsf E_j&=\sum_{u\in j}\dot R_{uu}(2\mathfrak d_u),
+ \end{aligned}
+\end{equation}
+and
+\begin{equation}\label{eq:score-pairs}
+ \begin{aligned}
+ \mathsf C^{mm}_{jk}&=\sum_{u\in j,v\in k}\dot R_{uv}
+                                        \mathfrak m_u\mathfrak m_v,&
+ \mathsf C^{md}_{jk}&=\sum_{u\in j,v\in k}\dot R_{uv}
+                                        \mathfrak m_u\mathfrak d_v,\\
+ \mathsf C^{dm}_{jk}&=\sum_{u\in j,v\in k}\dot R_{uv}
+                                        \mathfrak d_u\mathfrak m_v,&
+ \mathsf C^{dd}_{jk}&=\sum_{u\in j,v\in k}\dot R_{uv}
+                                        \mathfrak d_u\mathfrak d_v.
+ \end{aligned}
+\end{equation}
+The conditional marginal density $p_\xi(x\mid W^0)$ has derivative
+\begin{equation}\label{eq:full-score}
+ \partial_\xi p_\xi=\EE[k\mathcal S\mid W^0],\qquad
+ \mathcal S=\sum_j(\mathsf A_jM_j+\mathsf B_jS_j)
+ +\frac{s}{2}\left\{\sum_j(\mathsf C_jM_j+\mathsf E_jS_j)
+                                            +\mathcal Q\right\},
+\end{equation}
+where the complete quadratic part is
+\begin{align}\label{eq:Q-score}
+ \mathcal Q={}&\sum_j\left(
+ \mathsf C^{mm}_{jj}\frac{k_{j,aa}}{k_j}
+ +2\mathsf C^{md}_{jj}\frac{k_{j,ad}}{k_j}
+ +\mathsf C^{dd}_{jj}\frac{k_{j,dd}}{k_j}\right)\notag\\
+ &+2\sum_{j<k}\left(
+ \mathsf C^{mm}_{jk}M_jM_k+\mathsf C^{md}_{jk}M_jS_k
+ +\mathsf C^{dm}_{jk}S_jM_k+\mathsf C^{dd}_{jk}S_jS_k\right).
+\end{align}
+For a single node,
+$\partial_u k=k(\mathfrak m_u M_j+\mathfrak d_u S_j)$.
+For $u=v$, its second derivative has the additional terms
+$\mathfrak m_u k_{j,a}+2\mathfrak d_u k_{j,d}$, giving
+$\mathsf C_j,\mathsf E_j$. The product of first emission derivatives gives
+the four pair types in \eqref{eq:score-pairs}; within one emission the two
+mixed types coincide after summing, and between two emissions symmetry of
+$\dot R$ doubles the $j<k$ sum. The mean part of
+\eqref{eq:Gaussian-diff} gives $\mathsf A_j,\mathsf B_j$.
+The formula therefore includes derivatives of both the random state means
+and the conditional covariance diagonals.
+
+Since the law of the additional observed driver is parameter-free,
+conditional Cauchy--Schwarz (or Jensen for the posterior score) bounds joint marginal Fisher
+information by
+\begin{equation}\label{eq:score-Jensen}
+ I_\xi\le\EE\int k\mathcal S^2\,dx.
+\end{equation}
+For fixed state and driver, the $Z_j$ are independent standard normals.
+The generating identity
+$\EE[e^{tZ-t^2/2}e^{uZ-u^2/2}]=e^{tu}$ gives
+$\EE H_a(Z)H_b(Z)=a!\,\mathbf1_{a=b}$ by comparing coefficients.
+Products on distinct coordinate supports are therefore orthogonal.
+In \eqref{eq:full-score} the singleton $H_2$ terms from
+$\mathsf B_j$, $\mathsf E_j$ and $\mathsf C^{mm}_{jj}$ overlap; the
+$H_1$ terms from $\mathsf A_j$ and $\mathsf C_j$ also share a degree.
+The overlapping terms are bounded using $(x+y)^2\le2x^2+2y^2$.
+The remaining singleton terms of degrees three and four, and the terms
+on distinct pair supports, are orthogonal.
+Consequently
+\begin{align}\label{eq:score-norm}
+ \int k\mathcal S^2\,dx\le{}&
+ C\sum_j\left(\frac{\mathsf A_j^2}{d_j}
+                         +\frac{\mathsf B_j^2}{d_j^2}\right)
+ +Cs^2\sum_j\left(\frac{\mathsf C_j^2}{d_j}
+                         +\frac{\mathsf E_j^2}{d_j^2}\right)\notag\\
+ &+Cs^2\sum_{j,k}\left[
+ \frac{(\mathsf C^{mm}_{jk})^2}{d_jd_k}
+ +\frac{(\mathsf C^{md}_{jk})^2}{d_jd_k^2}
+ +\frac{(\mathsf C^{dm}_{jk})^2}{d_j^2d_k}
+ +\frac{(\mathsf C^{dd}_{jk})^2}{d_j^2d_k^2}\right].
+\end{align}
+The constant is independent of the emission count: each singleton or pair
+support has only a fixed number of terms. Grouping by these supports avoids
+a crude bound of order $n^2$ from squaring the sum without using
+orthogonality.
+
+\subsection{Mesh-uniform chronological bounds}
+
+Put
+\[
+ a_{jk}=\sup_{t\in I_j,u\in I_k}
+                  |\dot R_{i(j),i(k)}(t,u)|.
+\]
+For every fixed $p\ge2$ the coefficients satisfy, uniformly in the common
+positive left quadrature,
+\begin{align}\label{eq:coefficient-bounds}
+ \|\mathsf A_j\|_p+\|\mathsf B_j\|_p&\le C_p\sqrt{s}e,\notag\\
+ \|\mathsf C_j\|_p+\|\mathsf E_j\|_p&\le C_pa_{jj},\notag\\
+ \|\mathsf C^{mm}_{jk}\|_p+\|\mathsf C^{md}_{jk}\|_p
+ +\|\mathsf C^{dm}_{jk}\|_p+\|\mathsf C^{dd}_{jk}\|_p
+                                      &\le C_pa_{jk}.
+\end{align}
+Expectations in these norms include both the common driver and the residual
+state. We prove each bound.
+
+For $\mathsf A_j$, $\dot m_u e^{y_u}$ is measurable before its Brownian
+increment. BDG for an adapted step integrand, followed by Minkowski and
+H\"older, gives
+\[
+ \left\|\sum_{u\in j}\dot m_u e^{y_u}z_u\right\|_p
+ \le C_p\left(\sum_{u\in j}w_u
+                     \|\dot m_u e^{y_u}\|_p^2\right)^{1/2}
+ \le C_p\sqrt{s}e.
+\]
+The last inequality uses \eqref{eq:m-derivative} at order $2p$, uniform
+Gaussian exponential moments and $\sum w_u=|I_j|\le d_+$.
+For $\mathsf B_j$ there is only an ordinary weighted sum:
+\[
+ \left\|\sum_{u\in j}w_u\dot m_u e^{2y_u}\right\|_p
+ \le\sum_{u\in j}w_u\|\dot m_u e^{2y_u}\|_p
+ \le C_p\sqrt{s}e.
+\]
+The factors $\tau$ and $r_0$ are fixed. The coefficient $\dot R_{uu}$ is
+deterministic and bounded by $a_{jj}$; the same martingale argument bounds
+$\mathsf C_j$, and the weighted-sum argument bounds $\mathsf E_j$.
+
+For $\mathsf C^{mm}_{jk}$, ordering the nodes by physical left time divides
+the sum into two strict-order triangles and equal physical times. In the
+triangle where $u$ precedes $v$, the contribution, apart from fixed
+constants, is the adapted outer stochastic sum
+\[
+ \sum_{v\in k} e^{y_v}z_v
+      \left(\sum_{\substack{u\in j\\t_u<t_v}}
+                    \dot R_{uv}e^{y_u}z_u\right).
+\]
+For each fixed later $v$, the inner kernel $\dot R_{uv}$ is deterministic
+and bounded by $a_{jk}$. BDG at order $2p$ gives its norm at most
+$C_pa_{jk}\sqrt{d_+}$. It is measurable before $z_v$.
+Multiplication by $e^{y_v}$ is bounded in $L^p$ by H\"older and exponential
+moments. A second BDG application to the outer sum gives $C_pa_{jk}$.
+Exchanging the two nodes gives the same bound for the reversed triangle.
+This remains valid across asset coordinates because the common
+Brownian filtration makes the earlier inner sum adapted to the later
+coordinate's increment.
+
+At equal physical times both states are measurable before the shared cell
+increments. For either the same or different Brownian coordinates,
+$\|z_{i,u}z_{k,u}\|_p\le C_pw_u$. H\"older bounds the exponential left
+factors, so the equal-time contribution is at most
+$C_pa_{jk}\sum w_u\le C_pa_{jk}d_+$. This includes the same-coordinate
+quadratic-variation terms and the cross-asset equal-time products.
+
+For $\mathsf C^{md}_{jk}$, the stochastic node
+$u$ can precede or follow the ordinary-time node $v$. In the first case,
+the sum is
+\[
+ \sum_{v\in k}w_ve^{2y_v}
+       \sum_{\substack{u\in j\\t_u<t_v}}
+                      \dot R_{uv}e^{y_u}z_u.
+\]
+BDG bounds the inner sum at order $2p$ by $C_pa_{jk}$; H\"older and
+Minkowski control the outer time sum. In the second case the inner time
+sum $\sum_{t_v<t_u}\dot R_{uv}w_ve^{2y_v}$ is adapted at $u$ and has
+$L^{2p}$ norm at most $C_pa_{jk}d_+$; the outer stochastic sum is bounded
+by BDG. For equal physical times an additional time weight multiplies a
+Brownian increment, and the bound is
+$C_pa_{jk}\sum w_u^{3/2}\le C_pa_{jk}d_+^{3/2}$.
+The transposed ordering proves the $dm$ bound. Finally two applications
+of Minkowski and H\"older give the $dd$ bound from the two ordinary-time
+sums and $\sum_{u\in j}w_u\sum_{v\in k}w_v\le d_+^2$.
+This proves every assertion in \eqref{eq:coefficient-bounds}. The chronological
+ordering accounts for the dependence of the state on $W^0$.
+
+All inverse powers of the integrated variances are uniformly integrable.
+Weighted Jensen gives
+\begin{equation}\label{eq:inverse-moments}
+ D_j\ge |I_j|\exp\left(\frac2{|I_j|}\sum_{u\in j}w_uy_u\right),
+ \qquad \EE D_j^{-p}\le d_-^{-p}e^{C_p}.
+\end{equation}
+The weighted state average in this display is unconditionally Gaussian
+with mean bounded by the state-mean envelope and variance at most
+$Cs_0$: its weights are positive and sum to one, and all state
+covariances are bounded by $Cs_0$. Taking its exponential moment proves
+the negative-moment bound for every fixed $p$.
+
+H\"older's inequality applied to \eqref{eq:score-norm}, with
+\eqref{eq:coefficient-bounds} at sufficiently high fixed moment orders
+and \eqref{eq:inverse-moments}, with $d_j=r_0D_j$, bounds the information
+as follows. The state-mean terms contribute $Cmse^2$. Covariance singletons
+and pairs contribute
+$Cs^2\sum_{j,k}a_{jk}^2$. For example
+$\EE(\mathsf C^{mm}_{jk})^2/(d_jd_k)\le Ca_{jk}^2$ follows by a fourth
+coefficient moment and a higher inverse moment; the other denominator
+powers are handled identically. Constants may depend on $r_0>0$.
+By \eqref{eq:R-derivative},
+\begin{equation}\label{eq:summability}
+ \sum_{j,k}a_{jk}^2\le Cm\le Cn.
+\end{equation}
+Indeed $(1+x)e^{-cx}\le C_ce^{-cx/2}$, and physical intervals separated
+by $l$ indices have distance at least $(l-1)d_-$ once $l\ge2$.
+There are only two asset copies per interval, so for each $j$ the sum
+in $k$ is bounded by a geometric series; adjacent and coincident
+intervals contribute finitely many bounded terms. Equations
+\eqref{eq:score-Jensen}--\eqref{eq:summability} prove the finite-quadrature
+bound
+\begin{equation}\label{eq:finite-information}
+ I_\xi\le Cn(s^2+se^2),
+\end{equation}
+independent of refinement, emission count and the true small parameters.
+
+\subsection{Exact increments and Hellinger contraction}
+
+We justify both the parameter integration and the passage to the exact
+stochastic-integral experiment. For a fixed finite quadrature, the
+conditional node mean has the $C^1$ version established above, and the
+conditional Gaussian covariance is positive definite. Differentiation
+under the finite Gaussian integral, first with localization, gives
+\eqref{eq:full-score}. On a compact parameter interval the higher moments
+in \eqref{eq:coefficient-bounds} and \eqref{eq:inverse-moments} permit
+removing localization by H\"older and dominated integral estimates.
+The resulting positive marginal density is pointwise absolutely
+continuous in $\xi$ for almost every driver and return vector. The
+integrable bounds on the localized derivative allow the fundamental
+theorem of calculus to pass through the finite mixture by Fubini.
+The driver law itself does not change with $\xi$.
+
+Relative to that law times Lebesgue measure for returns,
+$\partial_\xi\sqrt{p_\xi}=(\partial_\xi p_\xi)/(2\sqrt{p_\xi})$ has
+squared $L^2$ norm $I_\xi/4$. The Jensen and moment bounds control this
+norm uniformly on the parameter interval. Thus pointwise absolute
+continuity, Fubini and Minkowski justify integrating the square-root
+derivative in the joint $L^2$ space, giving
+\begin{equation}\label{eq:Hellinger-integral}
+ \Hell(p_\xi,p_{\xi'})
+ \le\frac12\int_{\xi}^{\xi'}\sqrt{I_u}\,|du|
+ \le C\sqrt{n(s^2+se^2)}|\xi-\xi'|.
+\end{equation}
+This derives the Hellinger bound from the finite-dimensional score.
+
+For each fixed $n,\xi$, the positive left sums for $D_j$ converge almost
+surely to the strictly positive integrals in
+\eqref{eq:conditional-emission}, since the state paths are continuous.
+The left mean sums converge in $L^2$ by It\^o isometry: the integrands
+converge pointwise by continuity, and Gaussian exponential moments
+uniformly dominate their squared differences on the finite horizon.
+Normal kernels with means converging in probability and variances
+converging to positive values converge in total variation in probability.
+The deterministic kernel statement follows from pointwise density
+convergence and Scheff\'e's lemma. For the finite product of emissions the
+same conclusion holds. Its total variation is bounded, so its expectation
+tends to zero. Coupling the conditional kernels with the same $(Y,W^0)$
+therefore gives total-variation convergence of the joint law of the
+emissions and the additional observed driver path.
+
+Since $\Hell^2\le2\TV$, the triangle inequality and this convergence pass
+the mesh-uniform bound \eqref{eq:Hellinger-integral} to exact richer
+observations. Hellinger contracts under a parameter-independent kernel:
+conditional Cauchy--Schwarz increases the affinity
+$\int\sqrt{pp'}$ after a kernel, and
+$\Hell^2=2-2\int\sqrt{pp'}$. Applying the reconstruction and noise kernel after
+\eqref{eq:common-factor} gives \eqref{eq:price-Hellinger} for every
+original noisy level. This completes the proof of
+Lemma~\ref{lem:all-price}.
+
+\subsection{Two-point risk and honest-diameter lower bounds}
+
+We work on the drift ball in Proposition~\ref{prop:rank-one}, with $V=I$, $q=0$,
+and fixed admissible $b,\mu,\nu,s$ and signed $L$.
+For $0\le e\le\sqrt{1-\kappa}$ use $L=eE_{12}$; for the whole range
+$0\le e\le\sqrt{2(1-\kappa)}$ use $L=(e/\sqrt2)I$.
+Fix any Frobenius-unit direction $D$ and a short line
+$M_\xi=M_0+\xi D$ inside the full four-dimensional ball. Its symmetric
+part remains uniformly negative, so
+$A_{0,\xi}=\chol[-(M_\xi+M_\xi^\top)]$ is $C^2$ with bounded
+derivatives. Class, strip and excitation conditions hold uniformly along
+the line. At $e=0$ the excitation condition holds by its zero convention.
+The nuisance restrictions are used solely to construct the lower submodel,
+not to inform the estimator.
+
+In $\Delta=1$ units choose two interior points separated by
+\begin{equation}\label{eq:two-point-separation}
+ d=c\min\{1,[n(s^2+se^2)]^{-1/2}\},
+\end{equation}
+with fixed $c$ small enough for both to stay in the ball and for
+Lemma~\ref{lem:all-price} to give $\TV\le1/2$.
+Any estimate of two values a distance $d$ apart defines a test by selecting
+the nearer value. On a classification error its squared loss is at least
+$d^2/4$. The sum of error probabilities of any test is at least
+$1-\TV$, so the maximum squared risk is at least
+$d^2(1-\TV)/8$. This classical two-point argument applies to every
+measurable function of all observed levels and proves the matrix lower
+bound in \eqref{eq:minimax}. Restoring fixed $\Delta$ units changes only
+constants. For a nonzero contrast choose $D=C/\|C\|_F$ in dimensionless
+drift units. Its contrast separation is $\|C\|_F d$, proving the scalar
+order including either off-diagonal entry. The upper order follows from
+\eqref{eq:drift-upper} and Cauchy--Schwarz. This proves
+Theorem~\ref{thm:main}(C), including the rank-one lower subfamily.
+
+Let a confidence set be honest at these two points, and let their contrast
+values be $\psi_0,\psi_1$. Under the first law,
+\begin{equation}\label{eq:two-point-diameter}
+ \PP_0\{\psi_0,\psi_1\text{ both in the set}\}
+ \ge1-2\alpha-\TV(P_0,P_1)\ge1/2-2\alpha.
+\end{equation}
+Coverage of $\psi_1$ transfers from $P_1$ to $P_0$ with loss at most
+$\TV$; intersecting with coverage of $\psi_0$ proves the inequality.
+For fixed $\alpha<1/4$, the expected squared diameter is consequently
+at least $(1/2-2\alpha)|\psi_1-\psi_0|^2$. This proves the matching
+worst-case honest-diameter lower bound in Theorem~\ref{thm:main}(D).
+At $s=0$, two distinct drifts with identical regular nuisance parameters have
+the same law. The same event has probability at least $1-2\alpha$,
+so honest structural uncertainty cannot uniformly shrink. Together with
+the previously proved upper statements, this finishes
+Theorem~\ref{thm:main}.
+
+\section{Absent and nonexciting leverage}\label{sec:contrasts}
+
+The same price experiment gives two contrasts in how leverage affects
+learnability. With small unknown leverage, including zero, the
+covariance-only rate remains attainable and has a matching worst-case bound
+on a specified subfamily. In a diagonal state model with known
+cross-loading support, the leverage term improves the rate for one
+persistence while the other retains the covariance-only rate.
+
+\subsection{Small unknown full leverage: a worst-case covariance boundary}
+
+Let $\mathcal G(s_0,\ell_0)$ contain all parameters of the original compact
+model with $\|L\|_F\le\ell_0$ and a fixed positive residual margin, allowing
+$q=0,L=0$. Its loading support and orientation are unknown, and it has no
+excitation condition.
+
+\begin{proposition}\label{prop:small-leverage}
+For sufficiently small fixed $\ell_0,s_0>0$, all positive-scale parameters
+in $\mathcal G(s_0,\ell_0)$ are identified, zero and positive scales are
+separated, and a single full-class exact-moment estimator has squared
+dimensionless drift risk at most
+$C\min\{1,(ns^2)^{-1}\}$. If the drift/shape class contains
+\begin{equation}\label{eq:small-lower-subfamily}
+ M_\gamma=\begin{pmatrix}-a_1&\gamma\\\gamma&-a_2\end{pmatrix},\quad
+ V=I,\quad a_1\ne a_2>0,\quad
+ \gamma\in J\Subset(0,\sqrt{a_1a_2}),
+\end{equation}
+where $J$ has positive length, this is the matching worst-case order at
+fixed $s$, also for the off-diagonal contrast on that subfamily.
+\end{proposition}
+\begin{proof}
+We again work in $\Delta=1$ units. The first-cubic profile of
+Lemma~\ref{lem:profile} remains valid without excitation. On this class
+$h_*\le C\sqrt{s_*}\ell_0$. Lemma~\ref{lem:cov-inverse}, applied to
+$G^0=G-J$, and \eqref{eq:H-profile} give
+\[
+ \rho_0:=\delta_\Sigma+s_*\delta_M
+ \le C\epsilon+C h_*\epsilon
+                  +Ch_*^2(\delta_M+\delta_\Sigma)
+ \le C\epsilon+C\ell_0^2(1+s_0)\rho_0.
+\]
+After fixing $s_0$ for the cubic profile and covariance inverse, we choose
+$\ell_0$ so that the last coefficient is at most $1/2$. Absorbing the last
+term gives $\rho_0\le C\epsilon$. The same regular formulas as before
+recover $b,\nu,\lambda,\mu,q$. At positive scale, equality gives $M,\Sigma$, then
+$H$ from the first cubic and $L=A^{-1}H$. At zero scale only the regular
+parameters remain, and the bound on $\delta_\Sigma$ separates it from
+positive scale.
+
+The full-class raw variance lemma and dense minimum-distance construction,
+now over $\mathcal G$, give a uniform $C/n$ squared bound for $\rho_0$
+plus regular nuisance errors. The truth drift weight is at least $s$;
+division and compact capping give the upper rate. The extra cubic lag in
+our 27 features is harmless; the inverse only needs the covariance pair
+and first cubic.
+
+For the lower bound, we use \eqref{eq:small-lower-subfamily}, $L=0,Q=I$ and
+fixed admissible nuisance parameters and $s$. This symmetric drift submodel
+contains an interval of positive length. Lemma~\ref{lem:all-price}
+at $e=0$ gives $\Hell^2\le Cns^2|\gamma-\gamma'|^2$;
+its proof here is covariance-only since the conditional state mean is
+fixed. Choosing an interior pair of separation
+$c\min\{1,(\sqrt n s)^{-1}\}$ and applying the all-price two-point test
+proves the lower order, also for $M_{12}=\gamma$.
+\end{proof}
+
+This worst-case result uses the admitted zero-leverage subfamily. It is
+not a pointwise impossibility claim at every small nonzero loading.
+Dynamic excitation in Theorem~\ref{thm:main} gives another inverse route,
+without a small-leverage condition on its performance subset.
+
+\subsection{A known-support nonexciting family}
+
+We next consider the known restrictions
+\begin{equation}\label{eq:diagonal-family}
+ \begin{gathered}
+ M=\diag(-a_1,-a_2),\qquad \Sigma=\diag(v_1,v_2),\qquad
+ v_i=sV_i,\quad V_1+V_2=2,\\
+ A=\diag(\sqrt{2a_1v_1},\sqrt{2a_2v_2}),\qquad L=\ell E_{12}.
+ \end{gathered}
+\end{equation}
+The $a_i$ range independently over fixed positive compact intervals of
+positive length. The $V_i$ range over compact positive shapes with
+$(1,1)$ admitted. Signed $\ell$, scale, shape, $q,\mu,b,\nu$ are all
+unknown, with the previous nuisance bounds and
+\begin{equation}\label{eq:diagonal-margin}
+ q^2+\ell^2\le1-\kappa.
+\end{equation}
+This is a separate compact class $\mathcal D(s_0)$: its diagonal state
+structure and leverage support are known, not an arbitrary unknown
+rank-one restriction. The determinant and trace of
+$Q-L^\top L=\left(\begin{smallmatrix}1&q\\q&1-\ell^2\end{smallmatrix}\right)$
+show that its least eigenvalue is at least $\kappa/2$, so all required
+uniform residual bounds hold with that fixed margin. At $\ell\ne0$,
+$H$ and $ZH$ have only their first rows nonzero. Thus their concatenation
+has row rank one and does not satisfy \eqref{eq:excitation}.
+
+\begin{theorem}\label{thm:diagonal}
+For a sufficiently small fixed $s_0$, all positive-scale parameters in
+$\mathcal D(s_0)$ are exactly identified. One exact-moment estimator over
+the whole class, with all parameters unknown, attains simultaneously
+\begin{equation}\label{eq:directional-rates}
+ \begin{gathered}
+ \EE(\widehat a_1-a_1)^2\le Cr_1,\qquad
+ \EE(\widehat a_2-a_2)^2\le Cr_2,\\
+ r_1=\min\{1,[n(s^2+s\ell^2)]^{-1}\},\quad
+ r_2=\min\{1,(ns^2)^{-1}\}.
+ \end{gathered}
+\end{equation}
+On each slice $s>0$, $|\ell|=e\le\sqrt{1-\kappa}$, these are matching
+minimax orders for every estimator using all noisy levels. For each fixed
+$c=(c_1,c_2)$ the contrast $c_1a_1+c_2a_2$ has order
+$c_1^2r_1+c_2^2r_2$. Full-class honest projected confidence sets have
+this expected squared diameter upper order for every fixed
+$\alpha\in(0,1)$, and matching worst-case lower order for fixed
+$\alpha<1/4$.
+\end{theorem}
+
+We prove the upper inverse first and then the two separate all-price
+obstructions; the latter cannot be inferred from the moment derivatives.
+
+\subsection{Exact directional inverse and upper bounds}
+
+In \eqref{eq:diagonal-family},
+$K_{12}(t)=\sqrt{2a_1v_1}\ell e^{-a_1t}$, $C_{12}(t)=0$, and
+$K_{11}=K_{22}=0$. Lemma~\ref{lem:exact-moments} gives, exactly,
+\begin{equation}\label{eq:diagonal-cubic}
+ T_{k,12}=2h^2\lambda_1\sqrt{\lambda_2}e^{-v_2/2}
+          \sqrt{2a_1v_1}\ell f_h(a_1)e^{-a_1k\Delta},
+ \qquad f_h(a)=\frac{2(\cosh(ah)-1)}{a^2h^2}>0.
+\end{equation}
+The factor is $f_h(a)=A_h(-a)A_h(a)$ by direct integration.
+Both own-coordinate corrections $J_{k,ii}$ vanish, since their first
+loading factor $K_{ii}$ is zero. The own fourth-moment pairs are therefore
+exactly their scalar covariance-only maps, for every $q,\ell$.
+
+The scalar proof of Lemma~\ref{lem:cov-inverse} gives, for any two
+candidates in this entire restricted class,
+\begin{equation}\label{eq:scalar-inverse}
+ |v_i-v_i'|+\max(v_i,v_i')|a_i-a_i'|
+          \le C\|F(\theta)-F(\theta')\|,
+ \qquad i=1,2.
+\end{equation}
+Specifically the scalar linear pair is
+$B_1=4v_i f_h(a_i)e^{-a_i\Delta}$, $B_2=e^{-a_i\Delta}B_1$;
+the larger variance endpoint has $|B_1'|\ge c\max(v_i,v_i')$.
+The scalar logarithm of $B_2/B_1$ controls persistence on the positive
+compact interval. Covariance and drift remainder derivatives are
+$O(v_*)$ and $O(v_*^2)$, as before, and are absorbed for small $s_0$.
+
+Put $z(a)=e^{-a\Delta}$. Equation \eqref{eq:diagonal-cubic} gives
+$T_{2,12}=z(a_1)T_{1,12}$ and, for any alternative,
+\[
+ |T_{1,12}|\,|z(a_1)-z(a_1')|
+ \le|T_{2,12}-T_{2,12}'|
+          +|z(a_1')|\,|T_{1,12}-T_{1,12}'|.
+\]
+On the compact interval $|z(a)-z(a')|\ge c|a-a'|$, and the exact
+amplitude obeys $|T_{1,12}|\ge c\sqrt{v_1}|\ell|$. The centered
+transformations are Lipschitz in the raw features. Thus, without knowing
+magnitude or sign at either endpoint,
+\begin{equation}\label{eq:scalar-leverage-inverse}
+ \sqrt{v_1}|\ell|\,|a_1-a_1'|\le C\|F(\theta)-F(\theta')\|.
+\end{equation}
+Together with \eqref{eq:scalar-inverse}, this gives the truth-side bounds
+\begin{equation}\label{eq:directional-inverse}
+ \sqrt{v_1^2+v_1\ell^2}\,|a_1-a_1'|\le C\|F-F'\|,
+ \qquad v_2|a_2-a_2'|\le C\|F-F'\|.
+\end{equation}
+They include comparison with zero-scale alternatives. Since $v_i$ is
+comparable to $s$, Lemma~\ref{lem:moment-variance} and the measurable
+full-class minimum-distance construction prove both upper rates in
+\eqref{eq:directional-rates}. In this statement full class means the
+entire class $\mathcal D(s_0)$, not the unrestricted class with unknown
+loading support. One estimator attains both rates simultaneously.
+
+At positive scale \eqref{eq:scalar-inverse} identifies $a_i,v_i$,
+including at $\ell=0$. Equation \eqref{eq:diagonal-cubic} then identifies
+the signed $\ell$, and the regular formulas identify $b,\mu,\nu,q$;
+$s,V_i$ follow. The scalar covariance inverse also separates zero scale.
+For a contrast estimate, $(c_1x+c_2y)^2\le2c_1^2x^2+2c_2^2y^2$ gives
+upper order $c_1^2r_1+c_2^2r_2$.
+
+The confidence set \eqref{eq:confidence-ball}, constructed over
+$\mathcal D(s_0)$, has uniform coverage by the same moment MSE,
+including at zero scale. Every candidate has moment error at most $Z_n$
+about the truth off or on the coverage event. Equation
+\eqref{eq:directional-inverse} bounds the coordinate diameters separately,
+with each capped by its compact interval. The expected squared contrast diameter
+is at most $C_\alpha(c_1^2r_1+c_2^2r_2)$. This derives the directional
+confidence upper claim without a plug-in leverage estimate.
+
+\subsection{All-price lower bound for the exposed persistence}
+
+For $a_1$, we restrict to $q=0$, $v_1=v_2=s$, fixed signed $\ell$, fixed
+$a_2$ and fixed admissible regular nuisance parameters. With $\varrho=1-\ell^2$,
+we use the representation
+\[
+ B_1=\ell U_2+\sqrt{\varrho}W_1
+\]
+with $U_1,U_2,W_1,B_2$ independent standard Brownian motions. The enlarged
+experiment observes the entire prehistory of $U_2$ and the $Y_2$ path,
+together with every clean asset-1 increment of the full grid. The law of
+the two paths is independent of $a=a_1$. The asset-2 clean levels can be reconstructed from
+$U_2,Y_2$ with their fixed starting level; adding the original level
+errors to both assets is a parameter-independent kernel. The target
+$Y_1$ stays hidden.
+
+Given $U_2$, its conditional mean and covariance are
+\begin{equation}\label{eq:a1-conditional}
+ m_a(t)=\mu_1+\ell\sqrt{2as}\int_{-\infty}^t e^{-a(t-u)}dU_2(u),
+ \qquad s\varrho e^{-a|t-u|}.
+\end{equation}
+Since $U_1$ is independent of this state, the emissions conditional on
+$Y_1$ have fixed means $b_1|I_j|$ and variances
+$D_j=\int_{I_j}e^{2Y_1(t)}dt$.
+
+For finite quadratures put
+\[
+ J_j^{\mathrm m}=\sum_{u\in j}w_u\dot m_a(t_u)e^{2y_u},\qquad
+ W_{jk}=\sum_{u\in j,v\in k}w_uw_v\dot R_a(t_u,t_v)e^{2y_u+2y_v},
+ \quad R_a(t,u)=e^{-a|t-u|}.
+\]
+With $S_j=H_2(Z_j)/(2D_j)$ and
+$T_j^{\mathrm H}=H_4(Z_j)/(4D_j^2)$, define
+\[
+ \mathcal Z=\sum_jW_{jj}T_j^{\mathrm H}
+                  +2\sum_{j<k}W_{jk}S_jS_k.
+\]
+Equation \eqref{eq:Gaussian-diff} gives the complete derivative
+\begin{equation}\label{eq:a1-score}
+ \partial_a p=\EE\left[k\left\{2\sum_jJ_j^{\mathrm m}S_j
+                              +2s\varrho\mathcal Z\right\}\mid U_2\right].
+\end{equation}
+Here $\dot R_a(t,t)=0$, so there is no covariance-diagonal derivative
+term in this scalar fixed-variance submodel. The state-mean derivative
+term is retained. Under $k$, its singleton $H_2$ supports are orthogonal
+to the covariance singleton $H_4$ and pair $H_2H_2$ supports. Since
+$|W_{jk}|\le a_{jk}D_jD_k$, where
+$a_{jk}=\sup_{I_j,I_k}|t-u|e^{-a|t-u|}$, Jensen and Hermite norms give
+\begin{equation}\label{eq:a1-information}
+ I(a)\le2\sum_j\EE[(J_j^{\mathrm m})^2/D_j^2]
+                         +Cs^2\varrho^2\sum_{j,k}a_{jk}^2.
+\end{equation}
+For instance $\EE_k(T_j^{\mathrm H})^2=3/(2D_j^4)$ and
+$\EE_k S_j^2=1/(2D_j^2)$, which cancel the $D$ factors in the covariance
+part.
+
+Differentiating the mean convolution gives
+\begin{equation}\label{eq:a1-mean-derivative}
+ \dot m_a(t)=\ell\sqrt{2as}\int_{-\infty}^t
+       [1/(2a)-(t-u)]e^{-a(t-u)}dU_2(u),
+ \qquad \EE\dot m_a(t)^2=\frac{s\ell^2}{4a^2}.
+\end{equation}
+The variance identity follows by integrating
+$2as\ell^2\int_0^\infty(1/(2a)-v)^2e^{-2av}dv$.
+For the bounded-interval supremum required to control $J_j^{\mathrm m}$,
+let $x=m_a-\mu_1$. It solves the stable two-equation system
+\[
+ dx=-ax\,dt+\ell\sqrt{2as}\,dU_2,
+ \qquad d\dot m_a=-(x+a\dot m_a)dt
+                         +\ell\sqrt{s/(2a)}\,dU_2.
+\]
+Its stationary starting second moments are $\EE x^2=s\ell^2$ and those
+in \eqref{eq:a1-mean-derivative}. On an interval of length at most $d_+$,
+the integrated equations, Cauchy--Schwarz for drift integrals and Doob's
+$L^2$ inequality for the Brownian terms give an inequality of the form
+\[
+ \EE\sup_{t_0\le t\le t_0+u}(|x(t)|^2+|\dot m_a(t)|^2)
+ \le Cs\ell^2+C\int_0^u
+       \EE\sup_{t_0\le t\le t_0+v}(|x(t)|^2+|\dot m_a(t)|^2)dv.
+\]
+Gronwall yields $\EE\sup_{I_j}|\dot m_a|^2\le Cs\ell^2$, uniformly on
+the positive compact $a$ interval. Positive weights imply
+$|J_j^{\mathrm m}|/D_j\le\sup_{I_j}|\dot m_a|$.
+The same geometric summability as \eqref{eq:summability} bounds
+$\sum a_{jk}^2$ by $Cn$. Thus \eqref{eq:a1-information} gives
+$I(a)\le Cn(s^2+s\ell^2)$ uniformly in quadrature. The parameter
+integration and exact-kernel convergence proved after
+\eqref{eq:finite-information} apply here, including the additional observed paths.
+After reconstruction,
+\begin{equation}\label{eq:a1-Hellinger}
+ \Hell^2(P_a^{(n)},P_{a'}^{(n)})
+                  \le Cn(s^2+s\ell^2)|a-a'|^2.
+\end{equation}
+An interior pair with separation $c\sqrt{r_1}$ therefore proves the
+all-price $r_1$ lower order.
+
+\subsection{All-price lower bound for the unexposed persistence}
+
+We now fix $a_1$ and vary $a=a_2$, again with $q=0$, $v_i=s$, fixed signed
+$\ell$ and nuisance parameters. Here the enlarged experiment observes the
+parameter-free $B_1,U_1$ on their full prehistory, together with all clean
+asset-2 increments. These observations reconstruct asset-1 prices using the
+fixed $a_1$. We use the representation
+\[
+ U_2=\ell B_1+\sqrt{\varrho}W_2
+\]
+with $B_1,W_2,B_2,U_1$ independent. The hidden $Y_2$ is independent of
+$B_1$, and the exact conditional emission means and variances are
+\begin{equation}\label{eq:a2-emission}
+ a_j=b_2|I_j|+\ell\int_{I_j}e^{Y_2(t)}dB_1(t),\qquad
+ d_j=\varrho D_j,\quad D_j=\int_{I_j}e^{2Y_2(t)}dt.
+\end{equation}
+The state dependence of the emission means requires retaining their derivatives.
+
+In positive left quadratures, the $B_1$ increments $z_u$ are independent,
+with variance $w_u$. The emission derivatives are now
+\[
+ \mathfrak m_u=\ell e^{y_u}z_u,\qquad
+ \mathfrak d_u=2\varrho w_ue^{2y_u}.
+\]
+The state mean is fixed and its covariance is $sR_a$,
+$R_a(t,u)=e^{-a|t-u|}$. Only in this scalar fixed-variance model is
+$\dot R_a(t,t)=0$. All four arrays
+$\mathsf C^{mm},\mathsf C^{md},\mathsf C^{dm},\mathsf C^{dd}$ from
+\eqref{eq:score-pairs} enter with these derivatives. The exact marginal
+score derivative is
+\begin{equation}\label{eq:a2-score}
+ \partial_a p=(s/2)\EE[k\mathcal Q\mid B_1],
+\end{equation}
+where $\mathcal Q$ is the full expression \eqref{eq:Q-score}; there are
+no mean-state or covariance-diagonal additions in this particular
+submodel. All singleton degrees and pair supports in $\mathcal Q$ are
+orthogonal here. The Hermite identities give the exact norm
+\begin{align}\label{eq:a2-score-norm}
+ \int k\mathcal Q^2\,dx={}&\sum_j\left[
+ \frac{2(\mathsf C^{mm}_{jj})^2}{d_j^2}
+ +\frac{6(\mathsf C^{md}_{jj})^2}{d_j^3}
+ +\frac{3(\mathsf C^{dd}_{jj})^2}{2d_j^4}\right]\notag\\
+ &+4\sum_{j<k}\left[
+ \frac{(\mathsf C^{mm}_{jk})^2}{d_jd_k}
+ +\frac{(\mathsf C^{md}_{jk})^2}{2d_jd_k^2}
+ +\frac{(\mathsf C^{dm}_{jk})^2}{2d_j^2d_k}
+ +\frac{(\mathsf C^{dd}_{jk})^2}{4d_j^2d_k^2}\right].
+\end{align}
+Here the $mm$, $md$ and $dm$ terms account for the random mean, and the
+$dd$ terms for the variance mixture.
+
+The integrated-variance denominators cancel as follows. Let
+\[
+ a_{jk}=\sup_{I_j,I_k}|\dot R_a(t,u)|.
+\]
+Conditional on the full
+$Y_2$ path, the $z_u$ are independent centered Gaussians, since
+$Y_2$ is independent of $B_1$ in this richer experiment. Their second and
+fourth moments give
+\begin{equation}\label{eq:a2-coefficient-bounds}
+ \begin{aligned}
+ \EE_{B_1}(\mathsf C^{mm}_{jj})^2
+       &\le2\ell^4a_{jj}^2D_j^2,\\
+ \EE_{B_1}(\mathsf C^{mm}_{jk})^2
+       &\le\ell^4a_{jk}^2D_jD_k\quad(j\ne k),\\
+ \EE_{B_1}(\mathsf C^{md}_{jk})^2
+       &\le4\ell^2\varrho^2 a_{jk}^2D_jD_k^2,\\
+ |\mathsf C^{dd}_{jk}|&\le4\varrho^2 a_{jk}D_jD_k.
+ \end{aligned}
+\end{equation}
+The transposed $dm$ inequality interchanges $j,k$. To see the first
+bound, $\mathsf C^{mm}_{jj}$ is a Gaussian quadratic form with zero
+conditional mean, since its diagonal coefficients $\dot R_a(t_u,t_u)$
+vanish. Its variance is twice the weighted sum of squared off-diagonal
+coefficients:
+\[
+ 2\ell^4\sum_{u,v\in j}\dot R_a(t_u,t_v)^2
+                 e^{2y_u+2y_v}w_uw_v\le2\ell^4a_{jj}^2D_j^2.
+\]
+For distinct emissions the two independent Brownian sums give the second
+bound without the factor two. For $md$, conditional variance of the
+linear Gaussian sum is
+\[
+ \ell^2\sum_{u\in j}w_ue^{2y_u}
+    \left(2\varrho\sum_{v\in k}\dot R_a(t_u,t_v)w_ve^{2y_v}\right)^2
+ \le4\ell^2\varrho^2a_{jk}^2D_jD_k^2.
+\]
+The $dd$ bound is the absolute bound for two deterministic weighted sums.
+These bounds hold uniformly in the number of quadrature nodes within each emission.
+
+After substitution of $d_j=\varrho D_j$ into \eqref{eq:a2-score-norm}, the three
+singleton contributions are bounded respectively by
+$4\ell^4/\varrho^2$, $24\ell^2/\varrho$, and $24$, times $a_{jj}^2$.
+The analogous pair bounds are controlled by the same fixed envelope.
+Consequently
+\begin{equation}\label{eq:a2-cancellation}
+ \EE\int k\mathcal Q^2\,dx
+ \le24\left(1+\frac{\ell^2}{\varrho}
+                +\frac{\ell^4}{\varrho^2}\right)\sum_{j,k}a_{jk}^2
+ \le\frac{24}{\varrho^2}\sum_{j,k}a_{jk}^2.
+\end{equation}
+The last inequality follows from
+$\varrho^2+\ell^2\varrho+\ell^4\le1$ with $\varrho=1-\ell^2$.
+There are no negative powers of $D_j$ left. Jensen for
+\eqref{eq:a2-score}, summability and $\varrho\ge\kappa$ give
+\begin{equation}\label{eq:a2-information}
+ I(a)\le Cns^2/(1-\ell^2)^2\le C_\kappa ns^2.
+\end{equation}
+Finite quadratures, parameter integration and convergence to exact
+conditional kernels are justified exactly as in the proof of
+Lemma~\ref{lem:all-price}. Here the target state is independent of the
+additional observed driver, but the emission mean remains stochastic. Reconstruction
+of asset-1 prices and addition of one error at each distinct time to both
+assets give
+\begin{equation}\label{eq:a2-Hellinger}
+ \Hell^2(P_a^{(n)},P_{a'}^{(n)})\le C_\kappa ns^2|a-a'|^2.
+\end{equation}
+An interior $a_2$ pair with separation $c\sqrt{r_2}$ proves its all-price
+lower order. In particular, fixed nonzero cross leverage does not
+accelerate this persistence.
+
+For $c_1a_1+c_2a_2$, each coordinate can vary independently over an interval
+of positive length. The two testing arguments lower-bound worst-case risk
+by constants times $c_1^2r_1$ and $c_2^2r_2$; their maximum is at least
+half their sum. The upper bound was proved by the same coordinatewise
+argument after \eqref{eq:directional-inverse}. For honest sets,
+\eqref{eq:two-point-diameter} applies separately to these same two-point
+submodels. The maximum-to-sum inequality then gives, for fixed
+$\alpha<1/4$, the matching expected squared diameter lower
+order. All infima here permit every estimator using the full noisy grid;
+fixing nuisance parameters on a lower submodel does not restrict the procedure.
+This completes Theorem~\ref{thm:diagonal}. None of these rate bounds is
+extended to perfect leverage; the constant in
+\eqref{eq:a2-information} explicitly uses its positive residual margin.
+
+\section{Conclusion}
+
+The precision warranted by noisy prices depends on where leverage carries
+information through the hidden dynamics. In the coupled rank-one example,
+three exact lags identify all four drift entries. In the separate diagonal
+known-support example, the second persistence remains limited by
+covariance-only information. The rates quantify this difference even when
+all nuisance parameters are unknown. Their lower bounds use every noisy
+price level, and honest confidence sets express the resulting uncertainty
+without assuming excitation for coverage. The precision guarantees retain
+fixed excitation and residual margins and a sufficiently small,
+unevaluated covariance ceiling; they do not yet give calibrated sample
+sizes or practical confidence widths.
+
+\section*{Acknowledgements}
+
+The author used ChatGPT (OpenAI, GPT-6 Astra) to assist in drafting and
+polishing the exposition from the author's notes and proof sketches, as well
+as in checking for possible gaps and inconsistencies. The author is
+responsible for the final statements and proofs.
+
+\begin{thebibliography}{9}
+\enlargethispage{2\baselineskip}
+
+\bibitem{ChengRenaultSangrey2024}
+X.~Cheng, E.~Renault and P.~Sangrey,
+\emph{Identifying the Volatility Risk Price Through the Leverage Effect},
+author manuscript, 23 April 2024.
+Publication DOI: \texttt{10.1016/j.jeconom.2024.105943}.
+
+\bibitem{AhsanDufour2024}
+Md.~N.~Ahsan and J.-M.~Dufour,
+\emph{High-frequency instruments and identification-robust inference for
+stochastic volatility models}, October 2024 author manuscript, including
+Supplementary Appendix.
+Journal publication (2025) DOI: \texttt{10.1111/jtsa.12812}.
+
+\bibitem{ADR2025journal}
+Md.~N.~Ahsan, J.-M.~Dufour and G.~Rodriguez-Rondon,
+\emph{Estimation and Inference for Higher-Order Stochastic Volatility
+Models With Leverage}, Journal of Time Series Analysis \textbf{46}(6)
+(2025), 1064--1084.
+DOI: \texttt{10.1111/jtsa.12851}.
+
+\bibitem{GregoirMeddahi2025}
+St\'ephane Gregoir and N.~Meddahi,
+\emph{Towards Identification of Shocks in Linear State-Space Models:
+Application to Stochastic Volatility Model}, Journal of Time Series
+Analysis \textbf{46}(6) (2025), 1205--1223; first published 8 September
+2025. DOI: \texttt{10.1111/jtsa.70012}.
+
+\bibitem{OymakOzay2019}
+S.~Oymak and N.~Ozay,
+\emph{Non-asymptotic Identification of LTI Systems from a Single
+Trajectory}, arXiv:1806.05722v2, 3 February 2019.
+
+\bibitem{MasoliverPerello2005}
+J.~Masoliver and J.~Perell\'o,
+\emph{Multiple time scales and the exponential Ornstein--Uhlenbeck
+stochastic volatility model}, arXiv:cond-mat/0501639v1, 26 January 2005;
+Quantitative Finance \textbf{6} (2006), 423--433.
+DOI: \texttt{10.1080/14697680600727547}.
+
+\bibitem{Gloter2007}
+A.~Gloter,
+\emph{Efficient estimation of drift parameters in stochastic volatility
+models}, Finance and Stochastics \textbf{11} (2007), 495--519.
+DOI: \texttt{10.1007/s00780-007-0048-2}.
+
+\bibitem{AbrahamNauletGassiat2022}
+K.~Abraham, Z.~Naulet and \'E.~Gassiat,
+\emph{Fundamental limits for learning hidden Markov model parameters},
+arXiv:2106.12936v3, 24 October 2022.
+
+\bibitem{ChongEtAl2024}
+C.~H.~Chong, M.~Hoffmann, Y.~Liu, M.~Rosenbaum and G.~Szymanski,
+\emph{Statistical inference for rough volatility: Minimax theory},
+arXiv:2210.01214v2, 15 February 2024.
+
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,1438 @@
+\documentclass[11pt,a4paper]{amsart}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{orcidlink,enumitem,booktabs,array}
+\usepackage[margin=1in]{geometry}
+\raggedbottom
+\hypersetup{hypertexnames=false}
+\AtBeginDocument{\begingroup\setbox0=\hbox{$\square\mathbb{R}$}\endgroup}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+
+\title[Sharp discrete hedging rates]{Sharp Discrete Hedging Rates with a Prescribed Call}
+\author[J.~Vidal Llaurad\'o]{J.~Vidal Llaurad\'o\,\orcidlink{0009-0002-1918-5458}}
+\subjclass[2020]{91G20, 60G22, 60H07}
+\keywords{Discrete hedging, market completeness, Volterra volatility, optimal trading dates, mean-square error, payoff regularity}
+\hypersetup{
+  pdftitle={Sharp Discrete Hedging Rates with a Prescribed Call},
+  pdfauthor={J. Vidal Llaurad\'o},
+  pdfkeywords={discrete hedging, market completeness, Volterra volatility, optimal trading dates, mean-square error, payoff regularity}
+}
+\date{}
+
+\usepackage{mathrsfs}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\G}{\mathcal G}
+\newcommand{\Es}{\EE_s}
+\newcommand{\ph}{\varphi}
+\newcommand{\BS}{\mathcal B}
+\newcommand{\Ent}{\operatorname{Ent}}
+\newcommand{\unif}{\mathrm{unif}}
+\newcommand{\detm}{\mathrm{det}}
+\newcommand{\tail}{\mathrm{tail}}
+\newcommand{\sig}{\mathrm{sig}}
+\newcommand{\pred}{\mathrm{pred}}
+\newcommand{\eps}{\varepsilon}
+
+\begin{document}
+\begin{abstract}
+A call can complete a stochastic-volatility market in continuous time while its changing exposure limits discrete hedging. In a Brownian stock model with bounded Volterra volatility, we determine sharp mean-square errors using one prescribed call with the target's maturity and full Brownian information. The bounds cover all square-integrable total stock/call gains on uniform and optimal deterministic dates, uniformly across a specified family from a latent-driver digital to smooth bounded targets, for each fixed power-kernel exponent $p>-1/2$. In the rough range, optimizing dates improves digital error from order $n^{-1/4}$ to $n^{-1/2}$. In that range, each fixed smooth target retains optimal error of order $(\log n)^2/n$: the completing call's terminal inefficiency persists after payoff smoothing.
+\end{abstract}
+\maketitle
+
+\section{Continuous completion and discrete execution}\label{sec:contract}
+
+A European call can supply the stock market's missing Brownian exposure at every time before maturity while remaining inefficient on a finite trading grid. Its exposure may become small near maturity or vary too much within a cell. We determine how this loss interacts with target regularity when both holdings and deterministic trading dates are optimized.
+
+As maturity approaches, less future volatility remains to affect the call's price. Its exposure to the volatility driver also changes with stock moneyness during a holding period. More frequent adjustments can reduce the hedging error, but their timing depends on the exposure of both the call and the target. We study this adjustment problem with known model parameters and both Brownian drivers observed as they evolve.
+
+\subsection{Relation to earlier work}\label{sec:literature}
+
+Payoff regularity and the allocation of trading dates are central to hedging approximation. Geiss and Gobet \cite{GG2010}, equation~(1) and Theorems~0.5.4, 0.5.6 and 0.5.8, study a selected stock-delta discretization for a stock-terminal payoff; their fractional-smoothness bounds and graded dates separate target regularity from date allocation. Gobet and Landon \cite{GL2014}, Theorems~3.1--3.3, optimize a different criterion: trade count times error quadratic variation, almost surely, with attainment by stopping-time delta schemes under regularity and ellipticity assumptions.
+
+Calls allow higher-order corrections to stock hedges. Gobet and Makhlouf \cite{GM2009}, Definition~1 and Theorems~3 and 6, analyze a prescribed delta--gamma strategy using calls and exchange options expiring at $T_2>T$. Their It\^o expansions control remainders through payoff regularity and Greek ratios; Lemmas~9--10 and the mesh threshold use the positive maturity gap. Their bounds include a critical logarithmic regime, with generic tightness discussed for the uniform selected strategy below fractional regularity one. Finer rates at regularity one remain unresolved there. Brod\'en and Wiktorsson \cite{BW2010} obtain an $n^{-3/2}$ MSE expansion for a selected equidistant delta--gamma strategy with a call target and a later-expiry call hedge under local-volatility assumptions.
+
+Pathwise results also permit common-maturity options. Armstrong and Ionescu \cite{AI2025}, Theorem~3.1, prove convergence with bounded Greek-matching holdings and controlled rough-integral representations, allowing untraded pricing signals. Armstrong and Das \cite{AD2026}, Theorem~1.3 and Corollary~1.4, use $C^3$ pricing functions, bounded derivative-cancelling holdings and suitable vanishing variation. Here the call shares the target's maturity, and its exposure degenerates near that date. We determine necessary and attainable MSE orders over all admitted stock/call gains and deterministic schedules, uniformly in target smoothing.
+
+\subsection{Model, targets and admissible gains}
+
+Fix known $T,S_0,k,c>0$ and $p>-1/2$. Under a fixed pricing law $\QQ$, independent standard Brownian motions $W,B$ generate the full augmented joint natural filtration $\F$. Cash is identically one. Define
+\begin{equation}\label{eq:market}
+ Y_t=c\int_0^t(t-r)^p\,dB_r,\qquad
+ f(y)=1+\tfrac12\tanh y,\qquad \sigma_t=f(Y_t),
+ \qquad dS_t=S_t\sigma_t\,dW_t,
+\end{equation}
+and trade, besides $S$, only the single prescribed call
+\begin{equation}\label{eq:call-contract}
+ C_t=\EE_{\QQ}[(S_T-k)_+\mid\F_t],\qquad 0\le t\le T.
+\end{equation}
+The square-integrable power kernel gives a continuous version of $Y$: splitting translated kernels near their endpoints gives an $L^2$ increment modulus of a positive power (with any smaller power at a borderline), and Gaussian higher moments give continuity. The stock is the strictly positive stochastic exponential. With
+\begin{equation}\label{eq:variance-bounds}
+ m=\tfrac14,\qquad M=\tfrac94,
+ \qquad m\le\sigma_t^2\le M,
+\end{equation}
+conditioning on $B$ gives stock moments of every finite positive order, and $S$ is a true square-integrable martingale. The call is also square integrable and $0\le C_t\le S_t$. The trader observes the driver $B$, which is not a traded asset.
+
+All targets pay at $T$. For $a\in[0,1]$ put
+\begin{equation}\label{eq:targets}
+ D_0=\mathbf1_{\{B_T>0\}},\qquad
+ D_a=\Phi\left(\frac{B_T}{a\sqrt T}\right)\quad(a>0),
+ \qquad U_a=T(1+a^2),
+\end{equation}
+where $\Phi,\ph$ are the standard normal distribution function and density. Symmetry gives $\EE D_a=1/2$. Smoothing changes the target, not the call maturity or trading horizon.
+
+\begin{definition}\label{def:gain}
+On a deterministic $n$-cell grid $\pi=(0=t_0<\cdots<t_n=T)$, the admissible holdings are the finite $\F_{t_i}$-measurable pairs $(\theta_i^S,\theta_i^C)$, constant on their respective cells, whose total scalar cell gain
+\[
+ G_i=\theta_i^S(S_{t_{i+1}}-S_{t_i})+
+       \theta_i^C(C_{t_{i+1}}-C_{t_i})
+\]
+belongs to $L^2(\QQ)$. Define
+\begin{align}
+ R_\pi(p,a)&=\inf_\theta\EE\left[
+       \left(D_a-\tfrac12-\sum_iG_i\right)^2\right],\label{eq:risk}\\
+ R_n^{\detm}(p,a)&=\inf_{\pi:\,n\text{ deterministic cells}}R_\pi(p,a),
+ &R_n^{\unif}(p,a)&=R_{(iT/n)_{i=0}^n}(p,a).\label{eq:risk-inf}
+\end{align}
+\end{definition}
+No maximum-mesh premise is imposed on the infimum. In particular, separate global legwise energy is not required when two large legs cancel in the total gain. These quantities are mean-square errors (MSE); their square roots are $L^2$ norms. All comparison constants below may depend on the fixed parameters $p,T,S_0,k,c$, and not on $a$, the grid, or $n$, unless explicitly indicated.
+
+The target energy will be needed both for necessity and date allocation.
+\begin{lemma}\label{lem:target}
+For $t<T$,
+\begin{equation}\label{eq:target-representation}
+ \EE_tD_a=\Phi\left(\frac{B_t}{\sqrt{U_a-t}}\right),\qquad
+ D_a-\tfrac12=\int_0^T y_t^{(a)}\,dB_t,\qquad
+ y_t^{(a)}=\frac{\ph(B_t/\sqrt{U_a-t})}{\sqrt{U_a-t}}.
+\end{equation}
+The coefficient $y^{(a)}$ is a martingale between strict preterminal dates. Its energy density is increasing and satisfies
+\begin{align}
+ F_a(t):=\EE[(y_t^{(a)})^2]
+ &=\frac1{2\pi\sqrt{U_a^2-t^2}},
+ \qquad\Var(D_a)=\frac1{2\pi}\arcsin(T/U_a),\label{eq:target-energy}\\
+ TF_a(T(1-r))
+ &=\frac1{2\pi\sqrt{(a^2+r)(2+a^2-r)}}
+ \asymp(a^2+r)^{-1/2},\quad 0<r\le1,\label{eq:energy-residual}\\
+ \frac{F_a'(t)}{F_a(t)}&=\frac{t}{U_a^2-t^2}
+ \le\frac1{T-t}.\label{eq:energy-logderivative}
+\end{align}
+The comparison in \eqref{eq:energy-residual} is uniform in $a\in[0,1]$.
+\end{lemma}
+\begin{proof}
+Gaussian convolution of $\Phi$ proves the conditional price, including the digital at $a=0$. Its space derivative is $y^{(a)}$, and the backward heat equation removes the drift in It\^o's formula. Differentiating the heat equation, or convolving its normal density, also proves $\EE_s y_u^{(a)}=y_s^{(a)}$ for $s\le u<T$. A one-dimensional Gaussian integral gives
+\[
+ \EE e^{-B_t^2/(U_a-t)}=\sqrt{\frac{U_a-t}{U_a+t}},
+\]
+which gives the formula for $F_a$. Integrating $F_a$ from $0$ to $T$ gives $\Var(D_a)$. The conditional martingale converges in $L^2$ to $D_a$, so the representation extends to $T$, also at $a=0$, without assigning a square-integrable terminal value to $y^{(0)}$. The remaining assertions follow by substitution and differentiation; $1\le2+a^2-r\le3$.
+\end{proof}
+
+\section{Sharp rates and the smoothing crossover}\label{sec:main}
+
+The allocation of dates balances the target's remaining Brownian energy against the call's local hedging inefficiency. In residual time, the density below combines both quantities; its quantiles place more dates where either makes a long holding period costly. Put
+\begin{equation}\label{eq:allocation-definitions}
+ \begin{gathered}
+ q=\max(2,2p+2),\qquad \eps_n=n^{-1/(q-1)},\qquad
+ \delta_n=n^{-1/q},\\
+ f_{q,a}(r)=r^{-q/2}(a^2+r)^{-1/4},\qquad
+ \Lambda_{n,q}(a)=\int_{\eps_n}^1 f_{q,a}(r)\,dr.
+ \end{gathered}
+\end{equation}
+The allocation density $f_{q,a}$ is distinct from the volatility map $f$.
+
+\begin{theorem}\label{thm:main}
+For every fixed $p>-1/2$ and fixed positive $T,S_0,k,c$, there exist $0<c_*\le C_*<\infty$ and $n_0$, independent of $a\in[0,1]$, such that for all $n\ge n_0$ and all $a\in[0,1]$,
+\begin{equation}\label{eq:main-rates}
+ R_n^{\detm}(p,a)\asymp\frac{\Lambda_{n,q}(a)^2}{n},
+ \qquad
+ R_n^{\unif}(p,a)\asymp\frac{\delta_n}{\sqrt{a^2+\delta_n}}.
+\end{equation}
+For $q>2$ the first expression is comparable to
+\begin{equation}\label{eq:supercritical}
+ \frac{\eps_n}{\sqrt{a^2+\eps_n}}.
+\end{equation}
+For $q=2$ it is comparable to
+\begin{equation}\label{eq:critical}
+ \begin{cases}
+ n^{-1/2},&na^2\le1,\\[2pt]
+ (1+\log(na^2))^2/(na),&na^2>1.
+ \end{cases}
+\end{equation}
+An attaining sequence of deterministic grids is given by
+\begin{equation}\label{eq:quantiles}
+ \int_{r_j}^1 f_{q,a}(r)\,dr=\frac{j}{n-1}\Lambda_{n,q}(a),
+ \quad 0\le j<n,\qquad
+ t_j=T(1-r_j),\quad t_n=T,
+\end{equation}
+where $r_0=1>\cdots>r_{n-1}=\eps_n$. The stock/call projection holdings defined in \eqref{eq:frozen-holdings} attain the upper order on these dates.
+\end{theorem}
+
+Here $\asymp$ denotes two-sided orders, not a leading-constant limit. The constants cover arbitrary deterministic sequences $a=a_n$. The crossover is $a\asymp n^{-1/(2q)}$ on uniform dates and $a\asymp n^{-1/(2(q-1))}$ on optimized dates. No uniformity as $p\downarrow-1/2$, $H\downarrow0$, or $c\downarrow0$ is asserted.
+
+\begin{corollary}\label{cor:consequences}
+For the digital target,
+\[
+ R_n^{\unif}(p,0)=\Theta(n^{-1/(2q)}),\qquad
+ R_n^{\detm}(p,0)=\Theta(n^{-1/(2(q-1))}).
+\]
+In the rough family $p=H-1/2$, fixed $0<H<1/2$, and the smooth model $p=1$, these become
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Digital experiment & Uniform-date MSE & Deterministic-optimal MSE\\
+\midrule
+Rough, fixed $H\in(0,1/2)$ & $\Theta(n^{-1/4})$ & $\Theta(n^{-1/2})$\\
+Smooth, $Y_t=c\int_0^tB_r\,dr$ & $\Theta(n^{-1/8})$ & $\Theta(n^{-1/6})$\\
+\bottomrule
+\end{tabular}
+\end{center}
+For every fixed $a>0$, in the rough or $p=0$ market,
+\begin{equation}\label{eq:smooth-log}
+ R_n^{\detm}(p,a)=\Theta((\log n)^2/n),\qquad
+ R_n^{\unif}(p,a)=\Theta(n^{-1/2}).
+\end{equation}
+For fixed $a>0$ and $p>0$, the corresponding orders are $n^{-1/(q-1)}$ and $n^{-1/q}$.
+\end{corollary}
+The smooth model identity follows by stochastic Fubini. Norm exponents are half of the MSE exponents: the digital table gives $(1/8,1/4)$ in the rough case and $(1/16,1/12)$ in the smooth case. Optimizing dates improves the digital rates in both models. Smoothing the target improves them further, but leaves the squared logarithm in \eqref{eq:smooth-log}. That penalty is therefore not confined to a discontinuous payoff: it is necessary over every admitted gain and every deterministic $n$-cell schedule.
+
+Two features of the call determine the exponent $q$. Independent stock noise changes the call's missing-driver exposure through moneyness, producing the scale $h/(T-s)^2$. For $p>0$, decay of that exposure relative to a stock-orthogonal quadratic component gives the stronger scale $h/(T-s)^{2p+2}$. This explains the slower rates in the specified smooth-volatility model: the loss comes from the behavior of the hedging instrument's exposure near maturity.
+
+The call's exact projection on each trading cell gives upper bounds that control both exposure variation and stock-delta leakage. We then use the cell bounds to allocate trading dates: a counted refinement gives a lower bound for every deterministic schedule, and equal-mass spacing attains the same order. At $q=2$, a smooth target leaves the allocation integral $\int dr/r$, which accounts for the squared logarithm.
+
+\section{The call and its interval projection}\label{sec:geometry}
+
+Write
+\begin{equation}\label{eq:black-definitions}
+ \begin{gathered}
+ A_{uv}=\int_u^v\sigma_r^2\,dr,\qquad L_t=\log(S_t/k),
+ \qquad h_0(y)=2f(y)f'(y),\\
+ V(L,A)=\frac{\ph(L/\sqrt A+\sqrt A/2)}{2\sqrt A},\qquad
+ \Gamma_t=c\int_t^T(u-t)^p h_0(Y_u)\,du.
+ \end{gathered}
+\end{equation}
+The quantities $A_{tT}$ and $\Gamma_t$ are future functionals, not observed state coordinates. Direct differentiation gives
+\begin{equation}\label{eq:h0-bounds}
+ 0<h_0\le\tfrac32,\qquad h_0(y)\ge\tfrac12 e^{-2|y|},
+ \qquad |h_0'|\le3h_0,\qquad M-f(y)^2\le C e^{-2y}.
+\end{equation}
+For spot $x>0$ and total variance $A>0$, let
+\[
+ \BS(x,A)=x\Phi(d_+)-k\Phi(d_-),\qquad
+ d_\pm=\frac{\log(x/k)}{\sqrt A}\pm\frac{\sqrt A}{2}.
+\]
+Then $\BS_x=\Phi(d_+)$, $\BS_A=xV$, and
+$\BS_A=\tfrac12 x^2\BS_{xx}$.
+
+\begin{proposition}\label{prop:call}
+The call admits the predictable representation
+\begin{equation}\label{eq:call-representation}
+ \begin{gathered}
+ C_t=\EE_t\BS(S_t,A_{tT}),\qquad
+ dC_t=S_t\sigma_t\delta_t\,dW_t+b_t\,dB_t,\\
+ \delta_t=\EE_t\Phi(d_+(S_t,A_{tT})),\qquad
+ \rho_t=\EE_t[V(L_t,A_{tT})\Gamma_t],\qquad b_t=S_t\rho_t>0.
+ \end{gathered}
+\end{equation}
+Positivity holds $dt\otimes\QQ$-almost everywhere before $T$. The coefficients are square integrable. Moreover $U_t=\EE_t[S_T\mathbf1_{\{S_T>k\}}]=S_t\delta_t$ is a square-integrable martingale with
+\begin{equation}\label{eq:delta-martingale}
+ \begin{gathered}
+ dU_t=S_t\sigma_t(\delta_t+2\EE_tV)\,dW_t
+             +S_t\delta_B(t)\,dB_t,\\
+ \delta_B(t)=\EE_t[V\Gamma_t(\tfrac12-L_t/A_{tT})],\qquad
+ |S_t\delta_B(t)|\le b_t\left(\tfrac12+\frac{|L_t|}{m(T-t)}\right).
+ \end{gathered}
+\end{equation}
+In these formulas, $V$ is evaluated at $(L_t,A_{tT})$.
+\end{proposition}
+\begin{proof}
+Conditional on $\F_t$ and the whole $B$ path, the future stock log-return is normal with variance $A=A_{tT}$, proving the price formula. Appendix~\ref{app:closure} justifies Gaussian differentiation and approximation at the strike for every $p>-1/2$. To compute the exposures, let
+\[
+ J_t=\int_t^T f'(Y_u)c(u-t)^p\,dW_u,\qquad
+ D_t^0=\int_t^T\sigma_u f'(Y_u)c(u-t)^p\,du=\Gamma_t/2.
+\]
+The Gaussian derivative of $S_T$ in direction $B_t$ is $S_T(J_t-D_t^0)$. Given the $B$ path, the pair consisting of the future stock log integral and $J_t$ has covariance $D_t^0$. Gaussian regression and integration at the strike threshold give
+\[
+ \EE[\mathbf1_{\{S_T>k\}}S_T(J_t-D_t^0)\mid\F_t,B]
+ =S_tD_t^0\frac{\ph(d_+(S_t,A))}{\sqrt A}
+ =S_tV(L_t,A)\Gamma_t.
+\]
+The positive term on the right arises from integration at the strike threshold. The $W$ derivative gives $S_t\sigma_t\Phi(d_+)$. Predictable projection identifies \eqref{eq:call-representation}. Since the integrand of $\Gamma_t$ is strictly positive and $A\ge m(T-t)>0$, conditional expectation preserves positivity. Also
+\[
+ b_t\le C S_t(T-t)^{p+1/2},\qquad 0<\delta_t<1,
+\]
+so stock moments give product-space integrability. The closed derivative and martingale arguments ensure the predictable versions of these formulas. Finally, differentiating the positive-variance Black convolution for $x\Phi(d_+)$ gives \eqref{eq:delta-martingale}; its compact-preterminal approximation justification is also in Appendix~\ref{app:closure}.
+\end{proof}
+
+The traded exposure determinant is $S_t\sigma_t b_t>0$. Thus for any $X\in L^2(\F_T)$ with Brownian coefficients $(x_t,y_t)$, continuous replication uses
+\begin{equation}\label{eq:continuous-holdings}
+ \theta_t^C=y_t/b_t,\qquad
+ \theta_t^S=\frac{x_t-S_t\sigma_t\delta_t y_t/b_t}{S_t\sigma_t}.
+\end{equation}
+Replication is defined in the completed multivariate total-exposure norm
+\begin{equation}\label{eq:continuous-energy}
+ \EE\int_0^T\left[(\theta_t^S S_t\sigma_t+
+             \theta_t^C S_t\sigma_t\delta_t)^2+(\theta_t^C b_t)^2\right]dt
+ =\EE\int_0^T(x_t^2+y_t^2)dt<\infty.
+\end{equation}
+The integral is constructed by localizing both legs on the same bounded holding norms and stopping the total price quadratic variation. Each localized leg is square integrable; their sum converges in total-exposure norm and hence in $L^2$ martingale path norm. The same truncation multiplies both legs, preserving cancellation. No inverse-exposure floor or unweighted holding moment follows. For $D_a$ the energy is $\Var(D_a)$. This continuous convention is distinct from Definition~\ref{def:gain}; continuous completion alone gives no quantitative grid rate.
+
+\subsection{Closed cell gain spaces}
+Fix a cell $[s,t]$, $h=t-s$, and write $\Es=\EE[\,\cdot\mid\F_s]$. Define
+\begin{equation}\label{eq:cell-definitions}
+ \beta_s=\frac{\Es[\Delta S\Delta C]}{\Es[(\Delta S)^2]},\qquad
+ v_s=\Es[(\Delta C-\beta_s\Delta S)^2],\qquad
+ g_s=\Es\int_s^t b_u\,du,
+ \qquad \zeta_{s,h}=1-\frac{g_s^2}{h v_s}.
+\end{equation}
+Conditional It\^o isometry gives
+\begin{equation}\label{eq:variance-decomposition}
+ v_s=\Es\int_s^t b_u^2\,du+
+       \Es\int_s^tS_u^2\sigma_u^2(\delta_u-\beta_s)^2\,du>0.
+\end{equation}
+The second term is the stock-delta leakage from a single constant stock/call ratio. The conditional stock variance is positive, $0<\beta_s<1$, and the two-asset conditional Gram determinant is $\Es[(\Delta S)^2]v_s>0$. Cauchy--Schwarz proves $0\le\zeta\le1$, and more explicitly
+\[
+ \zeta=\frac{\Es\int_s^t(b_u-g_s/h)^2du+
+                  \Es\int_s^tS_u^2\sigma_u^2(\delta_u-\beta_s)^2du}{v_s}.
+\]
+Both types of variation enter the same bounded inefficiency.
+
+\begin{proposition}\label{prop:projection}
+For any $L^2$ target measurable with respect to $B$, write
+$X=\EE X+\int_0^T y_u\,dB_u$ with $B$-predictable $y$. Put
+\[
+ A_s^X=\Es\int_s^t y_u^2du,\qquad c_s^X=\Es\int_s^t y_ub_u\,du.
+\]
+The exact conditional optimal residual on this cell is
+\begin{equation}\label{eq:true-residual}
+ \mathfrak r_{s,t}(X)=A_s^X-\frac{(c_s^X)^2}{v_s}.
+\end{equation}
+It is attained by call units $c_s^X/v_s$ and stock units $-\beta_s c_s^X/v_s$, with total conditional gain energy at most $A_s^X$. For a deterministic grid, with initial cash $\EE X$,
+\begin{equation}\label{eq:sum-residual}
+ R_\pi(X)=\sum_i\EE\mathfrak r_{t_i,t_{i+1}}(X).
+\end{equation}
+The infimum covers exactly all the gains in Definition~\ref{def:gain}.
+\end{proposition}
+\begin{proof}
+Let $\mathsf G_s$ be the conditional Gram matrix of $(\Delta S,\Delta C)$. It is finite positive definite almost surely. For any finite $\F_s$-measurable vector $\theta$, localization on $\{\|\theta\|\le j\}$ proves, as an extended nonnegative identity,
+\[
+ \Es[(\theta^S\Delta S+\theta^C\Delta C)^2]
+       =\theta^\top\mathsf G_s\theta.
+\]
+Consequently the weighted space with squared norm $\EE\theta^\top\mathsf G_s\theta$ is complete: multiplication by $\mathsf G_s^{1/2}$ identifies it with $L^2(\F_s;\R^2)$, and the pointwise inverse is measurable and finite. Its scalar gain map is an isometry, so its image is closed. For admissible holdings the conditional mean of the total gain is zero, by the same localization and $L^2$ convergence. Distinct cell spaces are therefore orthogonal.
+
+The target increment $\int_s^t y\,dB$ has zero conditional stock covariance, whereas its covariance with the stock-orthogonalized call is $c_s^X$. Conditional positivity of the joint target/asset Gram matrix (first for rational vectors, then by continuity) gives $(c_s^X)^2/v_s\le A_s^X$. Two-dimensional orthogonalization gives the stated holdings and residual. The energy bound makes these holdings admissible. Localization and Cauchy--Schwarz justify cross moments with every other admissible total gain, so the resulting gains are orthogonal projections onto the closed cell gain spaces. Earlier and later target increments are orthogonal to this cell's gain. Summing the cell projections proves \eqref{eq:sum-residual}.
+\end{proof}
+
+\subsection{A projection strategy and its freezing error}
+If $y$ is a martingale between strict preterminal dates, projection of the frozen increment $y_s\Delta B$ uses
+\begin{equation}\label{eq:frozen-holdings}
+ \theta_s^C=\frac{y_sg_s}{v_s},\qquad
+ \theta_s^S=-\beta_s\frac{y_sg_s}{v_s},\qquad
+ \Es[(\theta_s^S\Delta S+\theta_s^C\Delta C)^2]
+       =\frac{y_s^2g_s^2}{v_s}\le h y_s^2.
+\end{equation}
+For $F(u)=\EE y_u^2$ define
+\begin{equation}\label{eq:bridge-quantities}
+ J_\pi=\sum_i h_i\EE[y_{t_i}^2\zeta_{t_i,h_i}],\qquad
+ E_B(\pi)=\sum_i\int_{t_i}^{t_{i+1}}(F(u)-F(t_i))\,du.
+\end{equation}
+The distance squared of $\sum_i y_{t_i}\Delta_iB$ to the grid gain space is $J_\pi$. Martingality of $y$ and It\^o isometry give
+$\|\int y\,dB-\sum_i y_{t_i}\Delta_iB\|_2^2=E_B(\pi)$, with the integrable endpoint understood by limits. The strategy \eqref{eq:frozen-holdings} thus has MSE at most
+\begin{equation}\label{eq:upper-bridge}
+ (\sqrt{J_\pi}+\sqrt{E_B(\pi)})^2
+ \le2(J_\pi+E_B(\pi)).
+\end{equation}
+For the lower bound, we retain the time-varying target coefficient inside \eqref{eq:true-residual}. This preserves the lower order uniformly in target smoothing.
+
+\section{Lower bounds over all admissible gains}\label{sec:necessity}
+
+\subsection{A lower bound from independent stock noise}
+The first obstruction comes from independent stock noise. It does not rely on the upper estimates, and it applies to any $L^2$ $B$-measurable target, including a path-dependent one.
+
+\begin{theorem}\label{thm:direct}
+Fix $\ell>0$, put $\tau=T-s$ and $\kappa=m\ell^2/(4M^2)$. On $\{L_s\ge\ell\}$, if $\tau\le\ell/M$, then for every deterministic cell $[s,t]\subseteq[s,T]$,
+\begin{equation}\label{eq:direct-coercivity}
+ \mathfrak r_{s,t}(X)\ge
+ \Es\int_s^t y_u^2\frac{\kappa(u-s)}{\tau^2+\kappa(u-s)}\,du.
+\end{equation}
+This is a lower bound for the true target and the entire admitted gain class.
+\end{theorem}
+\begin{proof}
+Let $\G_u=\F_s\vee\sigma(B_r-B_s:s\le r\le u)$, completed. Given $\G_u$, the stock innovation is normal:
+\[
+ S_u=S_s e^{\sqrt{A_{su}}Z-A_{su}/2},\qquad Z\sim N(0,1),
+ \qquad m(u-s)\le A_{su}\le M(u-s).
+\]
+Future $B$ is independent of $Z$. The exact Black convolution identity
+\begin{equation}\label{eq:black-semigroup}
+ \EE_Z\!\left[S_s e^{\sqrt{a_*}Z-a_*/2}
+ V(L_s+\sqrt{a_*}Z-a_*/2,A)\right]=S_sV(L_s,a_*+A)
+\end{equation}
+follows by differentiating the Black semigroup with respect to its positive variance. Consequently the $W$-averaged missing-driver exposure is
+\begin{equation}\label{eq:mu-logderivative}
+ \begin{gathered}
+ \mu_u:=\EE[b_u\mid\G_u]
+   =S_s\EE[V(L_s,A_{sT})\Gamma_u\mid\G_u]>0,\\
+ \frac{\partial_L\mu_u}{\mu_u}=\tfrac12-L_sR_u,
+ \qquad
+ R_u=\frac{\EE[V\Gamma_u/A_{sT}\mid\G_u]}{
+                  \EE[V\Gamma_u\mid\G_u]}
+       \in[(M\tau)^{-1},(m\tau)^{-1}].
+ \end{gathered}
+\end{equation}
+The $L$ derivative varies initial log spot with $B$ history fixed, and includes the spot factor $S_s$; hence $\partial_L\log(SV)=1/2-L/A$. On strict preterminal intervals the positive variance bounds and bounded $\Gamma_u$ justify differentiation and Gaussian integration by parts. Projection onto the constant and the first normal coordinate of independent stock noise gives
+\begin{align*}
+ \EE[b_uZ\mid\G_u]&=\sqrt{A_{su}}\,\partial_L\mu_u,\\
+ \EE[b_u^2\mid\G_u]&\ge\mu_u^2+A_{su}(\partial_L\mu_u)^2
+ \ge w_s(u)\mu_u^2,\qquad
+ w_s(u)=1+\kappa(u-s)/\tau^2.
+\end{align*}
+Indeed $L_s\ge\ell$ and $\tau\le\ell/M$ imply
+$|1/2-L_sR_u|\ge\ell/(2M\tau)$.
+
+Since $y_u$ is $B$-predictable it is $\G_u$-measurable, so the exact covariance is $c_s^X=\Es\int_s^t y_u\mu_u\,du$. Weighted conditional Cauchy--Schwarz on time and future $B$ yields
+\begin{equation}\label{eq:true-weighted-cs}
+ (c_s^X)^2\le
+ \left(\Es\int_s^t\frac{y_u^2}{w_s(u)}\,du\right)
+ \left(\Es\int_s^t w_s(u)\mu_u^2\,du\right)
+ \le v_s\Es\int_s^t\frac{y_u^2}{w_s(u)}\,du.
+\end{equation}
+The last step uses \eqref{eq:variance-decomposition}. Subtracting this captured energy from $A_s^X$ proves \eqref{eq:direct-coercivity}. The weighted inequality retains the time-varying coefficient $y_u$. For cells ending at $T$, monotone convergence extends the nonnegative energy bounds from strict preterminal times. The target and call coefficient $L^2$ energies control convergence of the covariance. Localization from Proposition~\ref{prop:projection} covers every finite admitted holding.
+\end{proof}
+
+Averaging over stock noise gives a uniform unconditional bound. Conditional on the full $B$ path, for $s\ge T/2$, $L_s$ is normal with mean $L_0-A_{0s}/2$ and variance $A_{0s}\in[mT/2,MT]$. Thus
+\begin{equation}\label{eq:moneyness-mass}
+ \QQ(L_s\ge\ell\mid\F_T^B)\ge p_\ell>0,
+ \qquad
+ p_\ell=1-\Phi\left(\frac{\ell+|L_0|+MT/2}{\sqrt{mT/2}}\right).
+\end{equation}
+In particular $\EE[y_u^2\mathbf1_{\{L_s\ge\ell\}}]\ge p_\ell\EE y_u^2$. The choice $\ell=MT$ makes the maturity restriction hold throughout. If $F(u)=\EE y_u^2$ is increasing, the integral Chebyshev inequality for the two increasing functions $F$ and $1-1/w_s$ gives
+\begin{equation}\label{eq:whole-cell-moneyness}
+ \EE\mathfrak r_{s,t}(X)\ge
+ p_\ell W_{s,t}\,\mathcal F(\kappa h/\tau^2),\qquad
+ W_{s,t}=\int_s^tF(u)\,du,\qquad
+ \mathcal F(x)=1-\frac{\log(1+x)}{x}.
+\end{equation}
+The inequality
+$(F(u)-F(v))(\psi(u)-\psi(v))\ge0$ holds pointwise. Integrating over the square with bounded truncations of $F$, followed by monotone convergence, also covers integrable endpoint singularities. Finally
+\begin{equation}\label{eq:moneyness-min}
+ \mathcal F(x)=\int_0^1\frac{xv}{1+xv}\,dv
+ \ge\frac{x}{2(1+x)}\ge\tfrac14\min(1,x).
+\end{equation}
+The bound controls the whole target energy in a terminal cell. The positive probability in \eqref{eq:moneyness-mass} is independent of target smoothing.
+
+\subsection{A stock-orthogonal Hermite obstruction}
+For nonnegative powers the exposure-decay mechanism is stronger. The witness below combines the first and second Gaussian chaoses to remove the stock component. Its exact conditional form gives a bound for every cell length.
+
+\begin{proposition}\label{prop:hermite}
+For $p\ge0$, set $q_0=2p+2$, $G=3c/[2(p+1)]$ and
+$\kappa_0=4m^2/[G^2(2+MT)]$. For every $L^2$ $B$-measurable target and every cell,
+\begin{equation}\label{eq:hermite-residual}
+ \mathfrak r_{s,t}(X)\ge
+ A_s^X\frac{\kappa_0 h}{\tau^{q_0}+\kappa_0 h}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+With $\G_u$ as above define the $B$-martingales
+\[
+ P_u=\EE[\BS(S_s,A_{sT})\mid\G_u],\qquad
+ H_u=\EE[S_s^2\BS_{xx}(S_s,A_{sT})\mid\G_u].
+\]
+They are square integrable, since $0\le\BS\le S_s$ and
+$0<H_u\le S_s/\sqrt{2\pi m\tau}$. Also $\EE[C_t\mid\G_t]=P_t$ and $P_s=C_s$. Given $\G_t$, put $a_*=A_{st}$ and take the standard normal stock innovation $Z$. The witness
+\[
+ \Xi=Z^2-1-\sqrt{a_*}Z
+\]
+satisfies
+\begin{equation}\label{eq:witness}
+ \EE[\Xi\mid\G_t]=0,\quad
+ \EE[\Xi^2\mid\G_t]=2+a_*,\quad
+ \EE[\Delta S\,\Xi\mid\G_t]=0,\quad
+ \EE[C_t\Xi\mid\G_t]=a_*H_t.
+\end{equation}
+For completeness, if $P_aF(x)=\EE F(xe^{\sqrt aZ-a/2})$, differentiation of the Gaussian convolution density gives
+\[
+ \EE[F(xe^{\sqrt aZ-a/2})Z]=\sqrt a\,\partial_{\log x}P_aF,
+ \quad
+ \EE[F(xe^{\sqrt aZ-a/2})(Z^2-1)]=a\,\partial_{\log x}^2P_aF.
+\]
+Their combination is $a x^2\partial_x^2P_aF$. Applying this identity to the conditional call function at $t$ and adding the variances gives the last identity in \eqref{eq:witness}. For $F(x)=x$ it gives zero. Gaussian moments prove the other identities. At $t=T$, the convolution has variance $a_*\ge mh>0$, so the same calculation applies to the kinked payoff of linear growth.
+
+Conditional variance decomposition and Cauchy--Schwarz against $\Xi$ give, for any finite $\F_s$-measurable stock coefficient,
+\begin{equation}\label{eq:hermite-variance}
+ v_s\ge V_{\sig}+\frac{m^2h^2}{2+MT}\Es H_t^2,
+ \qquad V_{\sig}=\Es(P_t-P_s)^2.
+\end{equation}
+The Gaussian derivative rule in Appendix~\ref{app:closure}, conditional on $\F_s$, gives
+\[
+ dP_u=\nu_u\,dB_u,\qquad
+ \nu_u=\EE[\BS_A(S_s,A_{sT})\Gamma_u\mid\G_u]
+ \le\tfrac12G\tau^{p+1}H_u.
+\]
+Here $\Gamma_u\le G(T-u)^{p+1}\le G\tau^{p+1}$ and
+$\BS_A=\tfrac12 S_s^2\BS_{xx}$. Martingale increase of $\Es H_u^2$ implies
+\begin{equation}\label{eq:signal-bound}
+ V_{\sig}\le\frac{G^2\tau^{q_0}h}{4}\Es H_t^2,
+ \qquad v_s\ge(1+\kappa_0h/\tau^{q_0})V_{\sig}.
+\end{equation}
+The true target increment is $\G_t$-measurable; its call covariance is its covariance with $P_t-P_s$, and its stock covariance is zero. Thus $(c_s^X)^2\le A_s^X V_{\sig}$. Substitution in \eqref{eq:true-residual}, together with \eqref{eq:signal-bound}, proves the result, also when $V_{\sig}=0$. Localization extends the conditional comparisons to all admissible holdings.
+\end{proof}
+
+Moneyness gives exponent $2$ for $p<0$; exposure decay gives $2p+2$ for $p>0$. Either works at $p=0$. This explains $q=\max(2,2p+2)$ independently of the upper analysis.
+
+\section{Upper bounds and target weighting}\label{sec:upper}
+
+To match the lower bounds, we must control hedging error even when the call's exposure is small or the observed history is extreme. We bound its variation relative to its current exposure, allowing that exposure to approach zero. The appendices establish the following bound for each decision history.
+
+For $\tau=T-s$ define the predictor
+\[
+ \mu_s(v)=c\int_0^s(s+v-r)^p\,dB_r,\qquad 0\le v\le\tau.
+\]
+For $p\ge0$ put
+\begin{equation}\label{eq:nonnegative-envelope}
+ M_s=\frac{p+1}{\tau^{p+1}}\int_0^\tau v^p|\mu_s(v)|\,dv,
+ \qquad \mathcal A_s=C\exp\{C(M_s+|L_s|)\}.
+\end{equation}
+For $-1/2<p<0$, put $H=p+1/2$, $\alpha=p+1\in(1/2,1)$ and
+\begin{equation}\label{eq:rough-envelope}
+ K_s=\sup_{0\le v\le\tau}|\mu_s(v)|,
+ \qquad \mathcal K_s=C e^{CK_s}(1+K_s)^b(1+|L_s|)^b,
+\end{equation}
+where $b<\infty$ is a fixed exponent that can be enlarged in a finite number of estimates.
+
+\begin{lemma}\label{lem:statewise}
+For $h\le\tau/2$ the call's inefficiency satisfies, on all states,
+\begin{equation}\label{eq:statewise}
+ \zeta_{s,h}\le
+ \begin{cases}
+ \min(1,C\mathcal A_s^2h\tau^{-(2p+2)}),&p\ge0,\\
+ \min(1,C\mathcal K_s^2h\tau^{-2}),&-1/2<p<0.
+ \end{cases}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Appendix~\ref{app:nonnegative} proves the nonnegative branch: Black-weight entropy gives relative sensitivity, conditional Gaussian derivatives and positive-mixture moments give relative exposure variation, and the delta martingale controls stock leakage. Appendix~\ref{app:rough} proves the rough branch. Its extra steps are refined innovation covariance, separate entropy estimates for $V$ and $V\Gamma_s$, a positive finite-energy Cameron--Martin shift, and absorption of the random prefix predictor before Gaussian Poincar\'e. Both proofs conclude with a localized conditional comparison, then use $\zeta\le1$ on ineligible states. The global strategy uses the holdings in \eqref{eq:frozen-holdings}, so this comparison imposes no inverse-exposure integrability condition.
+\end{proof}
+
+To obtain bounds uniform in target smoothing, define a probability on past decision information only by
+\begin{equation}\label{eq:past-tilt}
+ \frac{d\QQ_s^a}{d\QQ}\bigg|_{\F_s}
+       =\frac{(y_s^{(a)})^2}{F_a(s)}.
+\end{equation}
+Its past $B$ covariance is
+\begin{equation}\label{eq:contracted-covariance}
+ \Cov_{\QQ_s^a}(B_u,B_v)=\min(u,v)-\frac{2uv}{U_a+s},
+ \qquad u,v\le s.
+\end{equation}
+Indeed the weight is proportional to $\exp(-B_s^2/(U_a-s))$. Multiplication of the $N(0,s)$ density changes its variance to $s(U_a-s)/(U_a+s)$, and its conditional Brownian bridge remains unchanged. Past $W$ stays independent Brownian motion. Every conditional future option expectation in $\zeta$ is still under $\QQ$.
+
+\begin{lemma}\label{lem:averaging}
+All fixed finite moments of the envelopes in \eqref{eq:nonnegative-envelope}--\eqref{eq:rough-envelope} are bounded uniformly under $\QQ_s^a$, for $a\in[0,1]$, $s<T$. Consequently
+\begin{equation}\label{eq:averaged-bound}
+ \EE_{\QQ_s^a}\zeta_{s,h}\le C\min(1,h(T-s)^{-q}),
+ \qquad h\le(T-s)/2.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The covariance in \eqref{eq:contracted-covariance} subtracts a nonnegative rank-one form from Brownian covariance. Hence the variance of every centered linear Gaussian functional of past $B$ is no greater than its original variance. For $p\ge0$, each $\mu_s(v)$ has variance at most $c^2T^{2p+1}/(2p+1)$. Jensen first for the normalized $v^p$ weight and then for the convex function $e^{\eta x^2}$ gives a uniformly bounded small exponential square moment for $M_s$.
+
+For $p<0$, choose $\gamma_0\in(-p,1/2)$ and let $\widehat B_x=B_s-B_{s-x}$ be the reversed increments. Integration by parts gives
+\begin{equation}\label{eq:predictor-ibp}
+ \int_0^s(v+x)^p\,d\widehat B_x
+ =(v+s)^p\widehat B_s-p\int_0^s(v+x)^{p-1}\widehat B_x\,dx.
+\end{equation}
+At $v=0$ the lower boundary vanishes because $p+\gamma_0>0$. The absolute value, uniformly in $v\ge0$, is at most
+$C[\widehat B]_{\gamma_0;[0,s]}s^{p+\gamma_0}
+=C s^H[X]_{\gamma_0;[0,1]}$, where $X_x=s^{-1/2}\widehat B_{sx}$. Under the tilted law its increments are centered normal with variance at most their time length. Thus for $x\ge1$,
+\begin{equation}\label{eq:dyadic-tail}
+ \QQ_s^a\left(\sup_{j\ge0}2^{j\gamma_0}
+ \max_{k<2^j}|X_{(k+1)2^{-j}}-X_{k2^{-j}}|>x\right)
+ \le\sum_{j\ge0}2^{j+1}e^{-x^2 2^{j(1-2\gamma_0)}/2}
+ \le C e^{-c_0x^2}.
+\end{equation}
+Deterministic dyadic chaining controls the H\"older seminorm by a fixed multiple of this supremum. Consequently $K_s$ has a uniform small exponential square moment. This argument does not need independent increments under the tilted law.
+
+Conditional on past $B$, $L_s$ is normal with mean $L_0-A_{0s}/2$ and variance $A_{0s}\le MT$, also under $\QQ_s^a$. Its absolute exponential moments of any fixed order are uniformly bounded. H\"older's inequality combines these with the predictor square moments to bound every finite envelope moment. Averaging \eqref{eq:statewise} and also using $\zeta\le1$ proves \eqref{eq:averaged-bound}.
+\end{proof}
+
+\subsection{A deterministic upper functional and a terminal lower functional}
+For any finite deterministic grid put
+\begin{equation}\label{eq:functional}
+ \begin{gathered}
+ r_i=(T-t_i)/T,\qquad d_i=(t_{i+1}-t_i)/T,\qquad
+ W_{a,i}=\int_{t_i}^{t_{i+1}}F_a(u)\,du,\\
+ \mathcal C_{q,a}(\pi)=\sum_i W_{a,i}\min(1,d_i/r_i^q).
+ \end{gathered}
+\end{equation}
+Let $\mathcal C_{q,a}^{\tail}$ be the same sum restricted to cells starting at or after $T/2$.
+
+\begin{proposition}\label{prop:functional}
+Uniformly over $a\in[0,1]$ and all finite deterministic grids,
+\begin{equation}\label{eq:functional-comparison}
+ R_\pi(p,a)\le C\mathcal C_{q,a}(\pi),\qquad
+ R_\pi(p,a)\ge c\mathcal C_{q,a}^{\tail}(\pi).
+\end{equation}
+The frozen-target projection strategy attains the upper estimate, including its freezing error. No early-cell two-sided equivalence is asserted.
+\end{proposition}
+\begin{proof}
+The lower estimate follows from \eqref{eq:whole-cell-moneyness}--\eqref{eq:moneyness-min} when $p<0$ and Proposition~\ref{prop:hermite} when $p\ge0$, together with the exact residual sum. Fixed powers of $T$ are absorbed into constants.
+
+For the upper estimate consider first a cell with $h\le\tau/2$. Equations \eqref{eq:past-tilt} and \eqref{eq:averaged-bound} bound its $J$ contribution by
+$C hF_a(s)\min(1,d/r^q)\le C W_a\min(1,d/r^q)$. On such a cell \eqref{eq:energy-logderivative} gives comparable values of $F_a$ and
+\[
+ E_{B,i}=\int_s^{s+h}(F_a(u)-F_a(s))du
+ \le C h^2F_a(s)/\tau\le C W_a d/r.
+\]
+Also $E_{B,i}\le W_a$. Since $r\le1$ and $q\ge2$, $d/r\le d/r^q$, so freezing is absorbed by the same bounded penalty. If $h>\tau/2$, then $d/r^q\ge r^{1-q}/2\ge1/2$ while $J_i\le hF_a(s)\le W_a$ and $E_{B,i}\le W_a$. Summing over the cells and applying \eqref{eq:upper-bridge} proves the upper estimate.
+\end{proof}
+
+\section{The deterministic date budget}\label{sec:dates}
+
+\subsection{Refinement and necessity for arbitrary schedules}
+We first check that refinement respects the exact scalar total-gain convention.
+\begin{lemma}\label{lem:refinement}
+If $\pi'$ is a deterministic refinement of $\pi$, then $R_\pi(X)\ge R_{\pi'}(X)$.
+\end{lemma}
+\begin{proof}
+Let $\mathbf P=(S,C)$, and on a coarse cell let $G=\theta\cdot(\mathbf P_t-\mathbf P_s)\in L^2$ with finite $\F_s$-measurable $\theta$. For deterministic $u\in[s,t]$,
+\begin{equation}\label{eq:partial-gain}
+ \theta\cdot(\mathbf P_u-\mathbf P_s)=\EE[G\mid\F_u].
+\end{equation}
+On the event $\{\|\theta\|\le j\}\in\F_s$, the coefficients are bounded, so the $L^2$ martingale property proves the identity. This localization uses only the total-gain moment assumption. The truncated terminal total gains converge in $L^2$; so do their conditional expectations. Their almost sure limit is the finite-coefficient left side. Each refined gain is therefore a difference of two $L^2$ conditional expectations. The coarse holdings are therefore admissible on the refined grid and preserve the total terminal gain. Taking infima proves the assertion.
+\end{proof}
+
+Fix an arbitrary deterministic $n$-cell grid, $q\ge2$, $a\in[0,1]$, and $\eps=\eps_n\le1/4$. We refine the grid by adding $T/2$, $T(1-\eps)$ and all dates with dyadic residual fractions between $\eps$ and $1/2$. At most $O_q(\log n)$ dates are added. The band $[\eps,1/2]$ has at most $N\le C_q n$ cells, each satisfying
+\begin{equation}\label{eq:band-ratios}
+ r_i/2\le r_{i+1}<r_i,\qquad d_i=r_i-r_{i+1}.
+\end{equation}
+Lemma~\ref{lem:refinement}, the terminal lower functional, and \eqref{eq:energy-residual} give
+\begin{equation}\label{eq:band-lower}
+ R_\pi(p,a)\ge c\sum_{i\text{ in band}}
+ \frac{d_i^2}{\sqrt{a^2+r_i}(r_i^q+d_i)}.
+\end{equation}
+Indeed $W_{a,i}\ge c d_i/\sqrt{a^2+r_i}$ and $\min(1,x)\ge x/(1+x)$. Set $v_i=d_if_{q,a}(r_i)$. Weighted Cauchy--Schwarz gives
+\begin{equation}\label{eq:budget-cs}
+ \sum_i\frac{d_i^2}{\sqrt{a^2+r_i}(r_i^q+d_i)}
+ =\sum_i\frac{v_i^2}{1+d_i/r_i^q}
+ \ge\frac{(\sum_i v_i)^2}{N+\sum_i d_i/r_i^q}.
+\end{equation}
+The denominator is at most
+\begin{equation}\label{eq:budget-denominator}
+ C_q n+\int_\eps^{1/2}r^{-q}dr\le C'_q n,
+ \qquad \eps^{1-q}=n.
+\end{equation}
+On a cell with comparable residuals, the decreasing density satisfies
+$f_{q,a}(r_{i+1})/f_{q,a}(r_i)\le2^{q/2+1/4}$. Thus
+\begin{equation}\label{eq:full-integral}
+ \sum_i v_i\ge c_q\int_\eps^{1/2}f_{q,a}(r)dr
+ \ge c'_q\Lambda_{n,q}(a).
+\end{equation}
+The omitted $[1/2,1]$ integral is uniformly bounded in $a$, and $[1/4,1/2]$ supplies a uniform positive lower mass. Combining \eqref{eq:band-lower}--\eqref{eq:full-integral} proves
+\begin{equation}\label{eq:all-date-lower}
+ R_\pi(p,a)\ge c\Lambda_{n,q}(a)^2/n
+\end{equation}
+for every original deterministic $n$-cell schedule. The refinement retains the entire critical logarithmic integral while adding only $O_q(\log n)$ dates, so the denominator remains of order $n$.
+
+\subsection{Uniform evaluation of the allocation integral}
+The following elementary estimate will also control the last cell in the attaining construction.
+\begin{lemma}\label{lem:integral}
+For fixed $q\ge2$, $\eps=n^{-1/(q-1)}$ and all sufficiently large $n$, uniformly in $a\in[0,1]$, $\Lambda^2/n$ has the orders in \eqref{eq:supercritical}--\eqref{eq:critical}. In all cases
+\begin{equation}\label{eq:final-cell-bound}
+ \frac{\eps}{\sqrt{a^2+\eps}}\le C_q\Lambda^2/n.
+\end{equation}
+\end{lemma}
+\begin{proof}
+If $a^2\le\eps$, then $a^2+r\asymp r$ on $[\eps,1]$. With $\beta=q/2+1/4>1$,
+\[
+ \Lambda\asymp\int_\eps^1r^{-\beta}dr\asymp\eps^{1-\beta},
+ \qquad \Lambda^2/n\asymp\eps^{1/2}.
+\]
+If $a^2>\eps$ and $q>2$, the portion $[\eps,a^2]$ is at most
+$C_q a^{-1/2}\eps^{1-q/2}$, while the portion above $a^2$ is at most $C_q a^{3/2-q}$, no larger in order. A matching lower bound follows by integrating on $[\eps,2\eps]$, where $a^2+r\le3a^2$. This works even near transition; $2\eps\le1$. Hence
+\[
+ \Lambda\asymp a^{-1/2}\eps^{1-q/2},\qquad
+ \Lambda^2/n\asymp\eps/a.
+\]
+Together these prove \eqref{eq:supercritical} uniformly, including $a$ near $1$.
+
+If $q=2$, then $\eps=1/n$. For $a^2>\eps$, splitting at $a^2$ gives a lower portion comparable to
+$a^{-1/2}\log(a^2/\eps)$ and an upper portion comparable to $a^{-1/2}-1$. Their sum is uniformly comparable to
+\begin{equation}\label{eq:critical-integral}
+ a^{-1/2}\{1+\log(a^2/\eps)\}.
+\end{equation}
+To see the additive $1$ explicitly, when $a^2/\eps\ge e$ it is supplied by the logarithmic portion, including $a$ near $1$. When $1<a^2/\eps<e$, $n$ large makes $a^2$ small, and the upper portion supplies a fixed multiple of $a^{-1/2}$. Squaring proves \eqref{eq:critical}. The final-cell estimate follows from the digital regime when $a^2\le\eps$, from $\eps/a$ when $q>2$, and from the additional factor $(1+\log(a^2/\eps))^2\ge1$ when $q=2$.
+\end{proof}
+
+\subsection{Quantile dates and an attaining strategy}
+For the quantile dates in \eqref{eq:quantiles}, write $\lambda_n=\Lambda_{n,q}(a)/(n-1)$. Since $a,r\le1$ and $q\ge2$,
+\[
+ f_{q,a}(r)\ge2^{-1/4}/r,\qquad
+ \Lambda_{n,q}(a)\le\int_\eps^1r^{-q/2-1/4}dr.
+\]
+The latter gives $\lambda_n\le C_q n^{-(2q-1)/(4(q-1))}\to0$ uniformly in $a$. Equal mass in each preterminal cell therefore implies
+\begin{equation}\label{eq:quantile-ratio}
+ \log(r_i/r_{i+1})\le2^{1/4}\lambda_n\longrightarrow0.
+\end{equation}
+For all large $n$, independently of $a$, every preterminal cell has $d_i\le r_i/2$. Since the density is decreasing,
+\[
+ d_if_{q,a}(r_i)\le\int_{r_{i+1}}^{r_i}f_{q,a}(r)dr=\lambda_n.
+\]
+Comparable residuals and \eqref{eq:energy-residual} then give
+\begin{equation}\label{eq:quantile-cost}
+ W_{a,i}\min(1,d_i/r_i^q)
+ \le C\frac{d_i^2}{r_i^q\sqrt{a^2+r_i}}
+ =C[d_if_{q,a}(r_i)]^2\le C\lambda_n^2.
+\end{equation}
+The remaining target energy on the final cell, of length $T\eps$, is at most
+\begin{equation}\label{eq:last-energy}
+ C\int_0^\eps(a^2+r)^{-1/2}dr
+ =\frac{2C\eps}{\sqrt{a^2+\eps}+a}
+ \asymp\frac{\eps}{\sqrt{a^2+\eps}}
+ \le C_q\Lambda^2/n.
+\end{equation}
+Summing \eqref{eq:quantile-cost} over the preterminal cells and adding \eqref{eq:last-energy} bounds the upper functional. Proposition~\ref{prop:functional}, including the freezing error, then gives an MSE of at most $C\Lambda^2/n$.
+
+The units are precisely \eqref{eq:frozen-holdings} with $y=y^{(a)}$. They are finite and decision-measurable. Their conditional total cell energy is at most $h_i(y_{t_i}^{(a)})^2$, and its expected sum is at most
+\[
+ \sum_i h_iF_a(t_i)\le\int_0^TF_a(u)du=\Var(D_a)\le\tfrac14.
+\]
+The constructed total gains are therefore admissible. These grids attain the sharp asymptotic order.
+
+\subsection{Uniform dates}
+For $d=1/n$ and residual fractions $r_j=j/n$, the upper functional is, up to a uniform constant,
+\begin{equation}\label{eq:uniform-functional}
+ \sum_{j=1}^n\left[\int_{(j-1)/n}^{j/n}(a^2+r)^{-1/2}dr\right]
+                  \min(1,d/r_j^q).
+\end{equation}
+Cells below $\delta=d^{1/q}$, together with the rounding cell, contribute at most $C\delta/\sqrt{a^2+\delta}$. Earlier cells are bounded by
+\[
+ Cd\int_\delta^1r^{-q}(a^2+r)^{-1/2}dr
+ \le\frac{Cd\delta^{1-q}}{(q-1)\sqrt{a^2+\delta}}
+ =C_q\frac{\delta}{\sqrt{a^2+\delta}}.
+\]
+The last $\lfloor n\delta\rfloor$ cells give a matching lower bound. For large $n$ they start after $T/2$ and satisfy $d/r_j^q\ge1$. The terminal lower functional captures their whole target energy, at least
+\[
+ c\int_0^{\lfloor n\delta\rfloor/n}(a^2+r)^{-1/2}dr
+ \ge c'\frac{\delta}{\sqrt{a^2+\delta}},
+\]
+since $\lfloor n\delta\rfloor/n\asymp\delta$. This proves the second order in \eqref{eq:main-rates}; the upper is realized by the same admitted projections on uniform dates.
+
+\begin{proof}[Completion of the proof of Theorem~\ref{thm:main}]
+The all-date lower bound \eqref{eq:all-date-lower} and the quantile construction prove the deterministic assertion. The uniform-date argument proves its counterpart. Lemma~\ref{lem:integral} evaluates the deterministic expression. The two crossover scales follow by comparing $a^2$ with $\delta_n$ and $\eps_n$, respectively. All thresholds and constants used above are independent of $a$.
+\end{proof}
+
+\subsection{Digital schedules and the persistent smooth-target logarithm}
+At $a=0$, integration of $r^{-\beta}$, $\beta=q/2+1/4$, in \eqref{eq:quantiles} gives
+\begin{equation}\label{eq:digital-quantiles}
+ r_j=\left[1+\frac{j}{n-1}(\eps_n^{1-\beta}-1)\right]^{-1/(\beta-1)}.
+\end{equation}
+Thus the rough model admits
+\[
+ t_j=T\left[1-\left\{1+\frac{j}{n-1}(n^{1/4}-1)\right\}^{-4}\right],
+ \quad j<n,\qquad t_n=T,
+\]
+with last cell $T/n$. The smooth model admits
+\[
+ t_j=T\left[1-\left\{1+\frac{j}{n-1}(n^{5/12}-1)\right\}^{-4/5}\right],
+ \quad j<n,\qquad t_n=T,
+\]
+with last cell $Tn^{-1/3}$. These sequences attain the stated asymptotic orders. Substituting $a=0$ and fixed $a>0$ in the theorem proves Corollary~\ref{cor:consequences}.
+
+For $q=2$ and fixed $a>0$, the target energy is bounded at maturity, while $f_{2,a}(r)\asymp a^{-1/2}r^{-1}$ near zero. Integrating this density gives the logarithm, and the lower bound shows that it persists under every deterministic schedule. For $p>0$ the stronger exposure-decay obstruction produces the powers stated in the corollary.
+
+\section{Conclusion}
+
+The prescribed call's exposure governs the best discrete hedging rate in the frictionless model studied here, where parameters are known and both Brownian drivers are observed. Variation between adjustments and decay near maturity determine the error incurred over a holding period. Balancing this local inefficiency against the target's Brownian energy gives explicit deterministic schedules that attain the optimal asymptotic order over all admitted stock/call holdings.
+
+Smoothing the target improves the rates, while the call's terminal inefficiency persists. For every fixed smooth target in the specified family, the rough-volatility model has optimal mean-square error of order $(\log n)^2/n$. The specified smooth-volatility example converges more slowly because its call exposure decays more severely. Discrete hedging difficulty therefore depends jointly on target regularity and the behavior of the security used to supply the missing exposure.
+
+\section*{Acknowledgements}
+
+The author used ChatGPT (OpenAI, GPT-6 Astra) to assist in drafting and
+polishing the exposition from the author's notes and proof sketches, as well
+as in checking for possible gaps and inconsistencies. The author is
+responsible for the final statements and proofs.
+
+\appendix
+
+\section{Gaussian differentiation and payoff approximation}\label{app:closure}
+
+\subsection{Closed derivative, duality, and conditional inequalities}
+Let $\mathsf H=L^2(0,T;\R^2)$, in coordinate order $(W,B)$, and $I(h)=\int h^W dW+\int h^B dB$. On smooth finite Gaussian cylinders define
+\[
+ D F=\sum_j\partial_jF_0(I(h_1),\ldots,I(h_d))h_j.
+\]
+Finite-dimensional normal integration by parts gives, for deterministic $h$ and smooth cylindrical $G$,
+\begin{equation}\label{eq:gaussian-duality}
+ \EE[G\langle DF,h\rangle]=
+ \EE[F\{GI(h)-\langle DG,h\rangle\}].
+\end{equation}
+Compact cutoffs extend this to cylinders with the necessary Gaussian square moments. If $F_j\to0$ in $L^2$ and $DF_j\to Z$ in $L^2(\mathsf H)$, \eqref{eq:gaussian-duality} gives $\EE[G\langle Z,h\rangle]=0$. Bounded smooth cylinders are dense: finite Brownian increment fields exhaust $\F_T$, and smooth functions are dense for a finite normal law. A countable dense set of $h$ forces $Z=0$. Thus $D$ is closable; denote its closed domain by $\mathbb D^{1,2}$.
+
+For $F\in\mathbb D^{1,2}$ and $C^1$ $\psi$ with bounded continuous derivative, closure proves $D\psi(F)=\psi'(F)DF$. Indeed values converge by Lipschitz continuity, and for derivatives one separates $DF_j-DF$ from $(\psi'(F_j)-\psi'(F))DF$, using bounded domination. This also proves the rule after smoothing $\psi$ with locally uniform derivative limits.
+
+Choose a bounded smooth past cylinder $G\in\F_s$ and $h=\mathbf1_{(s,u]}e_j$. Since $\langle DG,h\rangle=0$, duality gives
+\[
+ \EE[FG(W_u^j-W_s^j)]=\EE\left[G\int_s^u D_r^jF\,dr\right].
+\]
+Density in the past field and in predictable step processes, with It\^o isometry and Brownian martingale representation, identify the Brownian coefficient of $F-\EE F$ with the predictable projection $\Pi_{\mathrm{pred}}DF$. This argument also holds conditional on a fixed decision history for fresh Brownian increments. Conditional differentiation commutes with integration over independent future coordinates. The identity holds for cylinders and extends by derivative closure and contraction of conditional expectation.
+
+For reference the Gaussian inequalities used below are
+\begin{equation}\label{eq:gaussian-inequalities}
+ \Var X\le\EE\|DX\|^2,\qquad
+ \Ent(X^2)\le2\EE\|DX\|^2,
+ \qquad \Ent(F)=\EE[F\log(F/\EE F)].
+\end{equation}
+One derivation uses the Ornstein--Uhlenbeck semigroup $P_v$. For cylinders, Gaussian integration by parts yields
+\[
+ \Var X=2\int_0^\infty\EE\|DP_vX\|^2dv,
+ \quad
+ \Ent(F)=\int_0^\infty\EE\frac{\|DP_vF\|^2}{P_vF}\,dv.
+\]
+Gradient commutation $DP_v=e^{-v}P_vD$, Jensen, and weighted Cauchy--Schwarz bound the first by $\EE\|DX\|^2$ and the second by $\tfrac12\EE\|DF\|^2/F$. Taking $F=X^2$ gives the second inequality. The calculation holds first for positive bounded $F$ (or $F+\eta$); truncation and derivative-domain approximation give the general case. Finite-coordinate exhaustion proves the Brownian versions and their conditional versions.
+
+We also use the entropy variational inequality
+\begin{equation}\label{eq:entropy-variational}
+ \EE_\nu\psi\le H(\nu\mid\QQ)+\log\EE e^\psi,
+ \qquad
+ \log\EE F\ge\EE_\nu\log F-H(\nu\mid\QQ),\quad F>0.
+\end{equation}
+Both follow by Jensen under $\nu$ applied to $e^\psi/(d\nu/d\QQ)$ or $F/(d\nu/d\QQ)$; truncation handles integrable limits. In particular for a centered Gaussian $Z$ of variance $v$,
+\begin{equation}\label{eq:entropy-normal}
+ |\EE_\nu Z|\le\sqrt{2vH(\nu\mid\QQ)},\qquad
+ \EE_\nu|Z|\le\sqrt{2v(H(\nu\mid\QQ)+\log2)}.
+\end{equation}
+These bounds follow by optimizing the parameter in $\psi=\lambda Z$ or $\lambda|Z|$, using $\EE e^{\lambda|Z|}\le2e^{\lambda^2v/2}$.
+
+\subsection{Volterra stock and the call kink}
+For $K(u,r)=c(u-r)^p\mathbf1_{\{r<u\}}$,
+\begin{equation}\label{eq:kernel-energy}
+ \int_0^T\int_r^T K(u,r)^2du\,dr
+ =\frac{c^2T^{2p+2}}{(2p+1)(2p+2)}<\infty.
+\end{equation}
+The row $k_u=K(u,\cdot)$ is continuous in $L^2(0,T)$ and has bounded row norms; cutting out the endpoints and then using dominated convergence proves this also for negative $p$. On a dyadic partition, let $\eta_j(u)$ be the left endpoint and let $P_j$ project onto deterministic step kernels. Set $k_u^j=P_j k_{\eta_j(u)}$ and $Y_u^j=I_B(k_u^j)$. The support is before $\eta_j(u)$, so $f(Y^j)$ is an adapted step process. Row continuity gives $k^j\to k$ in $L^2(du\,dr)$ and $Y^j\to Y$ in $L^2(du\otimes\QQ)$.
+
+The log stock variable
+\[
+ \mathsf L_j=\int_0^Tf(Y_u^j)dW_u-\tfrac12\int_0^Tf(Y_u^j)^2du
+\]
+is a smooth finite-coordinate function. Finite differentiation, It\^o isometry, and bounded continuous $f'$ and $ff'$ show that it and its derivatives converge to
+\begin{equation}\label{eq:log-derivative}
+ \mathsf L=\log(S_T/S_0),\qquad
+ D_r^W\mathsf L=\sigma_r,\qquad
+ D_r^B\mathsf L=J_r-D_r^0,
+\end{equation}
+where
+\[
+ J_r=\int_r^Tf'(Y_u)K(u,r)\,dW_u,
+ \qquad D_r^0=\int_r^T\sigma_uf'(Y_u)K(u,r)du.
+\]
+For example, the derivative integrands converge by splitting the kernel error from the bounded coefficient error times $k_u$, followed by dominated convergence. Hilbert-valued It\^o isometry in $r$ proves convergence of $J$. Only the squared kernel in \eqref{eq:kernel-energy} is needed, not its fourth power.
+
+For the exponential, we condition on the whole $B$ path and write
+$A_*=\int_0^T\sigma_u^2du$ and $Q_r=\int_r^Tf'(Y_u)^2K(u,r)^2du$. The Gaussian pair $(\int_0^T\sigma dW,J_r)$ has covariance $D_r^0$. Completing squares under the exponential tilt gives
+\begin{equation}\label{eq:exponential-moment}
+ \EE[S_T^2(J_r-D_r^0)^2\mid B]
+ =S_0^2e^{A_*}(Q_r+(D_r^0)^2)
+ \le S_0^2e^{MT}(1+MT)Q_r.
+\end{equation}
+Integrating in $r$ proves product-space square integrability. The $W$ derivative is controlled by bounded $\sigma$. A smooth upper cutoff of the exponential with derivative between $0$ and $e^x$ converges to $e^x$; dominated convergence using \eqref{eq:exponential-moment} and stock moments then proves
+\[
+ D_r^WS_T=S_T\sigma_r,\qquad
+ D_r^BS_T=S_T(J_r-D_r^0)
+\]
+in the closed domain. The conditional normal law has positive variance, so $\QQ(S_T=k)=0$. Smooth approximations of $(x-k)_+$ with slopes in $[0,1]$ and vanishing value error therefore give
+\begin{equation}\label{eq:payoff-derivative}
+ D_r^W(S_T-k)_+=\mathbf1_{\{S_T>k\}}S_T\sigma_r,
+ \qquad
+ D_r^B(S_T-k)_+=\mathbf1_{\{S_T>k\}}S_T(J_r-D_r^0).
+\end{equation}
+Thus the call payoff belongs to $\mathbb D^{1,2}$ with the stated derivatives.
+
+Integration over future $W$ identifies the exposure. Given $\F_t,B$, let $N=\int_t^T\sigma dW$, with variance $A=A_{tT}$ and covariance $D_t^0$ with $J_t$. Gaussian regression gives $J_t=(D_t^0/A)N+R$ with independent centered $R$. With $a_0=\log(k/S_t)+A/2$,
+\[
+ \EE[e^{N-A/2}\mathbf1_{\{N>a_0\}}]=\Phi(d_+),
+ \quad
+ \EE[Ne^{N-A/2}\mathbf1_{\{N>a_0\}}]
+      =A\Phi(d_+)+\sqrt A\ph(d_+).
+\]
+The second identity includes the boundary term obtained by differentiating the normal density. Substitution in \eqref{eq:payoff-derivative} gives the calculation in Proposition~\ref{prop:call}. All integrations against predictable tests are justified by the proved product $L^2$ bounds. Since $\Gamma_t\le C(T-t)^{p+1}$ and $V\le C(T-t)^{-1/2}$, the conditional exposures in \eqref{eq:call-representation} belong to product $L^2$.
+
+Joint measurability follows from the Volterra integrals. On compact preterminal intervals, their unprojected future-functional formulas are $L^2$-continuous, using continuity of $S,Y$, $L^1$ translation continuity of the integrable power kernel, and the square-integrable stock maximum. Left-step conditional approximations thus converge to their predictable projections and identify these with $\EE_t$ versions for almost every time. Strict positivity of the unprojected $S_tV\Gamma_t$ is preserved by predictable projection: on a predictable positive-measure set where the projection vanished its positive integral would have to be zero. This proves the asserted $dt\otimes\QQ$ positivity without a deterministic floor.
+
+To derive \eqref{eq:delta-martingale}, we approximate the discontinuous terminal variable $S_T\mathbf1_{\{S_T>k\}}$ by $H_j(S_T)$, where $H_j(x)=xq_j(x)$ and $q_j$ are smooth threshold approximations in $[0,1]$. For each $j$, $H_j$ has bounded derivative and the preceding closure applies. It converges in $L^2$ to the terminal variable. Conditional future-$W$ integration gives its coefficients by the derivatives of
+$\EE_ZH_j(xe^{\sqrt A Z-A/2})$. On $A\ge m\eta>0$ the first spot and variance derivatives can be taken on the Gaussian density. They converge to the derivatives of $x\Phi(d_+)$, dominated by $C_\eta x$ in these normalized derivatives because $|H_j(xe^{\sqrt A Z-A/2})|\le xe^{\sqrt A Z-A/2}$ and Gaussian score moments are bounded. Stock moments yield coefficient convergence on $[0,T-\eta]$. Martingale representation and It\^o isometry also give convergence of the global coefficients from terminal $L^2$ convergence. Uniqueness identifies them on every such compact interval. Finally
+\[
+ x\partial_x(x\Phi(d_+))=x(\Phi(d_+)+2V),\qquad
+ \partial_A(x\Phi(d_+))=xV(\tfrac12-L/A).
+\]
+Exhausting the preterminal intervals proves \eqref{eq:delta-martingale}. The same derivative arguments apply to the bounded-variance conditional functionals used in the lower and upper proofs, with the decision history fixed.
+
+\section{Relative estimates for nonnegative powers}\label{app:nonnegative}
+
+We first prove the stock-mixture algebra shared by both kernel branches. All calculations below fix the decision history at $s$, put $\tau=T-s$, and restrict $u\in[s,s+h]$ with $h\le\tau/2$. Conditional expectations of fresh increments remain under $\QQ$.
+
+\subsection{Fixed-function martingales and positive Black mixtures}\label{subsec:mixture}
+Define
+\begin{equation}\label{eq:fixed-martingales}
+ \begin{gathered}
+ P_u=S_u\EE_uV(L_u,A_{uT}),\qquad
+ \mathsf F_u=S_u\EE_u[V(L_u,A_{uT})\Gamma_s],\\
+ \mathsf N_u=\EE[V(L_s,A_{sT})\mid\G_u],\qquad
+ \mathsf M_u=\EE[V(L_s,A_{sT})\Gamma_s\mid\G_u].
+ \end{gathered}
+\end{equation}
+Here the future functional $\Gamma_s$ retains its index $s$ as $u$ varies. By \eqref{eq:black-semigroup} and the tower property, $P$ and $\mathsf F$ are positive square-integrable martingales on this cell. Indeed $A_{uT}\ge m\tau/2$, $\Gamma_s\le C\tau^{p+1}$, and conditional stock moments suffice. Moreover
+\begin{equation}\label{eq:fixed-means}
+ \EE[P_u\mid\G_u]=S_s\mathsf N_u,\qquad
+ \EE[\mathsf F_u\mid\G_u]=S_s\mathsf M_u,\qquad
+ P_s=S_s\mathsf N_s,\quad \mathsf F_s=b_s=S_s\mathsf M_s.
+\end{equation}
+
+Given $\G_u$, let $a_*=A_{su}\le Mh$ and $L_u=L_s-a_*/2+\sqrt{a_*}Z$. For each future constituent variance $A=A_{uT}\in[m\tau/2,M\tau]$ put
+\begin{equation}\label{eq:mixture-normalization}
+ \begin{gathered}
+ g_A(Z)=S_s e^{\sqrt{a_*}Z-a_*/2}V(L_s-a_*/2+\sqrt{a_*}Z,A),
+ \quad R_A=g_A/\EE_Zg_A,\\
+ Q_A=a_*/A,\qquad
+ z_A=\sqrt{a_*}\left[\tfrac12-(L_s-a_*/2)/A\right].
+ \end{gathered}
+\end{equation}
+Apart from its constant factor, $g_A=\exp(-Q_AZ^2/2+z_AZ)$. Completing the Gaussian square proves the exact identity
+\begin{equation}\label{eq:mixture-second}
+ \EE_ZR_A^2=\frac{1+Q_A}{\sqrt{1+2Q_A}}
+ \exp\left(\frac{z_A^2}{(1+Q_A)(1+2Q_A)}\right)
+ \le e^\chi,
+ \qquad \chi=C h(1+L_s^2)/\tau^2.
+\end{equation}
+Indeed $Q_A\le Ch/\tau$, the logarithm of the prefactor is at most $CQ_A^2$, and $z_A^2\le Ch(1+L_s^2)/\tau^2$. Under the normalized squared weight, $Z$ has mean $2z_A/(1+2Q_A)$ and variance $1/(1+2Q_A)$. Equivalently $L_u$ has mean $(L_s+a_*/2)/(1+2Q_A)$ and variance $a_* /(1+2Q_A)$. Hence
+\begin{equation}\label{eq:mixture-weighted}
+ \EE_Z[(1+L_u^2)R_A^2]\le C(1+L_s^2)e^\chi.
+\end{equation}
+These estimates extend to every positive mixture with nonnegative $B$-functional weights, notably $1$, $\Gamma_s$ and $\Gamma_u$. After division by its positive $W$ mean, the mixture is a probability mixture of the $R_A$, with weights proportional to the original weight times $\EE_Zg_A$. Jensen bounds its square, also after multiplication by $1+L_u^2$.
+
+\subsection{Relative sensitivity for nonnegative powers}
+Write $Y_{s+v}=\mu_s(v)+Z_v$, where $Z_v=c\int_0^v(v-r)^p d\widetilde B_r$ and $\widetilde B$ is fresh. Let $\EE_V$ denote expectation under the future $B$ law weighted by the density $V(L_s,A_{sT})/\Es V$. Since $A_{sT}\in[m\tau,M\tau]$,
+\[
+ \operatorname{osc}\log V\le C(1+L_s^2/\tau+\tau).
+\]
+The relative entropy of this density is no greater than that oscillation. By \eqref{eq:entropy-normal},
+\begin{equation}\label{eq:nonnegative-tilted-innovation}
+ \EE_V|Z_v|\le C v^{p+1/2}\sqrt{1+L_s^2/\tau+\tau}
+ \le C(1+|L_s|),\qquad v\le\tau.
+\end{equation}
+The last step uses $p\ge0$ and $\tau\le T$. The lower bound for $h_0$ in \eqref{eq:h0-bounds} and Jensen, first over the product of the normalized $v^p$ weight and the tilted law, give
+\[
+ x_s:=\EE_V\Gamma_s\ge
+ \frac{c\tau^{p+1}}{2(p+1)}
+ e^{-2M_s-C(1+|L_s|)}.
+\]
+Thus, with the envelope in \eqref{eq:nonnegative-envelope} chosen large enough,
+\begin{equation}\label{eq:nonnegative-relative}
+ r_s:=\frac{\Es V}{\rho_s}=x_s^{-1}\le\mathcal A_s\tau^{-(p+1)},
+ \qquad 1+L_s^4\le\mathcal A_s^2.
+\end{equation}
+This ratio bound allows $b_s$ to approach zero.
+
+\subsection{Conditional derivatives and absorption}
+For fresh derivative time $z\in[s,u]$, Appendix~\ref{app:closure} gives
+\begin{equation}\label{eq:nonnegative-Gamma-derivative}
+ D_zA_{sT}=\Gamma_z\le C\tau^{p+1},\qquad
+ |D_z\Gamma_s|\le3c\tau^p\Gamma_s.
+\end{equation}
+The second inequality follows by differentiation under the integral:
+\[
+ D_z\Gamma_s=c^2\int_z^T(r-s)^p(r-z)^ph_0'(Y_r)dr.
+\]
+Since $p\ge0$, we have $(r-z)^p\le\tau^p$. Combining this with $|h_0'|\le3h_0$ and enlarging the remaining positive integral to $[s,T]$ gives the bound.
+
+Since
+\begin{equation}\label{eq:V-variance-logderivative}
+ \partial_A\log V=-\frac1{2A}+\frac{L_s^2}{2A^2}-\frac18,
+\end{equation}
+conditional derivative commutation gives
+\begin{equation}\label{eq:nonnegative-N-derivative}
+ |D_z\mathsf N_u|\le a_s\mathsf N_u,
+ \qquad |D_z\mathsf M_u|\le a_s\mathsf M_u,
+ \qquad a_s=C(1+L_s^2)\tau^{p-1}.
+\end{equation}
+Fixed $L_s,\tau$ and the positive variance bound keep the derivatives integrable; finite Gaussian approximation and closure justify these inequalities in the derivative domain. Conditional Poincar\'e now gives, for either $X=\mathsf N_u$ or $\mathsf M_u$,
+$\Var_sX\le h a_s^2\Es X^2$. If $ha_s^2\le1/2$, the variance term can be absorbed, giving
+\begin{equation}\label{eq:nonnegative-N-moments}
+ \Es X^2\le2(\Es X)^2,
+ \qquad \Var_sX\le2ha_s^2(\Es X)^2.
+\end{equation}
+The means are $\mathsf N_s,\mathsf M_s$ by martingality.
+
+Combining \eqref{eq:fixed-means}, \eqref{eq:mixture-second}--\eqref{eq:mixture-weighted} and \eqref{eq:nonnegative-N-moments}, whenever $ha_s^2$ and $\chi$ are small, yields
+\begin{equation}\label{eq:nonnegative-F-moments}
+ \begin{gathered}
+ \Es[(\mathsf F_u/b_s-1)^2]\le C(ha_s^2+\chi),
+ \qquad \Es P_u^2/b_s^2\le C r_s^2,\\
+ \Es[(1+L_u^2)\mathsf F_u^2]/b_s^2\le C(1+L_s^2).
+ \end{gathered}
+\end{equation}
+For example the second moment ratio of $\mathsf F$ is bounded by $e^\chi/(1-ha_s^2)$, while its mean is $b_s$, so subtracting one gives its relative variance. The weighted assertion follows by conditional Jensen for the positive mixture and the $\mathsf M$ second moment.
+
+\subsection{Moving exposure and stock-delta leakage}
+Call a decision state eligible when
+\begin{equation}\label{eq:nonnegative-eligibility}
+ h(1+L_s^4)\tau^{-q}\le\eta,\qquad q=2p+2,
+\end{equation}
+where $\eta>0$ is a sufficiently small fixed constant. This ensures the preceding smallness conditions: $ha_s^2$ is bounded by the left side times $C\tau^{4p}$, and $\chi$ by it times $C\tau^{2p}$. On eligible states, also $ha_s^2+\chi\le C(1+L_s^4)h\tau^{-2}$.
+
+For $p\ge0$ positivity and kernel order give
+\begin{equation}\label{eq:nonnegative-Gamma-translation}
+ 0\le\Gamma_s-\Gamma_u\le C(u-s)\tau^p.
+\end{equation}
+Indeed replace $h_0$ by $3/2$ in the nonnegative kernel difference. Its integral is
+$[\tau^{p+1}-(\tau-(u-s))^{p+1}]/(p+1)\le(u-s)\tau^p$. Thus
+$0<b_u\le\mathsf F_u$ and $|\mathsf F_u-b_u|\le Ch\tau^pP_u$. Equations \eqref{eq:nonnegative-relative} and \eqref{eq:nonnegative-F-moments} imply
+\begin{equation}\label{eq:nonnegative-b-moments}
+ \begin{gathered}
+ \Es[(b_u/b_s-1)^2]
+ \le C\{(1+L_s^4)h\tau^{-2}+h^2\tau^{2p}r_s^2\}
+ \le C\mathcal A_s^2h\tau^{-q},\\
+ \Es[(1+L_u^2)b_u^2]/b_s^2\le C(1+L_s^2).
+ \end{gathered}
+\end{equation}
+The bounded factors in these power comparisons use $p\ge0$, $\tau\le T$, $h\le\tau/2$.
+
+The stock-delta error can be expressed using $U$ from \eqref{eq:delta-martingale}. Let
+$Z_u^\delta=U_u-\delta_sS_u=S_u(\delta_u-\delta_s)$. It is a square-integrable martingale starting at zero, and
+\begin{equation}\label{eq:Zdelta-sde}
+ dZ_u^\delta=\sigma_u(Z_u^\delta+2P_u)dW_u
+                  +S_u\delta_B(u)dB_u.
+\end{equation}
+It\^o isometry, \eqref{eq:delta-martingale}, and $T-u\ge\tau/2$ give
+\[
+ \Es|Z_u^\delta|^2\le C\int_s^u\Es|Z_v^\delta|^2dv
+       +Cb_s^2h\{r_s^2+(1+L_s^2)\tau^{-2}\}.
+\]
+Gronwall and \eqref{eq:nonnegative-relative} therefore imply
+\begin{equation}\label{eq:nonnegative-leakage}
+ \Es|Z_u^\delta|^2/b_s^2\le C\mathcal A_s^2h\tau^{-q}.
+\end{equation}
+The portfolio with call units $1/b_s$ and stock units $-\delta_s/b_s$ gives a conditional comparison with $\Delta B$. Its squared residual is
+\begin{equation}\label{eq:conditional-comparison}
+ \Es\int_s^{s+h}\left[(b_u/b_s-1)^2+
+                  \sigma_u^2(Z_u^\delta/b_s)^2\right]du.
+\end{equation}
+The minimum conditional residual is $h\zeta_{s,h}$, so \eqref{eq:nonnegative-b-moments} and \eqref{eq:nonnegative-leakage} bound $\zeta$ by $C\mathcal A_s^2h\tau^{-q}$ on eligible states. This conditional comparison is justified by localization on bounded decision coefficients. The global strategy is the projection in \eqref{eq:frozen-holdings}, for which only total-gain integrability is required. On ineligible states, $\zeta\le1$ and $\mathcal A_s^2\ge1+L_s^4$ give the bound after increasing the fixed constant by $1/\eta$. This proves the nonnegative part of Lemma~\ref{lem:statewise} on all states. Uniform envelope moments were proved in Lemma~\ref{lem:averaging} without any assumption on reciprocal exposure.
+
+\section{Relative estimates for rough powers}\label{app:rough}
+
+Fix $-1/2<p<0$, $H=p+1/2\in(0,1/2)$ and $\alpha=p+1\in(1/2,1)$. We use the martingales \eqref{eq:fixed-martingales} and the positive-mixture estimates of Appendix~\ref{app:nonnegative}. Throughout this appendix the initial history at $s$ is fixed, $\tau=T-s$, and $L=L_s$. Define
+\begin{equation}\label{eq:rough-D}
+ \mathscr D=1+\tau^{-1}+L^2\tau^{-2},
+ \qquad \sqrt{\mathscr D}\le C_T\sqrt{1+L^2}/\tau.
+\end{equation}
+On $A\in[m\tau,M\tau]$, \eqref{eq:V-variance-logderivative} gives $|(\log V)_A|\le C\mathscr D$.
+
+The rough kernel has two useful deterministic derivative and translation bounds:
+\begin{equation}\label{eq:rough-Gamma-bounds}
+ D_zA_{sT}=\Gamma_z,\qquad
+ |D_z\Gamma_s|\le C\int_z^T(r-s)^{\alpha-1}(r-z)^{\alpha-1}dr
+                  \le C\tau^{2H},\qquad z\ge s,
+\end{equation}
+\begin{equation}\label{eq:rough-translation}
+ |\Gamma_z-\Gamma_w|\le C|z-w|^\alpha,\qquad z,w\ge s.
+\end{equation}
+The derivative bound in \eqref{eq:rough-Gamma-bounds} follows from boundedness of $h_0'$ and $(r-s)^{\alpha-1}\le(r-z)^{\alpha-1}$; the squared singularity is integrable since $2\alpha-1=2H>0$. For \eqref{eq:rough-translation}, suppose $z<w$. The difference separates into the integral over $[z,w]$ and the integral of the nonnegative kernel difference $(r-w)^{\alpha-1}-(r-z)^{\alpha-1}$ on $[w,T]$. Each is bounded by a constant times $(w-z)^\alpha$. No time derivative of the moving exposure is assumed.
+
+\subsection{Fresh predictors and a Gaussian multiplier}
+The past predictor supremum $K_s$ is finite and its weighted square-exponential bound was proved in Lemma~\ref{lem:averaging}. For a fresh prefix $s\le u\le s+h$ put
+\[
+ A_{s,u}^{\pred}=\sup_{r\in[u,T]}
+       \left|c\int_s^u(r-v)^{\alpha-1}dB_v\right|.
+\]
+The predictor decomposition gives $K_u\le K_s+A_{s,u}^{\pred}$: the old predictor is evaluated at residual argument at least $u-s$, still in the interval over which $K_s$ takes its supremum. For $\gamma_0\in(1-\alpha,1/2)$, reversed-increment integration by parts \eqref{eq:predictor-ibp} on the independent segment of length $u-s$ bounds its supremum by $C(u-s)^H$ times the H\"older seminorm of a scaled Brownian path. The dyadic estimate \eqref{eq:dyadic-tail} (now for ordinary fresh Brownian increments) therefore proves
+\begin{equation}\label{eq:fresh-predictor-moment}
+ \Es\exp\left(\frac{(A_{s,u}^{\pred})^2}{C h^{2H}}\right)\le C.
+\end{equation}
+The same bound with $u-s$ in place of $h$ holds when $u>s$; the zero-length case is immediate.
+
+\begin{lemma}\label{lem:multiplier}
+For a functional $X$ in the Gaussian derivative space of the fresh prefix,
+\begin{equation}\label{eq:multiplier}
+ \Es[(A_{s,u}^{\pred})^2X^2]
+ \le C h^{2H}\left(\Es X^2+\Es\|DX\|_{L^2[s,u]}^2\right).
+\end{equation}
+\end{lemma}
+\begin{proof}
+For nonnegative $F$, Jensen under $F/\Es F$, or \eqref{eq:entropy-variational}, gives
+\[
+ \lambda\Es[(A_{s,u}^{\pred})^2F]
+ \le\Ent_s(F)+\Es F\log\Es e^{\lambda(A_{s,u}^{\pred})^2}.
+\]
+With $F=X^2$ and $\lambda=(Ch^{2H})^{-1}$, the moment bound \eqref{eq:fresh-predictor-moment} and conditional logarithmic Sobolev inequality \eqref{eq:gaussian-inequalities} give the result. Truncation and derivative-domain approximation prove the assertion for all such $X$. No derivative of the supremum is needed.
+\end{proof}
+This multiplier controls the contribution of fresh increments to the random predictor $K_u$ in the derivative estimate.
+
+\subsection{Refined innovation covariance and relative sensitivity}
+\begin{lemma}\label{lem:rough-relative}
+With the envelope \eqref{eq:rough-envelope} enlarged if necessary,
+\begin{equation}\label{eq:rough-relative}
+ \frac{\Es V(L,A_{sT})}{\Es[V(L,A_{sT})\Gamma_s]}
+ \le C e^{2K_s}\tau^{-\alpha}+C e^{K_s}\sqrt{\mathscr D}
+ \le\mathcal K_s/\tau.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Write $Y_{s+r}=\mu_s(r)+Z_r$, with
+$Z_r=c\int_0^r(r-v)^{\alpha-1}d\beta_v$ for fresh Brownian $\beta$. Its nonnegative covariance satisfies the refined bound
+\begin{equation}\label{eq:refined-covariance}
+ 0\le\Cov(Z_r,Z_u)
+ \le C\min(r,u)^\alpha\max(r,u)^{\alpha-1}
+ \le Cr^\alpha u^{\alpha-1}.
+\end{equation}
+For $r\le u/2$, the far kernel is bounded by $Cu^{\alpha-1}$, while the integral of the near kernel is at most $Cr^\alpha$. For comparable $r,u$, Gaussian Cauchy--Schwarz and
+$\EE Z_r^2=c^2r^{2H}/(2H)$ give the same bound. Symmetry proves the first upper bound; when $u<r$ the ratio of that bound to the last expression is $u/r$, and when $r\le u$ the expressions coincide.
+
+Let $\EE_V$ be expectation under conditional future density $V/\Es V$, and set $x=\EE_V\Gamma_s>0$. To control the tilted innovation, we use the bounded scalar Stein solution
+\[
+ g'(z)-zg(z)=|z|-\sqrt{2/\pi},\qquad |g|\le1.
+\]
+For $z\ge0$ it is
+$g(z)=-1+\sqrt{2/\pi}\,e^{z^2/2}\int_z^\infty e^{-v^2/2}dv$, extended oddly. Regression of the field $Z$ on $Z_r$ reduces the calculation to this one-dimensional identity. The regression derivative of $A_{sT}$ is the covariance-weighted integral of $h_0$, so integration by parts gives
+\begin{equation}\label{eq:rough-stein}
+ \EE_V|Z_r|\le Cr^H+
+ C\mathscr D\int_0^\tau\Cov(Z_r,Z_u)\EE_Vh_0(Y_{s+u})du
+ \le Cr^H+C\mathscr D r^\alpha x.
+\end{equation}
+All derivatives are bounded at fixed $L,\tau$ because $A\ge m\tau$ and $h_0$ is bounded; finite Gaussian approximation justifies regression and integration by parts. The factor $r^H$ comes from the untilted standard deviation. The last bound uses the refined covariance estimate \eqref{eq:refined-covariance}.
+
+Using $h_0(y)\ge\tfrac12e^{-2|y|}$ and Jensen under $\EE_V$ yields
+\begin{equation}\label{eq:selfconsistent-integral}
+ x\ge a_0\int_0^\tau r^{\alpha-1}
+                  e^{-C\mathscr D x r^\alpha}dr,
+ \qquad a_0=c_1e^{-2K_s}>0.
+\end{equation}
+The bounded factor $e^{-C\tau^H}$ has been absorbed into $c_1$. Evaluating the integral gives
+\begin{equation}\label{eq:selfconsistent-inequality}
+ x^2\ge\frac{a_0}{C\alpha\mathscr D}
+                (1-e^{-C\mathscr D x\tau^\alpha}).
+\end{equation}
+If $C\mathscr D x\tau^\alpha\le1$, the inequality $1-e^{-t}\ge t/2$ gives $x\ge c a_0\tau^\alpha$. Otherwise $x\ge c\sqrt{a_0/\mathscr D}$. Taking reciprocals in these two alternatives proves the first bound in \eqref{eq:rough-relative}. Since $\alpha<1$, $\tau\le T$, and \eqref{eq:rough-D} holds, the second follows from an envelope of the stated exponential-polynomial form.
+\end{proof}
+
+We next bound the variation of the call's exposure under the Black weights.
+
+\subsection{Two conditional entropies and a finite-energy shift}
+Fix $u\in[s,s+h]$, let $d=u-s$ and $v=T-u\ge\tau/2$, and condition on $\G_u$. The future field is
+\[
+ Y_{u+r}=\mu_u(r)+Z_r^u,\qquad 0\le r\le v,
+ \qquad |\mu_u(r)|\le K_u=:K.
+\]
+On this conditional future Gaussian space consider two separate densities
+\begin{equation}\label{eq:two-densities}
+ \nu_0=\frac{V(L,A_{sT})}{\mathsf N_u},\qquad
+ \nu_1=\frac{V(L,A_{sT})\Gamma_s}{\mathsf M_u},
+ \qquad H_j=H(\nu_j\mid\QQ).
+\end{equation}
+The prefix contribution to $A_{sT}$ is fixed. Set
+\begin{equation}\label{eq:boundary-scale}
+ \ell=\mathscr D^{-1/(2\alpha)},\qquad
+ \gamma=\frac{2\alpha-1}{2\alpha}>0.
+\end{equation}
+
+\begin{lemma}\label{lem:two-entropies}
+If
+\begin{equation}\label{eq:increasing-regime}
+ L^2\ge M\tau+(M\tau)^2/4,\qquad
+ d\le\ell\le v/2,
+\end{equation}
+then
+\begin{equation}\label{eq:entropy-bound}
+ H_0+H_1\le C(1+K^2)\mathscr D^\gamma.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The first condition makes $V(L,A)$ increasing throughout $[m\tau,M\tau]$ by \eqref{eq:V-variance-logderivative}. Let
+\[
+ V_{\max}=V(L,A_{su}+Mv),\qquad
+ \mathcal U=\log V_{\max}-\log V(L,A_{sT})\ge0.
+\]
+Then
+\begin{equation}\label{eq:variance-deficit}
+ \mathcal U\le C\mathscr D\int_u^T(M-f(Y_r)^2)dr.
+\end{equation}
+On fresh Brownian time $[0,v]$ introduce the deterministic (given $\G_u$) Cameron--Martin drift
+\begin{equation}\label{eq:shift-drift}
+ a_\ell(r)=A_0(1+K)\ell^{-\alpha}(1+r/\ell)^{-\alpha}
+                              [1+\log(1+r/\ell)],
+\end{equation}
+where $A_0$ is a large fixed constant. The induced positive Volterra shift is
+\[
+ g_\ell(r)=c\int_0^r(r-z)^{\alpha-1}a_\ell(z)dz.
+\]
+For $R=r/\ell\ge1$, the integral over $z/\ell\in[R/4,R/2]$ gives a lower bound on the scaled convolution. There the power factors are at least $R^{\alpha-1}$ and $(3R/2)^{-\alpha}$, and
+$1+\log(1+z/\ell)\ge\tfrac14[1+\log(1+R)]$. Consequently
+\begin{equation}\label{eq:shift-positive}
+ g_\ell(\ell R)\ge\frac{c(2/3)^\alpha A_0}{16}
+                        (1+K)[1+\log(1+R)].
+\end{equation}
+Choose $A_0$ so that $g_\ell(r)\ge K+2\log(1+r/\ell)$ for $r\ge\ell$. For $0\le r\le\ell$ the same convolution is bounded above by $C(1+K)$.
+
+Let $\QQ^a$ be this shifted conditional Gaussian law. Its entropy is
+\begin{equation}\label{eq:shift-energy}
+ H(\QQ^a\mid\QQ)=\tfrac12\int_0^v a_\ell(r)^2dr
+          \le C(1+K^2)\ell^{1-2\alpha}.
+\end{equation}
+The profile has finite energy for every fixed $\alpha>1/2$, because
+\begin{equation}\label{eq:profile-integral}
+ \int_0^\infty(1+x)^{-2\alpha}[1+\log(1+x)]^2dx
+ =\frac1b+\frac2{b^2}+\frac2{b^3},\qquad b=2\alpha-1>0.
+\end{equation}
+The substitution $t=\log(1+x)$ reduces the integral to exponential moments. The entropy formula follows from the finite-dimensional Gaussian change of mean for step drifts and then $L^2$ approximation.
+
+Under the shifted law the expected variance deficit is $O(\ell)$. The interval $[0,\ell]$ contributes at most $C\ell$. For $r\ge\ell$, \eqref{eq:h0-bounds}, \eqref{eq:shift-positive}, and $\Var Z_r^u\le C T^{2H}$ imply
+\[
+ \EE_{\QQ^a}[M-f(Y_{u+r})^2]\le C(1+r/\ell)^{-4}.
+\]
+Indeed the predictor is at least $-K$, and the shift dominates it; the normal exponential moment contributes only a fixed constant. Integration and \eqref{eq:variance-deficit} show
+\begin{equation}\label{eq:shift-deficit}
+ \EE_{\QQ^a}\mathcal U\le C\mathscr D\ell.
+\end{equation}
+Since $\nu_0=e^{-\mathcal U}/\EE e^{-\mathcal U}$,
+$H_0\le-\log\EE e^{-\mathcal U}$. The comparison inequality \eqref{eq:entropy-variational} with $\QQ^a$ then gives
+\begin{equation}\label{eq:H0}
+ H_0\le C(1+K^2)\ell^{1-2\alpha}+C\mathscr D\ell
+       \le C(1+K^2)\mathscr D^\gamma.
+\end{equation}
+
+For $H_1$, a separate lower estimate for $\Gamma_s$ is essential. Since $d\le\ell$ and the exponent is negative,
+\begin{equation}\label{eq:Gamma-boundary-lower}
+ \begin{aligned}
+ \Gamma_s&\ge c\int_0^\ell(d+r)^{\alpha-1}h_0(Y_{u+r})dr\\
+ &\ge c_2\ell^\alpha
+       \exp\left(-\frac2\ell\int_0^\ell|Y_{u+r}|dr\right).
+ \end{aligned}
+\end{equation}
+Here $(d+r)^{\alpha-1}\ge(2\ell)^{\alpha-1}$ and Jensen supplies the last line. Under $\QQ^a$, the average absolute field on $[0,\ell]$ has expectation at most $C(1+K)$, by the initial upper bound for $g_\ell$ and the bounded Gaussian variances. Thus
+\begin{equation}\label{eq:shift-logGamma}
+ \EE_{\QQ^a}\log\Gamma_s\ge\alpha\log\ell-C(1+K).
+\end{equation}
+For $F=e^{-\mathcal U}\Gamma_s$, we have $\log F\le\log(C\tau^\alpha)$, since $\Gamma_s\le C\tau^\alpha$. Applying \eqref{eq:entropy-variational} and combining \eqref{eq:shift-energy}, \eqref{eq:shift-deficit}, and \eqref{eq:shift-logGamma} gives
+\begin{equation}\label{eq:H1}
+ H_1\le C(1+K^2)\mathscr D^\gamma
+           +\alpha\log(\tau/\ell)+C(1+K).
+\end{equation}
+Since $\mathscr D\ge1$ and $\tau\le T$, the logarithmic term is bounded above by $C+C\log\mathscr D\le C_\alpha\mathscr D^\gamma$. This proves \eqref{eq:entropy-bound} for both densities.
+\end{proof}
+
+The shift supplies lower bounds on conditional partition functions. Future pricing expectations remain under $\QQ$. Finiteness of \eqref{eq:profile-integral} prevents an extra mesh-dependent logarithm for fixed $H>0$. Its divergence at $H=0$ is also why this argument supplies no boundary-uniform estimate.
+
+\subsection{Entropy smoothing and conditional derivatives}
+\begin{lemma}\label{lem:rough-derivative}
+There is a fixed sufficiently small $\eta>0$ such that, on states satisfying
+\begin{equation}\label{eq:rough-eligibility}
+ h(1+L_s^2)(1+K_s^2)\tau^{-2}\le\eta,
+\end{equation}
+for $s\le u\le s+h$ and almost every $z\in[s,u]$,
+\begin{equation}\label{eq:rough-N-derivative}
+ |D_z\mathsf N_u|\le
+ C\frac{\sqrt{1+L_s^2}}{\tau}(1+K_u)\mathsf N_u,
+\end{equation}
+\begin{equation}\label{eq:rough-M-derivative}
+ |D_z\mathsf M_u|\le
+ C\frac{\sqrt{1+L_s^2}}{\tau}(1+K_u)\mathsf M_u
+                     +C\tau^{2H}\mathsf N_u.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Conditional derivative commutation from Appendix~\ref{app:closure} gives
+\begin{equation}\label{eq:rough-derivative-identities}
+ D_z\mathsf N_u=\EE[V_A\Gamma_z\mid\G_u],\qquad
+ D_z\mathsf M_u=\EE[V_A\Gamma_z\Gamma_s+V D_z\Gamma_s\mid\G_u].
+\end{equation}
+All functionals belong to the derivative domain: $L,\tau$ are fixed, $A_{sT}\ge m\tau$, and \eqref{eq:rough-Gamma-bounds} controls the singular-kernel derivatives. The last term in the second identity is bounded by $C\tau^{2H}\mathsf N_u$ and will remain additive.
+
+There are three regimes. If $L^2<M\tau+(M\tau)^2/4$, then $\mathscr D\le C_T/\tau$. Since $\Gamma_z\le C\tau^\alpha$, direct use of \eqref{eq:rough-derivative-identities} gives coefficient $C\tau^{\alpha-1}\le C_T/\tau$, sufficient for the assertions. If $V$ is increasing but $\ell>v/2$, then $\mathscr D\tau^{2\alpha}\le C$ because $v\ge\tau/2$. Hence $\mathscr D\Gamma_z\le C\sqrt{\mathscr D}$, again sufficient.
+
+In the remaining regime $V$ is increasing and $\ell\le v/2$. After reducing the constant $\eta$ in \eqref{eq:rough-eligibility} by a fixed factor if necessary, eligibility implies $h\mathscr D\le1$. Since $\mathscr D\ge1$ and $1/(2\alpha)<1$, it follows that $h\le\ell$. Thus Lemma~\ref{lem:two-entropies} applies with $d\le h\le\ell$.
+
+Let $X$ now denote the fresh Brownian increment on $[u,u+\ell]$, a centered Gaussian of variance $\ell$. Gaussian integration by parts gives the two distinct identities
+\begin{equation}\label{eq:entropy-IBP0}
+ \frac{\EE_{\nu_0}X}{\ell}
+ =\frac1\ell\int_u^{u+\ell}
+             \EE_{\nu_0}[(\log V)_A\Gamma_w]dw,
+\end{equation}
+\begin{equation}\label{eq:entropy-IBP1}
+ \frac{\EE_{\nu_1}X}{\ell}
+ =\frac1\ell\int_u^{u+\ell}
+ \left\{\EE_{\nu_1}[(\log V)_A\Gamma_w]
+       +\frac{\EE[V D_w\Gamma_s\mid\G_u]}{\mathsf M_u}\right\}dw.
+\end{equation}
+These identities use the weighted derivative $V D_w\Gamma_s$, whose integrability follows from \eqref{eq:rough-Gamma-bounds}. By \eqref{eq:rough-translation}, replacing $\Gamma_w$ with $\Gamma_z$ costs at most $C\mathscr D\ell^\alpha$, since $|w-z|\le2\ell$. The additional source in \eqref{eq:entropy-IBP1} costs at most $C\tau^{2H}\mathsf N_u/\mathsf M_u$.
+
+The entropy-normal estimate \eqref{eq:entropy-normal} and Lemma~\ref{lem:two-entropies} yield
+\begin{equation}\label{eq:entropy-smoothing}
+ \frac{|\EE_{\nu_j}X|}{\ell}\le\sqrt{2H_j/\ell}
+       \le C(1+K_u)\sqrt{\mathscr D},\qquad
+ \mathscr D\ell^\alpha=\sqrt{\mathscr D}.
+\end{equation}
+Here $\gamma+1/(2\alpha)=1$. Substituting these estimates into \eqref{eq:entropy-IBP0}--\eqref{eq:entropy-IBP1}, then into \eqref{eq:rough-derivative-identities}, and using \eqref{eq:rough-D} proves both assertions. In the $\mathsf M$ estimate the original prefix derivative of $\Gamma_s$ adds another term of the same additive size, absorbed into the constant. Gaussian finite-coordinate approximations and closure justify all differentiations and integration-by-parts limits; no relative derivative bound for $\Gamma_s$ is assumed.
+\end{proof}
+
+\subsection{Absorbing the random predictor before Poincar\'e}
+Set
+\begin{equation}\label{eq:rough-as}
+ a_s^2=C(1+L_s^2)(1+K_s^2)/\tau^2.
+\end{equation}
+\begin{lemma}\label{lem:rough-moments}
+On the eligible states \eqref{eq:rough-eligibility}, after decreasing $\eta$,
+\begin{equation}\label{eq:rough-N-moments}
+ \Es\mathsf N_u^2\le C\mathsf N_s^2,
+ \qquad \Var_s\mathsf N_u\le C h a_s^2\mathsf N_s^2,
+\end{equation}
+\begin{equation}\label{eq:rough-M-moments}
+ \begin{gathered}
+ \Var_s\mathsf M_u\le C h a_s^2\mathsf M_s^2
+                             +C h\tau^{4H}\mathsf N_s^2,\\
+ \Es\mathsf M_u^2\le C(\mathsf M_s^2+h\tau^{4H}\mathsf N_s^2).
+ \end{gathered}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Put $a_*^2=C(1+L_s^2)/\tau^2$. Squaring and integrating the derivative estimates on $[s,u]$, with $K_u\le K_s+A_{s,u}^{\pred}$, gives, for $X=\mathsf N_u$,
+\begin{equation}\label{eq:predictor-before-absorption}
+ \Es\|DX\|^2\le C h a_*^2\left\{
+      (1+K_s^2)\Es X^2+\Es[(A_{s,u}^{\pred})^2X^2]\right\}.
+\end{equation}
+For $X=\mathsf M_u$ there is also $C h\tau^{4H}\Es\mathsf N_u^2$. Lemma~\ref{lem:multiplier} bounds the predictor product. The resulting derivative term has coefficient $C h a_*^2h^{2H}$, which is below $1/2$ for small enough $\eta$: eligibility controls $h a_*^2$, and $h^{2H}\le T^{2H}$. It can therefore be absorbed into the left-hand side of the derivative estimate. The remaining $h^{2H}$ multiple of $\Es X^2$ is absorbed into a fixed $T$-dependent constant times $1+K_s^2$. Consequently
+\begin{equation}\label{eq:rough-absorbed-derivatives}
+ \begin{aligned}
+ \Es\|D\mathsf N_u\|^2&\le C h a_s^2\Es\mathsf N_u^2,\\
+ \Es\|D\mathsf M_u\|^2&\le C h a_s^2\Es\mathsf M_u^2
+                            +C h\tau^{4H}\Es\mathsf N_u^2.
+ \end{aligned}
+\end{equation}
+Conditional Poincar\'e and the means $\Es\mathsf N_u=\mathsf N_s$, $\Es\mathsf M_u=\mathsf M_s$ now allow absorption of $C h a_s^2$ times the variances, again by choosing $\eta$ small. The $\mathsf N$ inequality yields \eqref{eq:rough-N-moments}. Substituting that bound in the $\mathsf M$ inequality gives \eqref{eq:rough-M-moments}. At fixed $L,\tau$ the underlying functionals and their required derivatives have the domain bounds already proved, so the multiplier and Poincar\'e steps need no lower bound for their initial positive means.
+\end{proof}
+
+\subsection{Independent stock noise and the moving exposure}
+On eligible states $\chi=C h(1+L_s^2)/\tau^2$ in \eqref{eq:mixture-second} is small. Set
+\begin{equation}\label{eq:rough-rs}
+ r_s=\mathsf N_s/\mathsf M_s=\Es V/\rho_s\le\mathcal K_s/\tau.
+\end{equation}
+Conditional variance decomposition using \eqref{eq:fixed-means}, the exact stock-mixture estimates \eqref{eq:mixture-second}--\eqref{eq:mixture-weighted}, and Lemma~\ref{lem:rough-moments} gives
+\begin{equation}\label{eq:rough-F-moments}
+ \Es[(\mathsf F_u/b_s-1)^2]
+ \le C[h a_s^2+h\tau^{4H}r_s^2],\qquad
+ \Es P_u^2/b_s^2\le C r_s^2.
+\end{equation}
+For the first inequality, total conditional variance splits into
+$S_s^2\Var_s\mathsf M_u$ and a $W$ variance bounded by
+$(e^\chi-1)S_s^2\Es\mathsf M_u^2$. Since $\chi\le C h a_s^2$ and is small, this proves the stated bound. This calculation is valid for each positive mixture, with future option moments still under $\QQ$.
+
+The deterministic translation bound gives
+\begin{equation}\label{eq:rough-moving-exposure}
+ |b_u-\mathsf F_u|\le C h^\alpha P_u.
+\end{equation}
+Therefore
+\begin{equation}\label{eq:rough-b-variation}
+ \Es[(b_u/b_s-1)^2]
+ \le C\{h a_s^2+(h\tau^{4H}+h^{2\alpha})r_s^2\}
+ \le C\mathcal K_s^2h/\tau^2.
+\end{equation}
+The last step uses $2\alpha>1$ and bounded $h,\tau\le T$, with an enlarged exponential-polynomial envelope.
+
+To control stock-delta leakage, we also need the weighted second moment
+\begin{equation}\label{eq:rough-weighted-b}
+ \Es[(1+L_u^2)b_u^2]/b_s^2
+ \le C(1+L_s^2)\{1+(h\tau^{4H}+h^{2\alpha})r_s^2\}.
+\end{equation}
+Indeed the $W$ mean of $b_u$ is
+$S_s\EE[V(L_s,A_{sT})\Gamma_u\mid\G_u]$, whose difference from $S_s\mathsf M_u$ is at most $C h^\alpha S_s\mathsf N_u$. The weighted positive-mixture estimate \eqref{eq:mixture-weighted}, followed by \eqref{eq:rough-N-moments}--\eqref{eq:rough-M-moments} and the squared difference bound, proves \eqref{eq:rough-weighted-b}. Here the change from $\Gamma_s$ to $\Gamma_u$ is controlled by the translation bound.
+
+\subsection{Stock-delta leakage and the all-state cell bound}
+The delta martingale formula and \eqref{eq:Zdelta-sde} remain valid for the non-Markov rough history by Appendix~\ref{app:closure}. Conditional It\^o isometry and Gronwall, followed by \eqref{eq:rough-F-moments}, \eqref{eq:rough-weighted-b}, and $T-u\ge\tau/2$, give
+\begin{equation}\label{eq:rough-leakage-pre}
+ \frac{\Es[(Z_u^\delta)^2]}{b_s^2}
+ \le C h\left\{r_s^2+\frac{1+L_s^2}{\tau^2}
+             [1+(h\tau^{4H}+h^{2\alpha})r_s^2]\right\}.
+\end{equation}
+Eligibility controls the apparently higher product:
+\begin{equation}\label{eq:rough-higher-product}
+ \frac{1+L_s^2}{\tau^2}(h\tau^{4H}+h^{2\alpha})
+ \le C(\tau^{4H}+h^{2\alpha-1})\le C_T.
+\end{equation}
+Hence \eqref{eq:rough-rs} reduces \eqref{eq:rough-leakage-pre} to
+\begin{equation}\label{eq:rough-leakage}
+ \Es[(Z_u^\delta)^2]/b_s^2\le C\mathcal K_s^2h/\tau^2.
+\end{equation}
+The conditional competitor with call units $1/b_s$ and stock units $-\delta_s/b_s$ has Brownian coefficients $b_u/b_s$ in the $B$ direction and $\sigma_u Z_u^\delta/b_s$ in the $W$ direction. Thus conditional minimization gives
+\[
+ h\zeta_{s,h}\le\Es\int_s^{s+h}
+      [(b_u/b_s-1)^2+\sigma_u^2(Z_u^\delta/b_s)^2]du.
+\]
+As in the nonnegative proof, common decision localization validates this quadratic comparison without imposing an unconditional inverse-exposure moment. The admitted global strategy is the projection \eqref{eq:frozen-holdings}.
+
+Equations \eqref{eq:rough-b-variation} and \eqref{eq:rough-leakage} imply $\zeta_{s,h}\le C\mathcal K_s^2h/\tau^2$ on eligible states. On ineligible states, enlarging the fixed envelope so that its square dominates $(1+L_s^2)(1+K_s^2)/\eta$ allows the bound $\zeta\le1$ to give the same estimate. We have proved on all states
+\begin{equation}\label{eq:rough-all-state}
+ \zeta_{s,h}\le\min(1,C\mathcal K_s^2h/\tau^2),
+ \qquad h\le\tau/2.
+\end{equation}
+This proves the rough part of Lemma~\ref{lem:statewise}. The averaging argument in Lemma~\ref{lem:averaging} uses contraction of the past Gaussian covariance and is uniform in target smoothing. Together these estimates provide the rough-case upper control used in Theorem~\ref{thm:main}.
+
+\begin{thebibliography}{99}
+
+\bibitem{GG2010}
+S.~Geiss and E.~Gobet,
+\emph{Fractional smoothness and applications in Finance},
+arXiv preprint 1004.3577v1, 20 April 2010.
+\newblock \url{https://arxiv.org/abs/1004.3577v1}.
+
+\bibitem{GM2009}
+E.~Gobet and A.~Makhlouf,
+\emph{The tracking error rate of the Delta-Gamma hedging strategy},
+preprint, 2 July 2009.
+\newblock \url{https://hal.science/hal-00401182/document}.
+
+\bibitem{BW2010}
+M.~Brod\'en and M.~Wiktorsson,
+\emph{On the Convergence of Higher Order Hedging Schemes},
+presentation slides, 23 June 2010.
+\newblock \url{https://www.fieldsinstitute.ca/programs/scientific/09-10/bachelier/talks/Wed/GGSuite/bfs262Wiktorsson.pdf}.
+
+\bibitem{AI2025}
+J.~Armstrong and A.~Ionescu,
+\emph{Gamma hedging and rough paths},
+Finance and Stochastics \textbf{29} (2025), 933--979.
+\newblock DOI: \href{https://doi.org/10.1007/s00780-025-00576-2}{10.1007/s00780-025-00576-2}.
+
+\bibitem{AD2026}
+J.~Armstrong and P.~Das,
+\emph{Gamma Hedging without Rough Paths},
+arXiv preprint 2601.08730v1, 13 January 2026.
+\newblock \url{https://arxiv.org/abs/2601.08730v1}.
+
+\bibitem{GL2014}
+E.~Gobet and N.~Landon,
+\emph{Almost sure optimal hedging strategy},
+Annals of Applied Probability \textbf{24} (2014), no.~4, 1652--1690.
+\newblock DOI: \href{https://doi.org/10.1214/13-AAP959}{10.1214/13-AAP959};
+arXiv:1405.4170v1, 16 May 2014.
+
+\end{thebibliography}
+\end{document}
