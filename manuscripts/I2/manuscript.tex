@@ -68,11 +68,13 @@ As maturity approaches, less future volatility remains to affect the call's pric
 
 \subsection{Relation to earlier work}\label{sec:literature}
 
-Payoff regularity and the allocation of trading dates are central to hedging approximation. Geiss and Gobet \cite{GG2010}, equation~(1) and Theorems~0.5.4, 0.5.6 and 0.5.8, study a selected stock-delta discretization for a stock-terminal payoff; their fractional-smoothness bounds and graded dates separate target regularity from date allocation. Gobet and Landon \cite{GL2014}, Theorems~3.1--3.3, optimize a different criterion: trade count times error quadratic variation, almost surely, with attainment by stopping-time delta schemes under regularity and ellipticity assumptions.
+Payoff regularity and the allocation of trading dates are central to hedging approximation. Geiss and Gobet \cite{GG2010}, equation~(1) and Theorems~0.5.4, 0.5.6 and 0.5.8, study a selected stock-delta discretization for a stock-terminal payoff; their fractional-smoothness bounds and graded dates separate target regularity from date allocation.
+
+Fukasawa \cite{F2011a,F2011b,F2014} derives sharp asymptotic bounds for semimartingale discretization and constructs efficient stopping-time rebalancing schemes. His analysis includes general simple predictable holdings under local approximation and uniform-integrability conditions, with error assessed relative to trade count or transaction cost. Gobet and Landon \cite{GL2014}, Theorems~3.1--3.3, obtain almost-sure lower bounds for the product of trade count and error quadratic variation, attained by stopping-time delta schemes under regularity and ellipticity assumptions.
 
 Calls allow higher-order corrections to stock hedges. Gobet and Makhlouf \cite{GM2009}, Definition~1 and Theorems~3 and 6, analyze a prescribed delta--gamma strategy using calls and exchange options expiring at $T_2>T$. Their It\^o expansions control remainders through payoff regularity and Greek ratios; Lemmas~9--10 and the mesh threshold use the positive maturity gap. Their bounds include a critical logarithmic regime, with generic tightness discussed for the uniform selected strategy below fractional regularity one. Finer rates at regularity one remain unresolved there. Brod\'en and Wiktorsson \cite{BW2010} obtain an $n^{-3/2}$ MSE expansion for a selected equidistant delta--gamma strategy with a call target and a later-expiry call hedge under local-volatility assumptions.
 
-Pathwise results also permit common-maturity options. Armstrong and Ionescu \cite{AI2025}, Theorem~3.1, prove convergence with bounded Greek-matching holdings and controlled rough-integral representations, allowing untraded pricing signals. Armstrong and Das \cite{AD2026}, Theorem~1.3 and Corollary~1.4, use $C^3$ pricing functions, bounded derivative-cancelling holdings and suitable vanishing variation. Here the call shares the target's maturity, and its exposure degenerates near that date. We determine necessary and attainable MSE orders over all admitted stock/call gains and deterministic schedules, uniformly in target smoothing.
+Pathwise results also permit common-maturity options. Armstrong and Ionescu \cite{AI2025}, Theorem~3.1, prove convergence with bounded Greek-matching holdings and controlled rough-integral representations, allowing untraded pricing signals. Armstrong and Das \cite{AD2026}, Theorem~1.3 and Corollary~1.4, use $C^3$ pricing functions, bounded derivative-cancelling holdings and suitable vanishing variation. Our estimates describe the terminal loss of efficiency of a prescribed call with the target's maturity. They give necessary and attainable full-horizon MSE orders over all admitted stock/call gains and deterministic schedules, uniformly in target smoothing.
 
 \subsection{Model, targets and admissible gains}
 
@@ -1402,6 +1404,25 @@ S.~Geiss and E.~Gobet,
 \emph{Fractional smoothness and applications in Finance},
 arXiv preprint 1004.3577v1, 20 April 2010.
 \newblock \url{https://arxiv.org/abs/1004.3577v1}.
+
+\bibitem{F2011a}
+M.~Fukasawa,
+\emph{Discretization error of stochastic integrals},
+Annals of Applied Probability \textbf{21} (2011), no.~4, 1436--1465.
+\newblock DOI: \href{https://doi.org/10.1214/10-AAP730}{10.1214/10-AAP730}.
+
+\bibitem{F2011b}
+M.~Fukasawa,
+\emph{Asymptotically efficient discrete hedging},
+in Stochastic Analysis with Financial Applications,
+Progress in Probability \textbf{65} (2011), 331--346.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-0348-0097-6_19}{10.1007/978-3-0348-0097-6\_19}.
+
+\bibitem{F2014}
+M.~Fukasawa,
+\emph{Efficient discretization of stochastic integrals},
+Finance and Stochastics \textbf{18} (2014), 175--208.
+\newblock DOI: \href{https://doi.org/10.1007/s00780-013-0215-6}{10.1007/s00780-013-0215-6}.
 
 \bibitem{GM2009}
 E.~Gobet and A.~Makhlouf,
